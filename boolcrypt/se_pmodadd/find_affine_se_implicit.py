@@ -392,8 +392,6 @@ def find_ase_implicit_pmodadd_3passes(wordsize, check, threads, verbose, debug, 
 
 
 if __name__ == '__main__':
-    raise ValueError("latest changes not tested")
-
     sys.setrecursionlimit(sys.getrecursionlimit()*1000)
 
     # wordsize = 3

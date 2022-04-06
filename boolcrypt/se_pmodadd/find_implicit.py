@@ -1870,8 +1870,6 @@ def print_new_symbolic_coeffs(base_coeff2ct_str, all_coeff2expr, filename):
 
 
 if __name__ == '__main__':
-    raise ValueError("latest changes not tested")
-
     sys.setrecursionlimit(sys.getrecursionlimit()*1000)
 
     wordsize = 3

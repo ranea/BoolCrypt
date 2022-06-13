@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.findpoly module &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="boolcrypt.findpolymodp module" href="boolcrypt.findpolymodp.html" />
+    <link rel="prev" title="boolcrypt.classification module" href="boolcrypt.classification.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="boolcrypt.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.utilities.html">boolcrypt.utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.equivalence.html">boolcrypt.equivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.functionalequations.html">boolcrypt.functionalequations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.cczselfequivalence.html">boolcrypt.cczselfequivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.sboxes.html">boolcrypt.sboxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.modularaddition.html">boolcrypt.modularaddition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.classification.html">boolcrypt.classification module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">boolcrypt.findpoly module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolymodp.html">boolcrypt.findpolymodp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolyoptimal.html">boolcrypt.findpolyoptimal module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="boolcrypt.html">API reference</a> &raquo;</li>
+      <li>boolcrypt.findpoly module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boolcrypt.findpoly.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-boolcrypt.findpoly">
+<span id="boolcrypt-findpoly-module"></span><h1>boolcrypt.findpoly module<a class="headerlink" href="#module-boolcrypt.findpoly" title="Permalink to this headline"></a></h1>
+<p>Functions to search for binary permutation polynomials.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.str2poly">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">str2poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#str2poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.str2poly" title="Permalink to this definition"></a></dt>
+<dd><p>Parse an string containing a finite field polynomial.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fpoly</span> <span class="o">=</span> <span class="n">str2poly</span><span class="p">(</span><span class="s2">&quot;53*x^208 + x^13&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fpoly</span>
+<span class="go">53*x^208 + x^13</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fpoly</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+<span class="go">Univariate Polynomial Ring in x over Finite Field in a of size 2^8</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.is_permutation_poly">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">is_permutation_poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polynomial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#is_permutation_poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.is_permutation_poly" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether the input polynomial is a permutation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_permutation_poly</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_permutation_poly</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">127</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_permutation_poly</span><span class="p">(</span><span class="n">str2poly</span><span class="p">(</span><span class="s2">&quot;(23)*x^7 + x^28&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.poly2lut_fast">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">poly2lut_fast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polynomial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#poly2lut_fast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.poly2lut_fast" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT representation of a permutation polynomial.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">field</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_lut</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly2lut_fast</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">output_lut</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output_lut</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.find_krssb">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">find_krssb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#find_krssb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.find_krssb" title="Permalink to this definition"></a></dt>
+<dd><p>Find all k-rotation-symmetric S-boxes of given algebraic degree.</p>
+<p>Find permutations S = sum(a_i + x^i), where a_i^(2^k) = a_i.</p>
+<p>Some “left” affine equivalent krssb do not appear in the list,
+that is, if f(x) and g(x) are two k-rssbb of the same alg_deg
+and f(x) = A(g(x)), with A affine, then g(x) might not appear.</p>
+<p>This function do not return anything (to prevent high memory usage).</p>
+<p>Apart from the polynomials, the signature of the function
+and the leading monomials (e.g., # x^192) is printed
+to the output.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_krssb</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># find_krssb(3, 2, 3, 1)</span>
+<span class="go">valid_exponents: [6, 5, 4, 3, 2, 1]</span>
+<span class="go">valid_exponents_lsb_set: {1, 3, 5}</span>
+<span class="go">subfield: [1]</span>
+<span class="go">maximal_subfield: {1}</span>
+<span class="go"># x^3</span>
+<span class="go">recursion(x^3, 2, 3, True, False)</span>
+<span class="go">x^3 + x^2 + x</span>
+<span class="go"># x^5</span>
+<span class="go">recursion(x^5, 2, 1, True, False)</span>
+<span class="go">x^5 + x^4 + x</span>
+<span class="go">x^5 + x^3 + x</span>
+<span class="go"># x^6</span>
+<span class="go">recursion(x^6, 2, 0, False, False)</span>
+<span class="go">x^6 + x^5 + x^4</span>
+<span class="go">x^6 + x^3 + x^2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_krssb</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go"># find_krssb(4, 2, 5, 2)</span>
+<span class="go"># x^3</span>
+<span class="go"># x^5</span>
+<span class="go"># x^6</span>
+<span class="go"># x^9</span>
+<span class="go"># x^10</span>
+<span class="go">x^10 + 6*x^9 + 7*x^8 + 6*x^6 + 7*x^5</span>
+<span class="go">x^10 + 6*x^9 + 6*x^6 + 7*x^5 + x^4</span>
+<span class="go">x^10 + 6*x^9 + 6*x^6 + 7*x^5 + 7*x^2</span>
+<span class="go">x^10 + 6*x^9 + 6*x^6 + 7*x^5 + x</span>
+<span class="go">x^10 + 7*x^9 + 6*x^8 + 7*x^6 + 6*x^5</span>
+<span class="go">x^10 + 7*x^9 + 7*x^6 + 6*x^5 + x^4</span>
+<span class="go">x^10 + 7*x^9 + 7*x^6 + 6*x^5 + 6*x^2</span>
+<span class="go">x^10 + 7*x^9 + 7*x^6 + 6*x^5 + x</span>
+<span class="go"># x^12</span>
+<span class="go">x^12 + 6*x^10 + 7*x^8 + 7*x^5 + x^3</span>
+<span class="go">x^12 + 6*x^10 + 7*x^5 + 6*x^4 + x^3</span>
+<span class="go">x^12 + 6*x^10 + 7*x^5 + x^3 + 7*x^2</span>
+<span class="go">x^12 + 6*x^10 + 7*x^5 + x^3 + 6*x</span>
+<span class="go">x^12 + 7*x^10 + 6*x^8 + 6*x^5 + x^3</span>
+<span class="go">x^12 + 7*x^10 + 6*x^5 + 7*x^4 + x^3</span>
+<span class="go">x^12 + 7*x^10 + 6*x^5 + x^3 + 6*x^2</span>
+<span class="go">x^12 + 7*x^10 + 6*x^5 + x^3 + 7*x</span>
+<span class="go">x^12 + x^9 + 6*x^8 + x^6 + x^3</span>
+<span class="go">x^12 + x^9 + 7*x^8 + x^6 + x^3</span>
+<span class="go">x^12 + x^9 + x^6 + 6*x^4 + x^3</span>
+<span class="go">x^12 + x^9 + x^6 + 7*x^4 + x^3</span>
+<span class="go">x^12 + x^9 + x^6 + x^3 + 6*x^2</span>
+<span class="go">x^12 + x^9 + x^6 + x^3 + 7*x^2</span>
+<span class="go">x^12 + x^9 + x^6 + x^3 + 6*x</span>
+<span class="go">x^12 + x^9 + x^6 + x^3 + 7*x</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.find_divisors_or_selfequivs">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">find_divisors_or_selfequivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">permutation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg_remainder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deg_other_se</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_divisor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_se</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xor_cts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_char_per_elem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_marks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#find_divisors_or_selfequivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.find_divisors_or_selfequivs" title="Permalink to this definition"></a></dt>
+<dd><p>Find divisors and/or self-equivalences of a permutation.</p>
+<p>The list of candidates P can be given as a file
+containing hex strings or str polynomials.
+If given as hex strings, the number of characters used
+element must be given (see hex_string2lut).
+If given as str polynomials, the variable of the
+polynomials must also be given.</p>
+<p>The permutation S can be given as a LUT, a polynomial
+or in the same format as the list of candidates.</p>
+<p>If side_divisor=”left”, outputs the candidates P such that S = P R.
+If side_divisor=”right”, outputs the candidates P such that S = R P.
+In both cases, outputs those P when deg(R) &lt;= deg_remainder.</p>
+<p>If side_se=”left”, outputs the candidates P such that S = P S R.
+If side_se=”right”, outputs the candidates P such that S = R S P.
+In both cases, outputs those P when deg(R) &lt;= deg_other_se.</p>
+<p>If loop_over_all_ct=”left”, for each candidate P, check also k + P(x).
+If loop_over_all_ct=”right”, for each candidate P, check also P(x+k).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">temp_file</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">tmp_filename</span><span class="p">(</span><span class="s1">&#39;testing_find_all_divisor_se&#39;</span><span class="p">,</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_krssb</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">terms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">temp_file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># finding left divisors P such that S = P R, with deg(R)&lt;=2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_divisors_or_selfequivs</span><span class="p">(</span><span class="s2">&quot;x^6&quot;</span><span class="p">,</span> <span class="n">temp_file</span><span class="p">,</span> <span class="n">deg_remainder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">side_divisor</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># found left divisor; deg(R): 2, poly(R): x^6 + x^3 + x^2</span>
+<span class="go">x^3 + x^2 + x</span>
+<span class="go"># found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^4</span>
+<span class="go">x^5 + x^4 + x</span>
+<span class="go"># found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^4 + x^3 + x^2</span>
+<span class="go">x^5 + x^3 + x</span>
+<span class="go"># found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^4 + x^3 + x</span>
+<span class="go">x^6 + x^5 + x^4</span>
+<span class="go"># found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^3 + x^2 + x</span>
+<span class="go">x^6 + x^3 + x^2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># finding left self-equivalences P such that S = P S R, with deg(R)&lt;=2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_divisors_or_selfequivs</span><span class="p">(</span><span class="s2">&quot;x^6&quot;</span><span class="p">,</span> <span class="n">temp_file</span><span class="p">,</span> <span class="n">deg_other_se</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">side_se</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">[0, 1, 5, 2, 7, 4, 3, 6]</span>
+<span class="go">[0, 1, 3, 6, 5, 2, 7, 4]</span>
+<span class="go">[0, 1, 6, 5, 2, 7, 4, 3]</span>
+<span class="go">[0, 1, 4, 3, 6, 5, 2, 7]</span>
+<span class="go">[0, 1, 2, 7, 4, 3, 6, 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span>  <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">temp_file</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">tmp_filename</span><span class="p">(</span><span class="s1">&#39;testing_find_all_divisor_se_part2&#39;</span><span class="p">,</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># find_krssb8b_givaro(d=2, terms=5, k=1, output_filename=temp_file)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># finding left divisors P such that x^13 = P R, with deg(R)&lt;=3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># find_divisors_or_selfequivs(&quot;x^13&quot;, temp_file, deg_remainder=3, side_divisor=&quot;left&quot;, field_var=x, verbose=True)</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^80 + x^65 + x^52 + x^20 + x^5</span>
+<span class="go">x^5 + x^20 + x^64 + x^65 + x^80</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^104 + x^80 + x^65 + x^20 + x^5</span>
+<span class="go">x^5 + x^20 + x^32 + x^65 + x^80</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^208 + x^80 + x^65 + x^20 + x^5</span>
+<span class="go">x^5 + x^16 + x^20 + x^65 + x^80</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^161 + x^80 + x^65 + x^20 + x^5</span>
+<span class="go">x^5 + x^8 + x^20 + x^65 + x^80</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^80 + x^67 + x^65 + x^20 + x^5</span>
+<span class="go">x^4 + x^5 + x^20 + x^65 + x^80</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^134 + x^80 + x^65 + x^20 + x^5</span>
+<span class="go">x^2 + x^5 + x^20 + x^65 + x^80</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^80 + x^65 + x^20 + x^13 + x^5</span>
+<span class="go">x + x^5 + x^20 + x^65 + x^80</span>
+<span class="go"># found left divisor; deg(R): 3, poly(R): x^160 + x^130 + x^40 + x^13 + x^10</span>
+<span class="go">x + x^10 + x^40 + x^130 + x^160</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.check_permutation">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">check_permutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_char_per_elem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#check_permutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.check_permutation" title="Permalink to this definition"></a></dt>
+<dd><p>Check properties of permutations given in a file.</p>
+<p>The permutation can be given as hex strings or str polynomials.
+If given as hex strings, the number of characters used
+element must be given (see hex_string2lut).
+If given as str polynomials, the variable of the
+polynomials must also be given.</p>
+<p>List of modes:</p>
+<ul>
+<li><p>“is_odd” outputs the permutations that are odd (like the inversion)</p></li>
+<li><p>“inv_deg_max” outputs the permutations whose inverse degree
+are greater than the target degree</p></li>
+<li><p>“inv_deg_min” outputs the permutations whose inverse degree
+are lower than the target degree</p></li>
+<li><p>“unique” outputs the list of permutations without duplicates</p></li>
+<li><p>“invertible” outputs the permutations that are invertible</p></li>
+<li><p>“linear_repr” outputs the linear representatives, without duplicates</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">temp_file</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">tmp_filename</span><span class="p">(</span><span class="s1">&#39;testing_check_lut&#39;</span><span class="p">,</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x**127&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_permutation</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;is_odd&quot;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="go">x**127</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_permutation</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;inv_deg_min&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="go"># 7</span>
+<span class="go">x**127</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_permutation</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;inv_deg_max&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="go"># 1</span>
+<span class="go">x</span>
+<span class="go"># 1</span>
+<span class="go">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_permutation</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;unique&quot;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="go">x</span>
+<span class="go">x**127</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpe</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">temp_file</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">tmp_filename</span><span class="p">(</span><span class="s1">&#39;testing_check_lut2&#39;</span><span class="p">,</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">lut2hex_string</span><span class="p">(</span><span class="n">poly2lut</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span> <span class="n">cpe</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">lut2hex_string</span><span class="p">(</span><span class="n">poly2lut</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="p">),</span> <span class="n">cpe</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">lut2hex_string</span><span class="p">(</span><span class="n">poly2lut</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">6</span><span class="p">),</span> <span class="n">cpe</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_permutation</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;invertible&quot;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_char_per_elem</span><span class="o">=</span><span class="n">cpe</span><span class="p">)</span>
+<span class="go">00010405030207060c0d08090f0e0b0a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_permutation</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;linear_repr&quot;</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_char_per_elem</span><span class="o">=</span><span class="n">cpe</span><span class="p">)</span>
+<span class="go">(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)</span>
+<span class="go">(16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.polyfile2hex">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">polyfile2hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#polyfile2hex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.polyfile2hex" title="Permalink to this definition"></a></dt>
+<dd><p>Return the hex representation of permutation polynomials.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">temp_file</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">tmp_filename</span><span class="p">(</span><span class="s1">&#39;test_poly2hex&#39;</span><span class="p">,</span> <span class="s1">&#39;.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;x**127&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polyfile2hex</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">temp_file</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="go">000102030405060708090a0b0c0d0e0f</span>
+<span class="go">00010b0d090e06070c0508030f02040a</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.get_sas_decomposition">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">get_sas_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exponent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#get_sas_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.get_sas_decomposition" title="Permalink to this definition"></a></dt>
+<dd><p>Find an SAS decomposition of a given power function f(x)=x^exponent,
+where A is an invertible linear monomial (x^2^i) and
+the S’s are invertible non-linear monomials with given algebraic degree.</p>
+<p>Each decomposition is given by a triplet [a, b, c] where (a, c)
+are the exponents of the non-linear monomials and b is the exponent
+of the linear monomial.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decompositions</span> <span class="o">=</span> <span class="n">get_sas_decomposition</span><span class="p">(</span><span class="mi">127</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decompositions</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">[[13, 1, 49], [13, 2, 152], [13, 4, 76], [13, 8, 38], [13, 16, 19]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.get_monomial_permutation">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">get_monomial_permutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alg_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_le</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#get_monomial_permutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.get_monomial_permutation" title="Permalink to this definition"></a></dt>
+<dd><p>Get all permutation monomials in GF(2^n) with given algebraic degree.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_monomial_permutation</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ignore_le</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">x^7</span>
+<span class="go">found x^11 but is LE to x^7</span>
+<span class="go">found x^13 but is LE to x^7</span>
+<span class="go">found x^14 but is LE to x^7</span>
+<span class="go">[x^7]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_monomial_permutation</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">[x^7, x^11, x^13, x^14]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_monomial_permutation</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ignore_le</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">x^7</span>
+<span class="go">x^11</span>
+<span class="go">x^13</span>
+<span class="go">found x^14 but is LE to x^7</span>
+<span class="go">x^19</span>
+<span class="go">found x^22 but is LE to x^11</span>
+<span class="go">found x^26 but is LE to x^13</span>
+<span class="go">found x^28 but is LE to x^7</span>
+<span class="go">x^37</span>
+<span class="go">found x^38 but is LE to x^19</span>
+<span class="go">found x^41 but is LE to x^37</span>
+<span class="go">found x^44 but is LE to x^11</span>
+<span class="go">found x^49 but is LE to x^19</span>
+<span class="go">found x^52 but is LE to x^13</span>
+<span class="go">found x^56 but is LE to x^7</span>
+<span class="go">found x^67 but is LE to x^13</span>
+<span class="go">found x^73 but is LE to x^37</span>
+<span class="go">found x^74 but is LE to x^37</span>
+<span class="go">found x^76 but is LE to x^19</span>
+<span class="go">found x^82 but is LE to x^37</span>
+<span class="go">found x^88 but is LE to x^11</span>
+<span class="go">found x^97 but is LE to x^11</span>
+<span class="go">found x^98 but is LE to x^19</span>
+<span class="go">found x^104 but is LE to x^13</span>
+<span class="go">found x^112 but is LE to x^7</span>
+<span class="go">found x^131 but is LE to x^7</span>
+<span class="go">found x^133 but is LE to x^11</span>
+<span class="go">found x^134 but is LE to x^13</span>
+<span class="go">found x^137 but is LE to x^19</span>
+<span class="go">found x^146 but is LE to x^37</span>
+<span class="go">found x^148 but is LE to x^37</span>
+<span class="go">found x^152 but is LE to x^19</span>
+<span class="go">found x^161 but is LE to x^13</span>
+<span class="go">found x^164 but is LE to x^37</span>
+<span class="go">found x^176 but is LE to x^11</span>
+<span class="go">found x^193 but is LE to x^7</span>
+<span class="go">found x^194 but is LE to x^11</span>
+<span class="go">found x^196 but is LE to x^19</span>
+<span class="go">found x^208 but is LE to x^13</span>
+<span class="go">found x^224 but is LE to x^7</span>
+<span class="go">[x^7, x^11, x^13, x^19, x^37]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.findpoly.find_quadratic_permutations">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.findpoly.</span></span><span class="sig-name descname"><span class="pre">find_quadratic_permutations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strong</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/findpoly.html#find_quadratic_permutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.findpoly.find_quadratic_permutations" title="Permalink to this definition"></a></dt>
+<dd><p>Find quadratic permutation in ANF form.</p>
+<p>If strong=True, find permutations without linear components
+and with good differential properties. In this cases,
+LUTs are printed (instead of ANFs) together with their
+differential uniformity.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">find_quadratic_permutations</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">[x0, x1, x2]</span>
+<span class="go">[x0, x1, x0*x1 + x2]</span>
+<span class="go">[x0, x0*x2 + x1, x2]</span>
+<span class="go">[x0, x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="go">[x0, x0*x1 + x0*x2 + x1, x0*x1 + x2]</span>
+<span class="go">[x0, x0*x1 + x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="go">[x0 + x1*x2, x1, x2]</span>
+<span class="go">[x0 + x1*x2, x1, x0*x1 + x1*x2 + x2]</span>
+<span class="go">[x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="go">[x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="go">[x0 + x1*x2, x0*x2 + x1*x2 + x1, x2]</span>
+<span class="go">[x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="go">[x0*x1 + x0 + x1*x2, x1, x0*x1 + x2]</span>
+<span class="go">[x0*x1 + x0 + x1*x2, x1, x0*x1 + x1*x2 + x2]</span>
+<span class="go">[x0*x1 + x0 + x1*x2, x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="go">[x0*x1 + x0 + x1*x2, x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="go">[x0*x1 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x2]</span>
+<span class="go">[x0*x1 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x2 + x1, x2]</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x2]</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x2]</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_quadratic_permutations</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">2 [0, 1, 2, 5, 4, 7, 3, 6]</span>
+<span class="go">2 [0, 1, 2, 7, 4, 3, 5, 6]</span>
+<span class="go">2 [0, 1, 2, 6, 4, 3, 7, 5]</span>
+<span class="go">2 [0, 1, 2, 6, 4, 7, 5, 3]</span>
+<span class="go">2 [0, 1, 2, 7, 4, 6, 3, 5]</span>
+<span class="go">2 [0, 1, 2, 5, 4, 6, 7, 3]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boolcrypt.classification.html" class="btn btn-neutral float-left" title="boolcrypt.classification module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boolcrypt.findpolymodp.html" class="btn btn-neutral float-right" title="boolcrypt.findpolymodp module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

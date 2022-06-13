@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.modularaddition &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boolcrypt.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>boolcrypt.modularaddition</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for boolcrypt.modularaddition</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Auxiliary functions for the modular addition modulo a power of two.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sage.all</span>
+
+<span class="kn">from</span> <span class="nn">sage.rings.polynomial.pbori.pbori</span> <span class="kn">import</span> <span class="n">BooleanPolynomialVector</span>
+
+<span class="n">GF</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">GF</span>
+<span class="n">PolynomialRing</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">PolynomialRing</span>
+<span class="n">BooleanPolynomialRing</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">BooleanPolynomialRing</span>
+
+
+<div class="viewcode-block" id="get_modadd_lut"><a class="viewcode-back" href="../../boolcrypt.modularaddition.html#boolcrypt.modularaddition.get_modadd_lut">[docs]</a><span class="k">def</span> <span class="nf">get_modadd_lut</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the LUT of the binary modular addition.</span>
+
+<span class="sd">    If permuted is True, returns (x, y) -&gt; (x \boxplus y, y).</span>
+
+<span class="sd">        &gt;&gt;&gt; get_modadd_lut(2)</span>
+<span class="sd">        [0, 1, 2, 3, 1, 2, 3, 0, 2, 3, 0, 1, 3, 0, 1, 2]</span>
+<span class="sd">        &gt;&gt;&gt; get_modadd_lut(2, permuted=True)</span>
+<span class="sd">        [0, 1, 2, 3, 5, 6, 7, 4, 10, 11, 8, 9, 15, 12, 13, 14]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">int2vector</span><span class="p">,</span> <span class="n">vector2int</span>
+
+    <span class="n">new_lut</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n_left</span> <span class="o">=</span> <span class="n">wordsize</span>
+    <span class="n">n_right</span> <span class="o">=</span> <span class="n">wordsize</span>
+
+    <span class="k">for</span> <span class="n">x_y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">n_left</span> <span class="o">+</span> <span class="n">n_right</span><span class="p">)):</span>
+        <span class="n">x_y</span> <span class="o">=</span> <span class="n">int2vector</span><span class="p">(</span><span class="n">x_y</span><span class="p">,</span> <span class="n">n_left</span> <span class="o">+</span> <span class="n">n_right</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">x_y</span><span class="p">[:</span><span class="n">n_left</span><span class="p">],</span> <span class="n">x_y</span><span class="p">[</span><span class="o">-</span><span class="n">n_left</span><span class="p">:]</span>
+
+        <span class="n">z_left</span> <span class="o">=</span> <span class="p">(</span><span class="n">vector2int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">vector2int</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">wordsize</span><span class="p">)</span>
+        <span class="n">z_left</span> <span class="o">=</span> <span class="n">int2vector</span><span class="p">(</span><span class="n">z_left</span><span class="p">,</span> <span class="n">n_left</span><span class="p">)</span>
+        <span class="n">z_right</span> <span class="o">=</span> <span class="n">y</span>
+
+        <span class="k">if</span> <span class="n">permuted</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">vector2int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">z_left</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">z_right</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">vector2int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">z_left</span><span class="p">))</span>
+
+        <span class="n">new_lut</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_lut</span></div>
+
+
+<div class="viewcode-block" id="get_modadd_anf"><a class="viewcode-back" href="../../boolcrypt.modularaddition.html#boolcrypt.modularaddition.get_modadd_anf">[docs]</a><span class="k">def</span> <span class="nf">get_modadd_anf</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_x_names</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the anf of the modular addition.</span>
+
+<span class="sd">    If permuted is True, returns (x, y) -&gt; (x \boxplus y, y).</span>
+
+<span class="sd">    If only_x_names is True, the input variables are denoted by x0, x1, ...</span>
+<span class="sd">    Otherwise, the inputs are denoted by x0, x1,...,y0,y1,...</span>
+
+<span class="sd">        &gt;&gt;&gt; for f in get_modadd_anf(2): print(f)</span>
+<span class="sd">        x0 + x2</span>
+<span class="sd">        x0*x2 + x1 + x3</span>
+<span class="sd">        &gt;&gt;&gt; for f in get_modadd_anf(3, permuted=True, only_x_names=False): print(f)</span>
+<span class="sd">        x0 + y0</span>
+<span class="sd">        x0*y0 + x1 + y1</span>
+<span class="sd">        x0*x1*y0 + x0*y0*y1 + x1*y1 + x2 + y2</span>
+<span class="sd">        y0</span>
+<span class="sd">        y1</span>
+<span class="sd">        y2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">only_x_names</span><span class="p">:</span>
+        <span class="n">x_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+        <span class="n">y_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">wordsize</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+        <span class="n">y_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+
+    <span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="n">x_names</span> <span class="o">+</span> <span class="n">y_names</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[:</span><span class="n">wordsize</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="n">wordsize</span><span class="p">:]</span>
+
+    <span class="n">anf</span> <span class="o">=</span> <span class="n">BooleanPolynomialVector</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">BooleanPolynomialVector</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">):</span>
+        <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>  <span class="c1"># c[i+1]</span>
+
+    <span class="k">if</span> <span class="n">permuted</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">):</span>
+            <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">anf</span></div>
+
+
+<div class="viewcode-block" id="get_implicit_modadd_anf"><a class="viewcode-back" href="../../boolcrypt.modularaddition.html#boolcrypt.modularaddition.get_implicit_modadd_anf">[docs]</a><span class="k">def</span> <span class="nf">get_implicit_modadd_anf</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_x_names</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the quadratic anf of the implicit function of the modular addition.</span>
+
+<span class="sd">    Let F(x,y)=x \boxplus y (F(x,y)=(x \boxplus y,y) if permuted).</span>
+<span class="sd">    The quadratic implicit function of \boxplus is a quadratic function G</span>
+<span class="sd">    such that Graph(F) = {(x, y) = G(x, y) = 0}.</span>
+
+<span class="sd">    For permuted=False, G(x, y, z) =  (x ^ y ^ z ^ q(x ^ z, y ^ z)),</span>
+<span class="sd">    where q(x, y) = (0, x_0 y_0, ..., x_0 y_0 ^ ... ^ x_{n-2} y_{n-2}).</span>
+<span class="sd">    For permuted=True, G(x, y, z, y) same but with the extra component t ^ y.</span>
+
+<span class="sd">        &gt;&gt;&gt; for f in get_implicit_modadd_anf(2): print(f)</span>
+<span class="sd">        x0 + x2 + x4</span>
+<span class="sd">        x0*x2 + x0*x4 + x1 + x2*x4 + x3 + x4 + x5</span>
+<span class="sd">        &gt;&gt;&gt; for f in get_implicit_modadd_anf(3, permuted=True, only_x_names=False): print(f)</span>
+<span class="sd">        x0 + y0 + z0</span>
+<span class="sd">        x0*y0 + x0*z0 + x1 + y0*z0 + y1 + z0 + z1</span>
+<span class="sd">        x0*y0 + x0*z0 + x1*y1 + x1*z1 + x2 + y0*z0 + y1*z1 + y2 + z0 + z1 + z2</span>
+<span class="sd">        y0 + t0</span>
+<span class="sd">        y1 + t1</span>
+<span class="sd">        y2 + t2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">only_x_names</span><span class="p">:</span>
+        <span class="n">x_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+        <span class="n">y_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">wordsize</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+        <span class="n">y_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">only_x_names</span><span class="p">:</span>
+        <span class="n">z_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">wordsize</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">wordsize</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">z_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;z&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+    <span class="n">t_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">permuted</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">only_x_names</span><span class="p">:</span>
+            <span class="n">t_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">wordsize</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="n">wordsize</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">t_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+
+    <span class="n">bpr</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="n">x_names</span> <span class="o">+</span> <span class="n">y_names</span> <span class="o">+</span> <span class="n">z_names</span> <span class="o">+</span> <span class="n">t_names</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[:</span><span class="n">wordsize</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="n">wordsize</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="n">wordsize</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">2</span><span class="o">*</span><span class="n">wordsize</span><span class="p">:</span><span class="mi">3</span><span class="o">*</span><span class="n">wordsize</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">permuted</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">3</span><span class="o">*</span><span class="n">wordsize</span><span class="p">:</span><span class="mi">4</span><span class="o">*</span><span class="n">wordsize</span><span class="p">]</span>
+
+    <span class="n">anf</span> <span class="o">=</span> <span class="n">BooleanPolynomialVector</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">q_anf</span> <span class="o">=</span> <span class="n">BooleanPolynomialVector</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">wordsize</span><span class="p">):</span>
+        <span class="c1"># x ^ y ^ z ^ q(x \oplus z, y \oplus z))</span>
+        <span class="n">aux_q</span> <span class="o">=</span> <span class="n">q_anf</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">aux_q</span><span class="p">)</span>
+        <span class="n">q_anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux_q</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">permuted</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">):</span>
+            <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">anf</span></div>
+
+
+<div class="viewcode-block" id="get_ccz_modadd_anf"><a class="viewcode-back" href="../../boolcrypt.modularaddition.html#boolcrypt.modularaddition.get_ccz_modadd_anf">[docs]</a><span class="k">def</span> <span class="nf">get_ccz_modadd_anf</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">only_x_names</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                       <span class="n">bpr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a CCZ-equivalent function of the modular addition.</span>
+
+<span class="sd">    The argument name can take the values &quot;q&quot;, &quot;Q&quot;, &quot;H&quot; and &quot;p&quot; and the</span>
+<span class="sd">    following quadratic CCZ functions are returned:</span>
+<span class="sd">    - q(x, y) = (0, x_0 y_0, ..., x_0 y_0 ^ ... ^ x_{n-2} y_{n-2})</span>
+<span class="sd">    - Q(x, y) = x ^ y ^ q(x, y)</span>
+<span class="sd">    - H(x, y) = x ^ q(x ^ y, y)</span>
+<span class="sd">    - p(x, y) = (0, x_0 y_0, ..., x_{n-2} y_{n-2})</span>
+
+<span class="sd">    If permuted=1 or permuted is True, appends the component &#39;y&#39;.</span>
+<span class="sd">    If permuted=2, appends the component &#39;0&#39;.</span>
+
+<span class="sd">    If a BooleanPolynomialRing is given in bpr and a list of</span>
+<span class="sd">    input variables (of x and y) of the same bpr are given in input_vars,</span>
+<span class="sd">    then bpr is set as the parent of the CCZ-equivalent function.</span>
+
+<span class="sd">        &gt;&gt;&gt; for f in get_ccz_modadd_anf(3, &quot;q&quot;, only_x_names=False): print(f)</span>
+<span class="sd">        0</span>
+<span class="sd">        x0*y0</span>
+<span class="sd">        x0*y0 + x1*y1</span>
+<span class="sd">        &gt;&gt;&gt; for f in get_ccz_modadd_anf(3, &quot;H&quot;, only_x_names=False): print(f)</span>
+<span class="sd">        x0</span>
+<span class="sd">        x0*y0 + x1 + y0</span>
+<span class="sd">        x0*y0 + x1*y1 + x2 + y0 + y1</span>
+<span class="sd">        &gt;&gt;&gt; for f in get_ccz_modadd_anf(3, &quot;Q&quot;, only_x_names=False): print(f)</span>
+<span class="sd">        x0 + y0</span>
+<span class="sd">        x0*y0 + x1 + y1</span>
+<span class="sd">        x0*y0 + x1*y1 + x2 + y2</span>
+<span class="sd">        &gt;&gt;&gt; for f in get_ccz_modadd_anf(3, &quot;p&quot;, only_x_names=False): print(f)</span>
+<span class="sd">        0</span>
+<span class="sd">        x0*y0</span>
+<span class="sd">        x1*y1</span>
+<span class="sd">        &gt;&gt;&gt; for f in get_ccz_modadd_anf(2, &quot;q&quot;, permuted=2): print(f)</span>
+<span class="sd">        0</span>
+<span class="sd">        x0*x2</span>
+<span class="sd">        0</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; for f in get_ccz_modadd_anf(2, &quot;H&quot;, permuted=1): print(f)</span>
+<span class="sd">        x0</span>
+<span class="sd">        x0*x2 + x1 + x2</span>
+<span class="sd">        x2</span>
+<span class="sd">        x3</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">permuted</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">permuted</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">permuted</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">permuted</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">permuted</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">bpr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">only_x_names</span><span class="p">:</span>
+            <span class="n">x_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+            <span class="n">y_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">wordsize</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+            <span class="n">y_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;y&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">)]</span>
+
+        <span class="n">bpr</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="n">x_names</span> <span class="o">+</span> <span class="n">y_names</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[:</span><span class="n">wordsize</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="n">wordsize</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">input_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_vars</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="o">*</span><span class="n">wordsize</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">bpr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">input_vars</span><span class="p">[:</span><span class="n">wordsize</span><span class="p">]]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">bpr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">input_vars</span><span class="p">[</span><span class="n">wordsize</span><span class="p">:]]</span>
+
+    <span class="n">anf</span> <span class="o">=</span> <span class="n">BooleanPolynomialVector</span><span class="p">()</span>
+    <span class="n">q_anf</span> <span class="o">=</span> <span class="n">BooleanPolynomialVector</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">aux_q</span> <span class="o">=</span> <span class="n">bpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">]:</span>
+                <span class="n">aux_q</span> <span class="o">=</span> <span class="n">q_anf</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
+                <span class="n">aux_q</span> <span class="o">=</span> <span class="n">q_anf</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span>
+                <span class="n">aux_q</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">q_anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux_q</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]:</span>
+            <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux_q</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Q&quot;</span><span class="p">:</span>
+            <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">aux_q</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
+            <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">aux_q</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">permuted</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">wordsize</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">anf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bpr</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">anf</span></div>
+
+
+<div class="viewcode-block" id="get_admissible_mapping"><a class="viewcode-back" href="../../boolcrypt.modularaddition.html#boolcrypt.modularaddition.get_admissible_mapping">[docs]</a><span class="k">def</span> <span class="nf">get_admissible_mapping</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bpr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the admissible mapping L of G s.t. L(Graph(G))=Graph(modadd).</span>
+
+<span class="sd">    G is the function from get_ccz_modadd(wordsize, name, permuted),</span>
+
+<span class="sd">        &gt;&gt;&gt; get_admissible_mapping(3, &quot;q&quot;)</span>
+<span class="sd">        [1 0 0|0 0 0|1 0 0]</span>
+<span class="sd">        [0 1 0|0 0 0|0 1 0]</span>
+<span class="sd">        [0 0 1|0 0 0|0 0 1]</span>
+<span class="sd">        [-----+-----+-----]</span>
+<span class="sd">        [0 0 0|1 0 0|1 0 0]</span>
+<span class="sd">        [0 0 0|0 1 0|0 1 0]</span>
+<span class="sd">        [0 0 0|0 0 1|0 0 1]</span>
+<span class="sd">        [-----+-----+-----]</span>
+<span class="sd">        [1 0 0|1 0 0|1 0 0]</span>
+<span class="sd">        [0 1 0|0 1 0|0 1 0]</span>
+<span class="sd">        [0 0 1|0 0 1|0 0 1]</span>
+<span class="sd">        &gt;&gt;&gt; get_admissible_mapping(3, &quot;H&quot;)</span>
+<span class="sd">        [0 0 0|1 0 0|1 0 0]</span>
+<span class="sd">        [0 0 0|0 1 0|0 1 0]</span>
+<span class="sd">        [0 0 0|0 0 1|0 0 1]</span>
+<span class="sd">        [-----+-----+-----]</span>
+<span class="sd">        [1 0 0|1 0 0|1 0 0]</span>
+<span class="sd">        [0 1 0|0 1 0|0 1 0]</span>
+<span class="sd">        [0 0 1|0 0 1|0 0 1]</span>
+<span class="sd">        [-----+-----+-----]</span>
+<span class="sd">        [0 0 0|0 0 0|1 0 0]</span>
+<span class="sd">        [0 0 0|0 0 0|0 1 0]</span>
+<span class="sd">        [0 0 0|0 0 0|0 0 1]</span>
+<span class="sd">        &gt;&gt;&gt; get_admissible_mapping(2, &quot;q&quot;, permuted=2)</span>
+<span class="sd">        [0 0|1 0|1 0|0 0]</span>
+<span class="sd">        [0 0|0 1|0 1|0 0]</span>
+<span class="sd">        [---+---+---+---]</span>
+<span class="sd">        [1 0|0 0|1 0|0 0]</span>
+<span class="sd">        [0 1|0 0|0 1|0 0]</span>
+<span class="sd">        [---+---+---+---]</span>
+<span class="sd">        [1 0|1 0|1 0|0 0]</span>
+<span class="sd">        [0 1|0 1|0 1|0 0]</span>
+<span class="sd">        [---+---+---+---]</span>
+<span class="sd">        [1 0|0 0|1 0|1 0]</span>
+<span class="sd">        [0 1|0 0|0 1|0 1]</span>
+<span class="sd">        &gt;&gt;&gt; get_admissible_mapping(2, &quot;H&quot;, permuted=1)</span>
+<span class="sd">        [0 0|1 0|1 0|0 0]</span>
+<span class="sd">        [0 0|0 1|0 1|0 0]</span>
+<span class="sd">        [---+---+---+---]</span>
+<span class="sd">        [1 0|1 0|1 0|0 0]</span>
+<span class="sd">        [0 1|0 1|0 1|0 0]</span>
+<span class="sd">        [---+---+---+---]</span>
+<span class="sd">        [0 0|0 0|1 0|0 0]</span>
+<span class="sd">        [0 0|0 0|0 1|0 0]</span>
+<span class="sd">        [---+---+---+---]</span>
+<span class="sd">        [1 0|0 0|1 0|1 0]</span>
+<span class="sd">        [0 1|0 0|0 1|0 1]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">wordsize</span>
+
+    <span class="k">if</span> <span class="n">bpr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">bpr</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">ib</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">bpr</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span>  <span class="c1"># identity matrix block</span>
+    <span class="n">zb</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">zero_matrix</span><span class="p">(</span><span class="n">bpr</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span>  <span class="c1"># zero matrix block</span>
+
+    <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">permuted</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">permuted</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">permuted</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">permuted</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">permuted</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;q&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permuted</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+        <span class="k">elif</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+        <span class="k">elif</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+            <span class="c1"># # both are admissible mappings</span>
+            <span class="c1"># am = sage.all.block_matrix([</span>
+            <span class="c1">#     [ib, zb, ib, zb],</span>
+            <span class="c1">#     [zb, ib, ib, zb],</span>
+            <span class="c1">#     [ib, ib, ib, zb],</span>
+            <span class="c1">#     [zb, ib, ib, ib]])</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permuted</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+            <span class="k">if</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Q&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permuted</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+            <span class="k">elif</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                    <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span>
+        <span class="c1"># p = bb \circ q</span>
+        <span class="c1"># bb:</span>
+        <span class="c1"># 1 0 0</span>
+        <span class="c1"># 1 1 0</span>
+        <span class="c1"># 1 1 1</span>
+        <span class="n">bb</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">bpr</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span> <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permuted</span><span class="p">:</span>
+            <span class="n">p2q</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">bb</span><span class="p">]])</span>  <span class="c1"># (bb^{-1})^{-1}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">p2q</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">bb</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">permuted</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+        <span class="k">elif</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+        <span class="k">elif</span> <span class="n">permuted</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+                <span class="p">[</span><span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">],</span>
+                <span class="p">[</span><span class="n">ib</span><span class="p">,</span> <span class="n">zb</span><span class="p">,</span> <span class="n">ib</span><span class="p">,</span> <span class="n">ib</span><span class="p">]])</span>
+        <span class="n">am</span> <span class="o">=</span> <span class="n">am</span> <span class="o">*</span> <span class="n">p2q</span>
+    <span class="k">return</span> <span class="n">am</span></div>
+
+
+<div class="viewcode-block" id="test_modadd_functions"><a class="viewcode-back" href="../../boolcrypt.modularaddition.html#boolcrypt.modularaddition.test_modadd_functions">[docs]</a><span class="k">def</span> <span class="nf">test_modadd_functions</span><span class="p">(</span><span class="n">wordsize_range</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;Test the conversion functions</span>
+
+<span class="sd">        &gt;&gt;&gt; test_modadd_functions()</span>
+<span class="sd">        True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">zip_longest</span>
+    <span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span>
+    <span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">check_ccz_equivalence_anf</span>
+
+    <span class="k">for</span> <span class="n">ws</span> <span class="ow">in</span> <span class="n">wordsize_range</span><span class="p">:</span>
+        <span class="n">modadd_anf</span> <span class="o">=</span> <span class="n">get_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+        <span class="n">modadd_permuted_anf</span> <span class="o">=</span> <span class="n">get_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">f</span> <span class="o">!=</span> <span class="n">g</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="n">modadd_anf</span><span class="p">,</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_modadd_lut</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span> <span class="n">num_outputs</span><span class="o">=</span><span class="n">ws</span><span class="p">))):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">f</span> <span class="o">!=</span> <span class="n">g</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">zip_longest</span><span class="p">(</span><span class="n">modadd_permuted_anf</span><span class="p">,</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_modadd_lut</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)))):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">check_ccz_equivalence_anf</span><span class="p">(</span><span class="n">modadd_anf</span><span class="p">,</span> <span class="n">get_implicit_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">),</span>
+                                         <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">ws</span> <span class="o">*</span> <span class="mi">3</span><span class="p">),</span> <span class="n">g_implicit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">check_ccz_equivalence_anf</span><span class="p">(</span><span class="n">modadd_permuted_anf</span><span class="p">,</span> <span class="n">get_implicit_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                                         <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">ws</span> <span class="o">*</span> <span class="mi">4</span><span class="p">),</span> <span class="n">g_implicit</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">permuted</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+            <span class="n">modadd_anf_aux</span> <span class="o">=</span> <span class="n">modadd_anf</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">permuted</span> <span class="k">else</span> <span class="n">modadd_permuted_anf</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]:</span>
+                <span class="n">ccz_anf</span> <span class="o">=</span> <span class="n">get_ccz_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+                <span class="n">am</span> <span class="o">=</span> <span class="n">get_admissible_mapping</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">check_ccz_equivalence_anf</span><span class="p">(</span><span class="n">ccz_anf</span><span class="p">,</span> <span class="n">modadd_anf_aux</span><span class="p">,</span> <span class="n">am</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="c1"># def find_admissible_mapping(wordsize, name, mode, permuted=False, simplify=False):</span>
+<span class="c1">#     &quot;&quot;&quot;Return admissible mappings to be CCZ to the the modular addition.</span>
+<span class="c1">#</span>
+<span class="c1">#     If mode == 0, it considers all matrices with identity or zero blocks.</span>
+<span class="c1">#     If mode == 1, it expands the 3x3 block admissible mapping of the non-permuted version</span>
+<span class="c1">#     with all combinations of identity and zero blocks.</span>
+<span class="c1">#     If mode == 2, it expands the 3x3 block admissible mapping of the non-permuted version</span>
+<span class="c1">#     (but with the 4 column being zero) with all combinations of identity and zero blocks.</span>
+<span class="c1">#</span>
+<span class="c1">#         &gt;&gt;&gt; for m in find_admissible_mapping(3, &quot;p&quot;, mode=0, permuted=False, simplify=True): print(m)</span>
+<span class="c1">#         [1 0|1 0|1 0]</span>
+<span class="c1">#         [0 1|0 1|0 1]</span>
+<span class="c1">#         [---+---+---]</span>
+<span class="c1">#         [1 0|1 0|0 0]</span>
+<span class="c1">#         [0 1|0 1|0 0]</span>
+<span class="c1">#         [---+---+---]</span>
+<span class="c1">#         [1 0|0 0|0 0]</span>
+<span class="c1">#         [0 1|0 0|0 0]</span>
+<span class="c1">#         &gt;&gt;&gt; for m in find_admissible_mapping(3, &quot;p&quot;, mode=0, permuted=True, simplify=True): print(m)</span>
+<span class="c1">#         [0 0|1 0|1 0|0 0]</span>
+<span class="c1">#         [0 0|0 1|0 1|0 0]</span>
+<span class="c1">#         [---+---+---+---]</span>
+<span class="c1">#         [1 0|1 0|1 0|0 0]</span>
+<span class="c1">#         [0 1|0 1|0 1|0 0]</span>
+<span class="c1">#         [---+---+---+---]</span>
+<span class="c1">#         [0 0|0 0|1 0|0 0]</span>
+<span class="c1">#         [0 0|0 0|0 1|0 0]</span>
+<span class="c1">#         [---+---+---+---]</span>
+<span class="c1">#         [1 0|0 0|1 0|1 0]</span>
+<span class="c1">#         [0 1|0 0|0 1|0 1]</span>
+<span class="c1">#</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     if not permuted:</span>
+<span class="c1">#         assert mode == 0</span>
+<span class="c1">#</span>
+<span class="c1">#     ws = wordsize</span>
+<span class="c1">#</span>
+<span class="c1">#     ib = sage.all.identity_matrix(sage.all.GF(2), ws)</span>
+<span class="c1">#     zb = sage.all.zero_matrix(sage.all.GF(2), ws, ws)</span>
+<span class="c1">#</span>
+<span class="c1">#     modadd_anf = get_modadd_anf(ws, permuted=permuted)</span>
+<span class="c1">#</span>
+<span class="c1">#     ccz_anf = get_ccz_modadd_anf(ws, name, permuted=permuted)</span>
+<span class="c1">#</span>
+<span class="c1">#     if not permuted or mode == 0:</span>
+<span class="c1">#         l = []</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         assert permuted is True</span>
+<span class="c1">#         matrix_l = get_admissible_mapping(wordsize, name, permuted=False)</span>
+<span class="c1">#         if mode in [1, 2]:</span>
+<span class="c1">#             l = []</span>
+<span class="c1">#             for row in range(3):</span>
+<span class="c1">#                 block_row = []</span>
+<span class="c1">#                 for col in range(3):</span>
+<span class="c1">#                     block_row.append(matrix_l.submatrix(row*ws, col*ws, ws, ws))</span>
+<span class="c1">#                 if mode == 2:</span>
+<span class="c1">#                     block_row.append(zb)</span>
+<span class="c1">#                 l.append(block_row)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             assert False</span>
+<span class="c1">#</span>
+<span class="c1">#     nb = 3 if not permuted else 4  # num_blocks per row</span>
+<span class="c1">#     if mode == 0:</span>
+<span class="c1">#         new_nb = nb * nb</span>
+<span class="c1">#     elif mode == 1:</span>
+<span class="c1">#         new_nb = 3 + 4</span>
+<span class="c1">#     elif mode == 2:</span>
+<span class="c1">#         new_nb = 4</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         assert False</span>
+<span class="c1">#</span>
+<span class="c1">#     blocks_to_sample = [ib, zb]</span>
+<span class="c1">#</span>
+<span class="c1">#     import itertools</span>
+<span class="c1">#     from boolcrypt.equivalence import check_ccz_equivalence_anf</span>
+<span class="c1">#</span>
+<span class="c1">#     for combination in itertools.product(blocks_to_sample, repeat=new_nb):</span>
+<span class="c1">#         if mode == 0:</span>
+<span class="c1">#             blocks = [[] for _ in range(nb)]</span>
+<span class="c1">#             for i in range(len(combination)):</span>
+<span class="c1">#                 blocks[i // nb].append(combination[i])</span>
+<span class="c1">#             admissible_mapping = sage.all.block_matrix(sage.all.GF(2), nb, nb, blocks)</span>
+<span class="c1">#         elif mode == 1:</span>
+<span class="c1">#             blocks = []</span>
+<span class="c1">#             for row in range(3):</span>
+<span class="c1">#                 blocks.append(l[row] + [combination[row]])</span>
+<span class="c1">#             blocks.append(combination[3:])</span>
+<span class="c1">#             admissible_mapping = sage.all.block_matrix(sage.all.GF(2), nb, nb, blocks)</span>
+<span class="c1">#         elif mode == 2:</span>
+<span class="c1">#             blocks = l + [combination]</span>
+<span class="c1">#             admissible_mapping = sage.all.block_matrix(sage.all.GF(2), nb, nb, blocks)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             raise ValueError(&quot;invalid mode&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#         if not admissible_mapping.is_invertible():</span>
+<span class="c1">#             continue</span>
+<span class="c1">#</span>
+<span class="c1">#         result = check_ccz_equivalence_anf(ccz_anf, modadd_anf, admissible_mapping)</span>
+<span class="c1">#         if result:</span>
+<span class="c1">#             print(&quot;found&quot;)</span>
+<span class="c1">#             if simplify:</span>
+<span class="c1">#                 admissible_mapping = []</span>
+<span class="c1">#                 for row in blocks:</span>
+<span class="c1">#                     new_row = []</span>
+<span class="c1">#                     for cell in row:</span>
+<span class="c1">#                         if cell == ib:</span>
+<span class="c1">#                             new_row.append(1)</span>
+<span class="c1">#                         elif cell == zb:</span>
+<span class="c1">#                             new_row.append(0)</span>
+<span class="c1">#                         else:</span>
+<span class="c1">#                             raise ValueError(&quot;invalid cell &quot; + str(cell))</span>
+<span class="c1">#                     admissible_mapping.append(new_row)</span>
+<span class="c1">#                 admissible_mapping = sage.all.matrix(sage.all.GF(2), nb, nb, admissible_mapping)</span>
+<span class="c1">#             yield admissible_mapping</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

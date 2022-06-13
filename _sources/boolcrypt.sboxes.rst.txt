@@ -1,0 +1,6 @@
+boolcrypt.sboxes module
+=======================
+
+.. automodule:: boolcrypt.sboxes
+   :members:
+   :show-inheritance:

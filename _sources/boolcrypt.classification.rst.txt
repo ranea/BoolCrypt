@@ -1,0 +1,6 @@
+boolcrypt.classification module
+===============================
+
+.. automodule:: boolcrypt.classification
+   :members:
+   :show-inheritance:

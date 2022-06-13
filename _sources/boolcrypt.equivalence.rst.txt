@@ -1,0 +1,6 @@
+boolcrypt.equivalence module
+============================
+
+.. automodule:: boolcrypt.equivalence
+   :members:
+   :show-inheritance:

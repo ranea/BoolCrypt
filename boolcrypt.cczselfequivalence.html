@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.cczselfequivalence module &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="boolcrypt.sboxes module" href="boolcrypt.sboxes.html" />
+    <link rel="prev" title="boolcrypt.functionalequations module" href="boolcrypt.functionalequations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="boolcrypt.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.utilities.html">boolcrypt.utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.equivalence.html">boolcrypt.equivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.functionalequations.html">boolcrypt.functionalequations module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">boolcrypt.cczselfequivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.sboxes.html">boolcrypt.sboxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.modularaddition.html">boolcrypt.modularaddition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.classification.html">boolcrypt.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpoly.html">boolcrypt.findpoly module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolymodp.html">boolcrypt.findpolymodp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolyoptimal.html">boolcrypt.findpolyoptimal module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="boolcrypt.html">API reference</a> &raquo;</li>
+      <li>boolcrypt.cczselfequivalence module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boolcrypt.cczselfequivalence.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-boolcrypt.cczselfequivalence">
+<span id="boolcrypt-cczselfequivalence-module"></span><h1>boolcrypt.cczselfequivalence module<a class="headerlink" href="#module-boolcrypt.cczselfequivalence" title="Permalink to this headline"></a></h1>
+<p>Find self-equivalences of a function by finding the self-equivalences
+of its graph (i.e., also called graph automorphisms)
+parametrized by a CCZ-equivalent function with lower degree.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.cczselfequivalence.find_self_equivalence">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.cczselfequivalence.</span></span><span class="sig-name descname"><span class="pre">find_self_equivalence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ccz_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admissible_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccz_anf_implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_se_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv_left_se_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se_ct_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_diagonal_equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_invertibility_equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_determinant_equation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_se</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccz_se_anf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_se_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'c'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_ccz_anf_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_anf_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_input_anf_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_ccz_se</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/cczselfequivalence.html#find_self_equivalence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.cczselfequivalence.find_self_equivalence" title="Permalink to this definition"></a></dt>
+<dd><p>Find a SE of F by finding a SE of the graph of G.</p>
+<p>Let F be the function (optionally) given by <code class="docutils literal notranslate"><span class="pre">anf</span></code> and
+G its CCZ-equivalent function through the <code class="docutils literal notranslate"><span class="pre">admissible_mapping</span></code> L,
+that is, Graph(F)=L(Graph(G)).
+F (if given) and G must be in ANF form, but L can be given in ANF,
+as a matrix, or as a (matrix, vector) pair.
+If F is not given, its number of input variables must be
+given in <code class="docutils literal notranslate"><span class="pre">num_input_anf_vars</span></code>.</p>
+<p>Graph(F) is defined as usual, {(x, y): for all x, y=F(x)}.
+If ccz_anf_implicit=False, Graph(G) is defined similarly as Graph(F):
+Otherwise, Graph(G)={(x, y): G(x, y)=0} if ccz_anf_implicit=True.</p>
+<p>This methods finds a self-equivalence (SE) (A, B) with given degrees of F
+(a pair of permutations (A,B) such that B F A = F) by finding
+a SE (an automorphism) of the graph of F parametrized by G.
+A is also called a right SE and B a left SE.
+If no solution is found, None is returned.</p>
+<p>If the SE degrees are both 1 and se_ct_terms=True
+(resp. False), this method finds an affine (resp. linear) SE.</p>
+<p>This methods returns SE (A, B) by finding a Graph(G)-SE C=(c_0, c_1)
+s.t. L C L^{-1} is diagonal and can be written as L C L^{-1} = (A, B^(-1)).
+This is done by solving the functional eq.
+G(c_0(u, G(u))) = c_1(u, G(u))) if ccz_anf_implicit=False,
+or D G C = C (D invertible, D(0)=0) if ccz_anf_implicit=True.
+When ccz_anf_implicit=True, this method is not complete, meaning that
+not all the Graph(G)-SE can be found from the equation G C = C.</p>
+<p>The ANF of C can be optionally given in ccz_se_anf to speed up this method.
+Otherwise, it will be created using get_symbolic_anf.</p>
+<p>If return_ccz_se=False, the SE of F are returned. However,
+the left SE B are not given in the output, but their inverses B^(-1).
+If return_ccz_se=True, instead of returning the SE (A, B),
+the Graph(G)-self-equivalences C are returned instead.</p>
+<p>If check_se=True, checks that the found SE (A, B) are indeed SE of F.</p>
+<p>If add_invertibility_equations=True, the equations that
+impose (A, B) to be invertible are added to the system of equations.
+In this case and if right_se_degree=1, the constraint <code class="docutils literal notranslate"><span class="pre">det(A)=1</span></code>
+is added, otherwise (if inv_left_se_degree=1), the constraint
+<code class="docutils literal notranslate"><span class="pre">det(B^(-1))=1</span></code>.
+If add_invertibility_equations=True and ignore_determinant_equation=False,
+then the high-degree equation involving the determinant is not added
+(and only some necessary but not sufficient constraints from
+<code class="docutils literal notranslate"><span class="pre">_get_lowdeg_inv_equations</span></code> are added).</p>
+<p>input_ccz_anf_vars and input_anf_vars are two lists with the inputs vars
+(containing Boolean variables or strings) of the given G and F
+(not needed for non-symbolic anfs).</p>
+<p>A Boolean polynomial ring bpr can be given to determine the
+term order. Otherwise, lexicographic order will be used
+(x0 &gt; x1 &gt; …, F0 &gt; F1 &gt; … &gt; G0 &gt; G1 &gt; … ).</p>
+<p>If ignore_diagonal_equations is True, the constraints that ensured
+that L C L^{-1} is diagonal and with proper degrees are ignored.
+In this case, add_invertibility_equations must be False.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+In particular, if return_mode and num_sat_solutions are not given,
+only one solution is found and the ANF of A and B^(-1) are given.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">get_lut_inversion</span><span class="p">,</span> <span class="n">anf2lut</span><span class="p">,</span> <span class="n">invert_lut</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">check_self_le_lut</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">am</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b_inv</span> <span class="o">=</span> <span class="n">find_self_equivalence</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">am</span><span class="p">,</span> <span class="n">anf</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">se_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">only_linear_fixed_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">finding SE (A, B) of F through the graph of G with deg(A), deg(B^(-1)) degrees (1, 1)</span>
+<span class="go">- F:</span>
+<span class="go">[x0*x1*x2 x0*x1*x3 x0*x2*x3 x1*x2*x3|   x0*x1    x0*x2    x0*x3    x1*x2    x1*x3    x2*x3|      x0       x1       x2       x3]</span>
+<span class="go">[-----------------------------------+-----------------------------------------------------+-----------------------------------]</span>
+<span class="go">[       1        0        0        1|       0        1        0        1        0        0|       1        1        1        1]</span>
+<span class="go">[       0        1        0        0|       1        1        0        1        1        0|       0        0        0        1]</span>
+<span class="go">[       0        0        1        0|       1        1        1        0        0        0|       0        0        1        1]</span>
+<span class="go">[       0        0        0        1|       0        0        1        0        1        1|       0        1        1        1]</span>
+<span class="go">- G (CCZ-equivalent of F):</span>
+<span class="go">[x0*x1*x2 x0*x1*x3 x0*x2*x3 x1*x2*x3|   x0*x1    x0*x2    x0*x3    x1*x2    x1*x3    x2*x3|      x0       x1       x2       x3]</span>
+<span class="go">[-----------------------------------+-----------------------------------------------------+-----------------------------------]</span>
+<span class="go">[       1        0        0        0|       1        1        1        0        0        0|       1        1        0        0]</span>
+<span class="go">[       0        1        0        0|       0        0        1        0        1        1|       1        0        0        1]</span>
+<span class="go">[       0        0        1        0|       0        1        0        1        1        1|       1        0        1        0]</span>
+<span class="go">[       1        0        0        1|       0        0        0        1        1        0|       1        1        0        1]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">computing</span> <span class="n">C</span>
+<span class="go">- C (self-equivalence of Graph(G)):</span>
+<span class="go">[   x0    x1    x2    x3    x4    x5    x6    x7]</span>
+<span class="go">[-----------------------------------------------]</span>
+<span class="go">[ca0_0 ca0_1 ca0_2 ca0_3 ca0_4 ca0_5 ca0_6 ca0_7]</span>
+<span class="go">[ca1_0 ca1_1 ca1_2 ca1_3 ca1_4 ca1_5 ca1_6 ca1_7]</span>
+<span class="go">[ca2_0 ca2_1 ca2_2 ca2_3 ca2_4 ca2_5 ca2_6 ca2_7]</span>
+<span class="go">[ca3_0 ca3_1 ca3_2 ca3_3 ca3_4 ca3_5 ca3_6 ca3_7]</span>
+<span class="go">[cb0_0 cb0_1 cb0_2 cb0_3 cb0_4 cb0_5 cb0_6 cb0_7]</span>
+<span class="go">[cb1_0 cb1_1 cb1_2 cb1_3 cb1_4 cb1_5 cb1_6 cb1_7]</span>
+<span class="go">[cb2_0 cb2_1 cb2_2 cb2_3 cb2_4 cb2_5 cb2_6 cb2_7]</span>
+<span class="go">[cb3_0 cb3_1 cb3_2 cb3_3 cb3_4 cb3_5 cb3_6 cb3_7]</span>
+<span class="go">number of C input variables: 8</span>
+<span class="go">number of symbolic coefficients: 64</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">getting</span> <span class="n">equations</span> <span class="kn">from</span> <span class="nn">L</span> <span class="n">C</span> <span class="n">L</span><span class="o">^</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">diagonal</span>
+<span class="go">- L C L^(-1) (L admissible mapping L(Graph(G)=Graph(F)):</span>
+<span class="go">[...]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">finding</span> <span class="n">fixed</span> <span class="n">variables</span> <span class="ow">and</span> <span class="n">reducing</span> <span class="n">initial</span> <span class="ow">and</span> <span class="n">diagonal</span> <span class="n">equations</span>
+<span class="go">reducing 32 equations with mode gauss and degrees (d,#) Counter({1: 32})</span>
+<span class="go">gauss-reduction obtained 32 equations with degrees (d,#) Counter({1: 32})</span>
+<span class="go">found 32 fixed variables, resulting in 0 equations</span>
+<span class="go">&gt; repeating find_fixed_vars with initial reduction_mode gauss</span>
+<span class="go">&gt; last find_fixed_vars call found 0 new fixed variables and removed 0 equations</span>
+<span class="go">- L C L^(-1) (reduced by initial and diagonal equations):</span>
+<span class="go">[...]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">adding</span> <span class="n">invertibility</span> <span class="n">equations</span> <span class="n">over</span> <span class="n">L</span> <span class="n">C</span> <span class="n">L</span><span class="o">^</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">added 1 invertibility equations</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">solving</span> <span class="n">the</span> <span class="n">Graph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">-</span><span class="n">equivalence</span> <span class="n">functional</span> <span class="n">equation</span>
+<span class="gp">...</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">parsing</span> <span class="ow">and</span> <span class="n">checking</span> <span class="n">the</span> <span class="n">Graph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">-</span><span class="n">equivalence</span> <span class="n">solutions</span>
+<span class="go">Solution 1 out of 1:</span>
+<span class="go">- L C L^(-1):</span>
+<span class="go">[...]</span>
+<span class="go">- SE (A, B) of F:</span>
+<span class="go"> - A:</span>
+<span class="go">[...]</span>
+<span class="go"> - B^(-1):</span>
+<span class="go">[...]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">returning</span> <span class="n">outputs</span> <span class="k">with</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;list_anfs&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">anf2lut</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">a</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">invert_lut</span><span class="p">(</span><span class="n">anf2lut</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">b_inv</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">right_le</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">left_le</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sbox</span> <span class="kn">import</span> <span class="n">SBox</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>  <span class="c1"># 12 LSE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">boolean_vars</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iv</span><span class="p">,</span> <span class="n">ov</span> <span class="o">=</span> <span class="n">boolean_vars</span><span class="p">[:</span><span class="mi">3</span><span class="p">],</span> <span class="n">boolean_vars</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iv</span><span class="p">,</span> <span class="n">ov</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">iv</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">ov</span><span class="p">))</span>  <span class="c1"># polynomials() takes x0 as MSB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">SBox</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">polynomials</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="n">ov</span><span class="p">,</span> <span class="n">groebner</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">3</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_vars</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="s1">&#39;cb2_2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb2_1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb2_0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb1_2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb1_1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb1_0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">(</span><span class="s1">&#39;cb0_1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb0_0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca2_5&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca2_4&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca2_3&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca1_5&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca1_4&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">(</span><span class="s1">&#39;ca0_5&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca0_4&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca0_3&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca2_0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca2_1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca2_2&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb2_3&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">(</span><span class="s1">&#39;cb0_2&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;ca1_3&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb2_4&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cb2_5&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cd2_0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cd2_1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;cd2_2&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b_inv</span><span class="p">],</span> <span class="n">eqs</span><span class="p">,</span> <span class="n">num_sols</span> <span class="o">=</span> <span class="n">find_self_equivalence</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">am</span><span class="p">,</span> <span class="n">num_input_anf_vars</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ccz_anf_implicit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">se_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reduction_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_linear_fixed_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_mode</span><span class="o">=</span><span class="s2">&quot;symbolic_anf&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">num_sat_solutions</span><span class="o">=</span><span class="mi">12</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">return_total_num_solutions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">initial_fixed_vars</span><span class="o">=</span><span class="n">fixed_vars</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">ignoring add_invertibility_equations when ccz_anf_implicit is True</span>
+<span class="go">finding SE (A, B) of F through the graph of G with deg(A), deg(B^(-1)) degrees (1, 1)</span>
+<span class="go">- F:</span>
+<span class="go">[]</span>
+<span class="go">- G (CCZ-implicit-equivalent of F):</span>
+<span class="go">[x3*x5 x4*x5|   x0    x1    x2    x3    x4    x5]</span>
+<span class="go">[-----------+-----------------------------------]</span>
+<span class="go">[    0     1|    1     0     0     1     0     0]</span>
+<span class="go">[    1     1|    0     1     0     0     1     0]</span>
+<span class="go">[    0     0|    0     0     1     0     0     1]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">computing</span> <span class="n">C</span>
+<span class="go">- C (self-equivalence of Graph(G)):</span>
+<span class="go">[   x0    x1    x2    x3    x4    x5]</span>
+<span class="go">[-----------------------------------]</span>
+<span class="go">[ca0_0 ca0_1 ca0_2     0     0     0]</span>
+<span class="go">[ca1_0 ca1_1 ca1_2     0     0     0]</span>
+<span class="go">[    0     0     1     0     0     0]</span>
+<span class="go">[    0     0     0 cb0_3 cb0_4 cb0_5]</span>
+<span class="go">[    0     0     0 cb1_3 cb1_4 cb1_5]</span>
+<span class="go">[    0     0     0     0     0     1]</span>
+<span class="go">input variables (6): [&#39;x0&#39;, &#39;x1&#39;, &#39;x2&#39;, &#39;x3&#39;, &#39;x4&#39;, &#39;x5&#39;]</span>
+<span class="go">symbolic coefficients (45): [&#39;ca0_0&#39;, ..., &#39;cd2_2&#39;]</span>
+<span class="go">Boolean PolynomialRing in x0, x1, x2, x3, x4, x5, ca0_0, ..., cd2_2</span>
+<span class="go">initial fixed vars (27):</span>
+<span class="go">    cb2_2 &lt;- 0</span>
+<span class="go">    ...</span>
+<span class="go">    cd2_2 &lt;- 1</span>
+<span class="go">- D (from G = D G C):</span>
+<span class="go">[   x0    x1    x2]</span>
+<span class="go">[-----------------]</span>
+<span class="go">[cd0_0 cd0_1 cd0_2]</span>
+<span class="go">[cd1_0 cd1_1 cd1_2]</span>
+<span class="go">[    0     0     1]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">getting</span> <span class="n">equations</span> <span class="kn">from</span> <span class="nn">L</span> <span class="n">C</span> <span class="n">L</span><span class="o">^</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">diagonal</span>
+<span class="go">- L C L^(-1) (L admissible mapping L(Graph(G)=Graph(F)):</span>
+<span class="go">[   x0    x1    x2    x3    x4    x5]</span>
+<span class="go">[-----------------------------------]</span>
+<span class="go">[ca0_0 ca0_1 ca0_2     0     0     0]</span>
+<span class="go">[ca1_0 ca1_1 ca1_2     0     0     0]</span>
+<span class="go">[    0     0     1     0     0     0]</span>
+<span class="go">[    0     0     0 cb0_3 cb0_4 cb0_5]</span>
+<span class="go">[    0     0     0 cb1_3 cb1_4 cb1_5]</span>
+<span class="go">[    0     0     0     0     0     1]</span>
+<span class="go">equations from L C L^(-1) = diagonal:</span>
+<span class="go">no equations added from L C L^(-1) = diagonal</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">finding</span> <span class="n">fixed</span> <span class="n">variables</span> <span class="ow">and</span> <span class="n">reducing</span> <span class="n">initial</span> <span class="ow">and</span> <span class="n">diagonal</span> <span class="n">equations</span>
+<span class="go">- L C L^(-1) (reduced by initial and diagonal equations):</span>
+<span class="go">[   x0    x1    x2    x3    x4    x5]</span>
+<span class="go">[-----------------------------------]</span>
+<span class="go">[ca0_0 ca0_1 ca0_2     0     0     0]</span>
+<span class="go">[ca1_0 ca1_1 ca1_2     0     0     0]</span>
+<span class="go">[    0     0     1     0     0     0]</span>
+<span class="go">[    0     0     0 cb0_3 cb0_4 cb0_5]</span>
+<span class="go">[    0     0     0 cb1_3 cb1_4 cb1_5]</span>
+<span class="go">[    0     0     0     0     0     1]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">solving</span> <span class="n">the</span> <span class="n">Graph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">-</span><span class="n">equivalence</span> <span class="n">functional</span> <span class="n">equation</span>
+<span class="go">removing from initial_fixed_vars cd2_0 &lt;- 0</span>
+<span class="go">removing from initial_fixed_vars cd2_1 &lt;- 0</span>
+<span class="go">removing from initial_fixed_vars cd2_2 &lt;- 1</span>
+<span class="gp">...</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">parsing</span> <span class="ow">and</span> <span class="n">checking</span> <span class="n">the</span> <span class="n">Graph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">-</span><span class="bp">self</span><span class="o">-</span><span class="n">equivalence</span> <span class="n">solutions</span>
+<span class="go">finding a solution of the remaining 3 equations for checking</span>
+<span class="go">    cb0_5*cd1_1 + cb1_5*cd1_0 + cb1_5*cd1_1 + cd0_2</span>
+<span class="go">    cd1_0*cd1_1 + cd1_0 + cd1_1 + 1</span>
+<span class="go">    cb0_5*cd1_0 + cb0_5*cd1_1 + cb1_5*cd1_0 + cd1_2</span>
+<span class="go"> - solution: {cd1_2: 0, cd1_1: 0, cd1_0: 1, cd0_2: 0, cb1_5: 0, cb0_5: 0}</span>
+<span class="go">Solution 1 out of 1:</span>
+<span class="go">- L C L^(-1):</span>
+<span class="go">[           x0            x1            x2            x3            x4            x5]</span>
+<span class="go">[-----------------------------------------------------------------------------------]</span>
+<span class="go">[        cd1_1         cd1_0 cb0_5 + cb1_5             0             0             0]</span>
+<span class="go">[        cd1_0 cd1_0 + cd1_1         cb0_5             0             0             0]</span>
+<span class="go">[            0             0             1             0             0             0]</span>
+<span class="go">[            0             0             0         cd1_1         cd1_0         cb0_5]</span>
+<span class="go">[            0             0             0         cd1_0 cd1_0 + cd1_1         cb1_5]</span>
+<span class="go">[            0             0             0             0             0             1]</span>
+<span class="go">- L C L^(-1) (with {cd1_2: 0, cd1_1: 0, cd1_0: 1, cd0_2: 0, cb1_5: 0, cb0_5: 0}):</span>
+<span class="go">[x0 x1 x2 x3 x4 x5]</span>
+<span class="go">[-----------------]</span>
+<span class="go">[ 0  1  0  0  0  0]</span>
+<span class="go">[ 1  1  0  0  0  0]</span>
+<span class="go">[ 0  0  1  0  0  0]</span>
+<span class="go">[ 0  0  0  0  1  0]</span>
+<span class="go">[ 0  0  0  1  1  0]</span>
+<span class="go">[ 0  0  0  0  0  1]</span>
+<span class="go">- SE (A, B) of F:</span>
+<span class="go"> - A:</span>
+<span class="go">[           x0            x1            x2]</span>
+<span class="go">[-----------------------------------------]</span>
+<span class="go">[        cd1_1         cd1_0 cb0_5 + cb1_5]</span>
+<span class="go">[        cd1_0 cd1_0 + cd1_1         cb0_5]</span>
+<span class="go">[            0             0             1]</span>
+<span class="go"> - B^(-1):</span>
+<span class="go">[           x0            x1            x2]</span>
+<span class="go">[-----------------------------------------]</span>
+<span class="go">[        cd1_1         cd1_0         cb0_5]</span>
+<span class="go">[        cd1_0 cd1_0 + cd1_1         cb1_5]</span>
+<span class="go">[            0             0             1]</span>
+<span class="go">- SE (A, B) of F (with {cd1_2: 0, cd1_1: 0, cd1_0: 1, cd0_2: 0, cb1_5: 0, cb0_5: 0}):</span>
+<span class="go"> - A:</span>
+<span class="go">[x0 x1 x2]</span>
+<span class="go">[--------]</span>
+<span class="go">[ 0  1  0]</span>
+<span class="go">[ 1  1  0]</span>
+<span class="go">[ 0  0  1]</span>
+<span class="go"> - B^(-1):</span>
+<span class="go">[x0 x1 x2]</span>
+<span class="go">[--------]</span>
+<span class="go">[ 0  1  0]</span>
+<span class="go">[ 1  1  0]</span>
+<span class="go">[ 0  0  1]</span>
+
+<span class="gp">... </span><span class="o">|</span> <span class="n">returning</span> <span class="n">outputs</span> <span class="k">with</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;symbolic_anf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
+<span class="go">[           x0            x1            x2]</span>
+<span class="go">[-----------------------------------------]</span>
+<span class="go">[        cd1_1         cd1_0 cb0_5 + cb1_5]</span>
+<span class="go">[        cd1_0 cd1_0 + cd1_1         cb0_5]</span>
+<span class="go">[            0             0             1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">b_inv</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
+<span class="go">[           x0            x1            x2]</span>
+<span class="go">[-----------------------------------------]</span>
+<span class="go">[        cd1_1         cd1_0         cb0_5]</span>
+<span class="go">[        cd1_0 cd1_0 + cd1_1         cb1_5]</span>
+<span class="go">[            0             0             1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="n">eqs</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+<span class="go">cb0_5*cd1_1 + cb1_5*cd1_0 + cb1_5*cd1_1 + cd0_2</span>
+<span class="go">cd1_0*cd1_1 + cd1_0 + cd1_1 + 1</span>
+<span class="go">cb0_5*cd1_0 + cb0_5*cd1_1 + cb1_5*cd1_0 + cd1_2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">num_sols</span>
+<span class="go">12</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boolcrypt.functionalequations.html" class="btn btn-neutral float-left" title="boolcrypt.functionalequations module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boolcrypt.sboxes.html" class="btn btn-neutral float-right" title="boolcrypt.sboxes module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

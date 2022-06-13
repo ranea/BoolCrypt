@@ -1,0 +1,6 @@
+boolcrypt.functionalequations module
+====================================
+
+.. automodule:: boolcrypt.functionalequations
+   :members:
+   :show-inheritance:

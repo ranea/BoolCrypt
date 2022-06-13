@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.utilities module &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="boolcrypt.equivalence module" href="boolcrypt.equivalence.html" />
+    <link rel="prev" title="API reference" href="boolcrypt.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="boolcrypt.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">boolcrypt.utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.equivalence.html">boolcrypt.equivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.functionalequations.html">boolcrypt.functionalequations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.cczselfequivalence.html">boolcrypt.cczselfequivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.sboxes.html">boolcrypt.sboxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.modularaddition.html">boolcrypt.modularaddition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.classification.html">boolcrypt.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpoly.html">boolcrypt.findpoly module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolymodp.html">boolcrypt.findpolymodp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolyoptimal.html">boolcrypt.findpolyoptimal module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="boolcrypt.html">API reference</a> &raquo;</li>
+      <li>boolcrypt.utilities module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boolcrypt.utilities.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-boolcrypt.utilities">
+<span id="boolcrypt-utilities-module"></span><h1>boolcrypt.utilities module<a class="headerlink" href="#module-boolcrypt.utilities" title="Permalink to this headline"></a></h1>
+<p>Basic utilities of boolcrypt.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_smart_print">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_smart_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_smart_print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_smart_print" title="Permalink to this definition"></a></dt>
+<dd><p>Return a print-like function.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_rijndael_field">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_rijndael_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_rijndael_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_rijndael_field" title="Permalink to this definition"></a></dt>
+<dd><p>Return the finite field used in AES</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_rijndael_field</span><span class="p">()</span><span class="o">.</span><span class="n">modulus</span><span class="p">()</span>
+<span class="go">x^8 + x^4 + x^3 + x + 1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.matrix2poly">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">matrix2poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poly_ring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#matrix2poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.matrix2poly" title="Permalink to this definition"></a></dt>
+<dd><p>Return the linearized polynomial given by the binary matrix.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2poly</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># See In How Many Ways Can You Write Rijndael?</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">entries</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bin_matrix</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">entries</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ct</span> <span class="o">=</span> <span class="n">get_rijndael_field</span><span class="p">()</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="n">vector2int</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="n">matrix2poly</span><span class="p">(</span><span class="n">bin_matrix</span><span class="p">,</span> <span class="n">get_rijndael_field</span><span class="p">())</span> <span class="o">+</span> <span class="n">ct</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span>
+<span class="go">143*x^128 + 181*x^64 + x^32 + 244*x^16 + 37*x^8 + 249*x^4 + 9*x^2 + 5*x + 99</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="nb">hex</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">integer_representation</span><span class="p">())</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">poly</span><span class="o">.</span><span class="n">coefficients</span><span class="p">()]</span>  <span class="c1"># [ct term, ..., leading coeff]</span>
+<span class="go">[&#39;0x63&#39;, &#39;0x5&#39;, &#39;0x9&#39;, &#39;0xf9&#39;, &#39;0x25&#39;, &#39;0xf4&#39;, &#39;0x1&#39;, &#39;0xb5&#39;, &#39;0x8f&#39;]</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Sources:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://ask.sagemath.org/question/40008/how-can-we-make-the-aes-s-box-using-lagrange-interpolation/">https://ask.sagemath.org/question/40008/how-can-we-make-the-aes-s-box-using-lagrange-interpolation/</a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.matrix2anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">matrix2anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool_poly_ring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#matrix2anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.matrix2anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return the ANF (the canonical components) of a given matrix.</p>
+<p>If bool_poly_ring is given, the list input_vars can be given as
+a list of Boolean variables, strings or input variable indices.
+Otherwise, input_vars is given as a a list of Boolean variables.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">bin_vector</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">anf</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0</span>
+<span class="go">x1 + 1</span>
+<span class="go">x2</span>
+<span class="go">x3 + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bool_poly_ring</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;y0&#39;</span><span class="p">,</span><span class="s1">&#39;y1&#39;</span><span class="p">,</span><span class="s1">&#39;y2&#39;</span><span class="p">,</span><span class="s1">&#39;y3&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span> <span class="o">=</span> <span class="n">bool_poly_ring</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">symbolic_matrix</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="p">[</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">symbolic_matrix</span>
+<span class="go">[a b]</span>
+<span class="go">[c d]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">symbolic_matrix</span><span class="p">,</span> <span class="n">bool_poly_ring</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">y3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">anf</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">a*y0 + b*y1</span>
+<span class="go">c*y0 + d*y1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.matrix2lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">matrix2lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#matrix2lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.matrix2lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT of a given matrix.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2lut</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">bin_vector</span><span class="o">=</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="go">[1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.poly2matrix">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">poly2matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lin_poly</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#poly2matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.poly2matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return the binary matrix given by the linearized polynomial.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly2matrix</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">[1 0 0 0]</span>
+<span class="go">[0 1 0 0]</span>
+<span class="go">[0 0 1 0]</span>
+<span class="go">[0 0 0 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># See In How Many Ways Can You Write Rijndael</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly2matrix</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[1 0 0 0 1 0 1 0]</span>
+<span class="go">[0 0 0 0 1 0 1 1]</span>
+<span class="go">[0 1 0 0 0 1 0 0]</span>
+<span class="go">[0 0 0 0 1 1 1 1]</span>
+<span class="go">[0 0 1 0 1 0 0 1]</span>
+<span class="go">[0 0 0 0 0 1 1 0]</span>
+<span class="go">[0 0 0 1 0 1 0 0]</span>
+<span class="go">[0 0 0 0 0 0 1 1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.lut2matrix">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">lut2matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_ct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#lut2matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.lut2matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return the binary matrix given by the LUT</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut2matrix</span><span class="p">(</span><span class="n">poly2lut</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="go">[1 0 0 0]</span>
+<span class="go">[0 1 0 0]</span>
+<span class="go">[0 0 1 0]</span>
+<span class="go">[0 0 0 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut2matrix</span><span class="p">(</span><span class="n">poly2lut</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">return_ct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[[0 1 1 1]</span>
+<span class="go">[0 1 0 0]</span>
+<span class="go">[0 0 1 0]</span>
+<span class="go">[0 0 0 1], (1, 0, 0, 0)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut2matrix</span><span class="p">(</span><span class="n">poly2lut</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># See In How Many Ways Can You Write Rijndael</span>
+<span class="go">[1 0 0 0 1 0 1 0]</span>
+<span class="go">[0 0 0 0 1 0 1 1]</span>
+<span class="go">[0 1 0 0 0 1 0 0]</span>
+<span class="go">[0 0 0 0 1 1 1 1]</span>
+<span class="go">[0 0 1 0 1 0 0 1]</span>
+<span class="go">[0 0 0 0 0 1 1 0]</span>
+<span class="go">[0 0 0 1 0 1 0 0]</span>
+<span class="go">[0 0 0 0 0 0 1 1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.hex_string2lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">hex_string2lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_char_per_elem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#hex_string2lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.hex_string2lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT given as a compact hex string.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;6512304789ABCDEF&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="n">hex_string2lut</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span>
+<span class="go">[6, 5, 1, 2, 3, 0, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="nb">hex</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lut</span><span class="p">]</span>
+<span class="go">[&#39;0x6&#39;, &#39;0x5&#39;, &#39;0x1&#39;, &#39;0x2&#39;, &#39;0x3&#39;, &#39;0x0&#39;, &#39;0x4&#39;, &#39;0x7&#39;, &#39;0x8&#39;, &#39;0x9&#39;, &#39;0xa&#39;, &#39;0xb&#39;, &#39;0xc&#39;, &#39;0xd&#39;, &#39;0xe&#39;, &#39;0xf&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">lut</span> <span class="o">==</span> <span class="n">hex_string2lut</span><span class="p">(</span><span class="s2">&quot;0x6512304789ABCDEF&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">lut</span> <span class="o">==</span> <span class="n">hex_string2lut</span><span class="p">(</span><span class="s2">&quot;0x060501020300040708090a0b0c0d0e0f&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.lut2hex_string">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">lut2hex_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_char_per_elem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix0x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#lut2hex_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.lut2hex_string" title="Permalink to this definition"></a></dt>
+<dd><p>Return the hex string representation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut2hex_string</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">&#39;6512304789abcdef&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">lut2hex_string</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;0x060501020300040708090a0b0c0d0e0f&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.lut2poly">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">lut2poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#lut2poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.lut2poly" title="Permalink to this definition"></a></dt>
+<dd><p>Return the polynomial representation of a given LUT.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut2poly</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">x^14</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">field_var</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut2poly</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">field_var</span><span class="o">.</span><span class="n">base_ring</span><span class="p">()),</span> <span class="n">field_var</span><span class="p">)</span>
+<span class="go">y^254</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.lut2anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">lut2anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bool_poly_ring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#lut2anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.lut2anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return the ANF (the canonical components) of a function given as a LUT.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0*x1*x2 + x0*x2 + x0 + x1*x2*x3 + x1*x2 + x1 + x2 + x3</span>
+<span class="go">x0*x1*x3 + x0*x1 + x0*x2 + x1*x2 + x1*x3 + x3</span>
+<span class="go">x0*x1 + x0*x2*x3 + x0*x2 + x0*x3 + x2 + x3</span>
+<span class="go">x0*x3 + x1*x2*x3 + x1*x3 + x1 + x2*x3 + x2 + x3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">3</span><span class="p">),</span> <span class="n">bool_poly_ring</span><span class="o">=</span><span class="n">bpr</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="go">0</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># more inputs that outputs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="p">[[</span><span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0*x1 + x0 + x1&quot;</span><span class="p">)(</span><span class="o">*</span><span class="n">v</span><span class="p">),</span> <span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0&quot;</span><span class="p">)(</span><span class="o">*</span><span class="n">v</span><span class="p">)]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">VectorSpace</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">([</span><span class="n">vector2int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">lut</span><span class="p">]):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0*x1 + x0 + x1</span>
+<span class="go">x0</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">([</span><span class="n">vector2int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">lut</span><span class="p">],</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0*x1 + x0 + x1</span>
+<span class="go">x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># more outputs than inputs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="p">[[</span><span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0&quot;</span><span class="p">)(</span><span class="o">*</span><span class="n">v</span><span class="p">),</span> <span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x1&quot;</span><span class="p">)(</span><span class="o">*</span><span class="n">v</span><span class="p">),</span> <span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x2&quot;</span><span class="p">)(</span><span class="o">*</span><span class="n">v</span><span class="p">),</span> <span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0*x1 + x2&quot;</span><span class="p">)(</span><span class="o">*</span><span class="n">v</span><span class="p">),</span> <span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">VectorSpace</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># for p in lut2anf([vector2int(v) for v in lut]): print(p)  # AssertionError</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">([</span><span class="n">vector2int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">lut</span><span class="p">],</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0</span>
+<span class="go">x1</span>
+<span class="go">x2</span>
+<span class="go">x0*x1 + x2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.poly2lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">poly2lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polynomial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#poly2lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.poly2lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT representation of a permutation polynomial.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly2lut</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">interpolation_polynomial</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly2lut</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">AES</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.anf2lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">anf2lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#anf2lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.anf2lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT representation of a permutation given by its ANF.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf2lut</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf2lut</span><span class="p">(</span><span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span> <span class="o">==</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.anf2matrix">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">anf2matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#anf2matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.anf2matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return the binary index_input_vars of the vectorial Boolean function given in ANF.</p>
+<p>If the anf is symbolic, index_input_vars must be given.
+The list input_vars can be given as a list of Boolean variables,
+strings or input variable indices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf2matrix</span><span class="p">([</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+<span class="go">[1 1]</span>
+<span class="go">[1 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y, a, b, c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf2matrix</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">[    0 a + b]</span>
+<span class="go">[    c     1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_ct_coeff">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_ct_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_ct_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_ct_coeff" title="Permalink to this definition"></a></dt>
+<dd><p>Return the binary constant of the vectorial Boolean function given in ANF.</p>
+<p>If the anf is symbolic, index_input_vars must be given.
+The list input_vars can be given as a list of Boolean variables,
+strings or input variable indices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">hex</span><span class="p">(</span><span class="n">vector2int</span><span class="p">(</span><span class="n">get_ct_coeff</span><span class="p">(</span><span class="n">lut2anf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">AES</span><span class="p">)))))</span>
+<span class="go">&#39;0x63&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y, a, b, c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="p">),</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_ct_coeff</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+<span class="go">(a*b*c, a + b + c + 1)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.int2vector">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">int2vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#int2vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.int2vector" title="Permalink to this definition"></a></dt>
+<dd><p>Return the integer associated to the given binary vector.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">([</span><span class="n">int2vector</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">3</span><span class="p">)])</span>
+<span class="go">[(0, 0, 0),</span>
+<span class="go"> (1, 0, 0),</span>
+<span class="go"> (0, 1, 0),</span>
+<span class="go"> (1, 1, 0),</span>
+<span class="go"> (0, 0, 1),</span>
+<span class="go"> (1, 0, 1),</span>
+<span class="go"> (0, 1, 1),</span>
+<span class="go"> (1, 1, 1)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.vector2int">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">vector2int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#vector2int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.vector2int" title="Permalink to this definition"></a></dt>
+<dd><p>Return the binary vector associated to the given integer.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vectors</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">VectorSpace</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vectors</span>
+<span class="go">[(0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0), (0, 0, 1), (1, 0, 1), (0, 1, 1), (1, 1, 1)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">vector2int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vectors</span><span class="p">]</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="o">==</span> <span class="n">vector2int</span><span class="p">(</span><span class="n">int2vector</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">)])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.test_conversion">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">test_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#test_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.test_conversion" title="Permalink to this definition"></a></dt>
+<dd><p>Test the conversion functions</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">test_conversion</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_lut_inversion">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_lut_inversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_lut_inversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_lut_inversion" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT representing the inversion of GF(2**n).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span>
+<span class="go">[0, 1, 9, 14, 13, 11, 7, 6, 15, 2, 12, 5, 10, 4, 3, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut2poly</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+<span class="go">x^14</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.invert_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">invert_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#invert_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.invert_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the inverse of a LUT</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">invert_lut</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">[0, 1, 2, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">invert_lut</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">==</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">invert_lut</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span> <span class="o">==</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_bitsize">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_bitsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_bitsize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_bitsize" title="Permalink to this definition"></a></dt>
+<dd><p>Return the bitsize of the given permutation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_bitsize</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.is_invertible">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">is_invertible</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#is_invertible"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.is_invertible" title="Permalink to this definition"></a></dt>
+<dd><p>Return whether the function is a permutation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_invertible</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_invertible</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_invertible</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_invertible</span><span class="p">([</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">9</span><span class="p">)])</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_invertible</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.str2bp">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">str2bp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">my_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpr_gens_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#str2bp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.str2bp" title="Permalink to this definition"></a></dt>
+<dd><p>Fast conversion of a string to a Boolean polynomial given the gens of a BooleanPolynomialRing.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">str2bp</span><span class="p">(</span><span class="s2">&quot;x + y&quot;</span><span class="p">,</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens_dict</span><span class="p">())</span>
+<span class="go">x + y</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_num_inputs_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_num_inputs_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_num_inputs_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_num_inputs_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return the number of inputs of the given vectorial anf</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.is_balanced">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">is_balanced</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#is_balanced"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.is_balanced" title="Permalink to this definition"></a></dt>
+<dd><p>Return whether the anf is balanced.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_balanced</span><span class="p">(</span><span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_balanced</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0*x1 + x0*x2 + x1*x2&quot;</span><span class="p">)])</span>  <span class="c1"># only 3-var 2-deg-homo balanced</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_balanced</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0*x1 + x0*x2 + x0*x3 + x1*x2 + x1*x3&quot;</span><span class="p">)])</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_balanced</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0*x1&quot;</span><span class="p">)])</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_balanced</span><span class="p">([</span><span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;x0*x1 + x0*x2&quot;</span><span class="p">)])</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_anf_coeffmatrix_str">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_anf_coeffmatrix_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_repr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_anf_coeffmatrix_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_anf_coeffmatrix_str" title="Permalink to this definition"></a></dt>
+<dd><p>Return the coefficient matrix of a (symbolic) anf as a string.</p>
+<p>If the anf is symbolic, input_vars must be given.
+The list input_vars can be given as a list of Boolean variables,
+strings or input variable indices.</p>
+<p>If the anf is symbolic and the number of symbolic coefficients
+is greater than 32, then instead of the coefficient matrix,
+a short string representation of the ANF is returned
+(unless <code class="docutils literal notranslate"><span class="pre">full_repr</span></code> is True).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y, z&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f0</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span>         <span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span>     <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span>   <span class="o">+</span> <span class="n">z</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">*</span><span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">]</span>
+<span class="go">[x*y*z + x*y + x*z + x + y*z + y + z + 1, x*y + x + y*z + z + 1, 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">([</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">])</span>
+<span class="go">[x*y*z|  x*y   x*z   y*z|    x     y     z|    1]</span>
+<span class="go">[-----+-----------------+-----------------+-----]</span>
+<span class="go">[    1|    1     1     1|    1     1     1|    1]</span>
+<span class="go">[    0|    1     0     1|    1     0     1|    1]</span>
+<span class="go">[    0|    0     0     0|    0     0     0|    0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">names</span> <span class="o">=</span> <span class="s2">&quot;x, y, z, ax, ay, az, a&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">az</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f0</span> <span class="o">=</span> <span class="n">ax</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">ay</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">az</span><span class="o">*</span><span class="n">z</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span>    <span class="n">x</span> <span class="o">+</span>      <span class="o">+</span> <span class="n">z</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">*</span><span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">([</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">],</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+<span class="go">[ x  y  z]</span>
+<span class="go">[--------]</span>
+<span class="go">[ax ay az]</span>
+<span class="go">[ 1  0  1]</span>
+<span class="go">[ 0  0  0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">vars</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">)])</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="p">[</span><span class="nb">vars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="nb">vars</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="o">+</span><span class="mi">32</span><span class="p">]),</span> <span class="nb">vars</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="nb">vars</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="nb">vars</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">]))</span>  
+<span class="go">[</span>
+<span class="go">    BooleanPolynomial(x0, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31)</span>
+<span class="go">    x1*a30 + a31</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.pretty_poly">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">pretty_poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polynomial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_coefficients</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#pretty_poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.pretty_poly" title="Permalink to this definition"></a></dt>
+<dd><p>Return a string representation of a finite field polynomial
+where the coefficients are represented as integers.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">F</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">F</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">polynomial</span>
+<span class="go">z^2*x^2 + z*x + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pretty_poly</span><span class="p">(</span><span class="n">polynomial</span><span class="p">)</span>
+<span class="go">&#39;4*x^2 + 2*x + 1&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.normalize_poly">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">normalize_poly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polynomial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#normalize_poly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.normalize_poly" title="Permalink to this definition"></a></dt>
+<dd><p>Return the normalized representation of a polynomial.</p>
+<p>Given f(x) = sum_{i=0}_{n} a_i x^i, return g(x) = c f(x + b) + d,
+such that g(0) = 0, g is monic, and g doesn’t have x^{n-1} term
+(if n != 0 mod p for n = deg(f) and GF(p**r)).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_poly</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">x^2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_poly</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">x^3 + (z^3 + z^2 + 1)*x</span>
+</pre></div>
+</div>
+<p>See also Section 1.5 of arXiv:1211.6044 [math.NT]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.pretty_container_with_matrices">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">pretty_container_with_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#pretty_container_with_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.pretty_container_with_matrices" title="Permalink to this definition"></a></dt>
+<dd><p>Print a sequence of matrices each one in a different line, similar to IPython.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_canonical_matrix">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_canonical_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_canonical_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_canonical_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return the canonical matrix with given rank over GF(2).</p>
+<p>The square canonical matrix of rank r is the following matrix</p>
+<blockquote>
+<div><p>( I_r   0   )
+(  0  O_n-r )</p>
+</div></blockquote>
+<p>Note that any matrix of dimension (n,m) and rank r is
+matrix equivalent to the canonical matrix of same dimension
+and rank k.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_canonical_matrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[1|0]</span>
+<span class="go">[-+-]</span>
+<span class="go">[0|0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_canonical_matrix</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">[1 0|0 0 0]</span>
+<span class="go">[0 1|0 0 0]</span>
+<span class="go">[---+-----]</span>
+<span class="go">[0 0|0 0 0]</span>
+<span class="go">[0 0|0 0 0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.find_monomial_matrices">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">find_monomial_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#find_monomial_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.find_monomial_matrices" title="Permalink to this definition"></a></dt>
+<dd><p>Find the binary matrices corresponding to the polynomials a*x^(2^i)
+verifying some condition.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">is_zero</span><span class="p">()</span> <span class="ow">and</span> <span class="n">m</span><span class="o">.</span><span class="n">submatrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">is_invertible</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrices</span> <span class="o">=</span> <span class="n">find_monomial_matrices</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pretty_container_with_matrices</span><span class="p">(</span><span class="n">matrices</span><span class="p">))</span>  <span class="c1"># not necessary in IPython</span>
+<span class="go">[</span>
+<span class="go">[1 0 0 0]</span>
+<span class="go">[0 1 0 0]</span>
+<span class="go">[0 0 1 0]</span>
+<span class="go">[0 0 0 1],</span>
+<span class="go">[1 0 1 0]</span>
+<span class="go">[0 0 1 0]</span>
+<span class="go">[0 1 0 1]</span>
+<span class="go">[0 0 0 1],</span>
+<span class="go">[1 1 1 1]</span>
+<span class="go">[0 1 0 1]</span>
+<span class="go">[0 0 1 1]</span>
+<span class="go">[0 0 0 1],</span>
+<span class="go">[1 1 0 0]</span>
+<span class="go">[0 0 1 1]</span>
+<span class="go">[0 1 0 0]</span>
+<span class="go">[0 0 0 1]</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.lin_poly2pseudocirc_matrix">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">lin_poly2pseudocirc_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polynomial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#lin_poly2pseudocirc_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.lin_poly2pseudocirc_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return the pseudo-circulant matrix associated to a linearized polynomial.</p>
+<p>A linearized polynomial is invertible iff its associated matrix
+is non-singular.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z0</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">R</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lin_poly2pseudocirc_matrix</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">z0</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">z0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">[       1        0       z4 z4^2 + 1]</span>
+<span class="go">[      z4        1        0     z4^2]</span>
+<span class="go">[  z4 + 1     z4^2        1        0]</span>
+<span class="go">[       0 z4^2 + 1   z4 + 1        1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">poly</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">random_element</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">poly</span> <span class="o">-=</span> <span class="n">poly</span><span class="o">.</span><span class="n">constant_coefficient</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="k">assert</span> <span class="n">lin_poly2pseudocirc_matrix</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span><span class="o">.</span><span class="n">is_invertible</span><span class="p">()</span> <span class="o">==</span> <span class="n">poly2matrix</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span><span class="o">.</span><span class="n">is_invertible</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.compose_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">compose_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#compose_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.compose_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT representing F(G(x)).</p>
+<p>F and G can be given as LUTs, matrices or affine functions,
+but one of them should be given as a LUT.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">compose_lut</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rm</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">random_matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;unimodular&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compose_lut</span><span class="p">(</span><span class="n">matrix2lut</span><span class="p">(</span><span class="n">rm</span><span class="p">),</span> <span class="n">rm</span><span class="o">.</span><span class="n">inverse</span><span class="p">())</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compose_lut</span><span class="p">([</span><span class="n">rm</span><span class="o">.</span><span class="n">inverse</span><span class="p">(),</span> <span class="n">rm</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span> <span class="o">*</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">vector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])],</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">matrix2lut</span><span class="p">(</span><span class="n">rm</span><span class="p">)])</span>
+<span class="go">[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">field</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_self</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_self</span> <span class="o">=</span> <span class="n">right_self</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_self</span><span class="p">(</span><span class="n">lut2poly</span><span class="p">(</span><span class="n">lut</span><span class="p">)(</span><span class="n">right_self</span><span class="p">))</span>  <span class="c1"># checking is a self_equivalence</span>
+<span class="go">x^14</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_self</span><span class="p">,</span> <span class="n">left_self</span> <span class="o">=</span> <span class="n">poly2matrix</span><span class="p">(</span><span class="n">right_self</span><span class="p">),</span> <span class="n">poly2matrix</span><span class="p">(</span><span class="n">left_self</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut2poly</span><span class="p">(</span><span class="n">compose_lut</span><span class="p">(</span><span class="n">left_self</span><span class="p">,</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right_self</span><span class="p">)))</span>
+<span class="go">x^14</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.compose_affine">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">compose_affine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_ct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_ct</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#compose_affine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.compose_affine" title="Permalink to this definition"></a></dt>
+<dd><p>Return the composition of two affine functions as a (matrix, vector) pair.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">left_rot</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="o">.</span><span class="n">circulant</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">compose_affine</span><span class="p">(</span><span class="n">left_rot</span><span class="o">.</span><span class="n">inverse</span><span class="p">(),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">left_rot</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">[[1 0 0 0]</span>
+<span class="go">[0 1 0 0]</span>
+<span class="go">[0 0 1 0]</span>
+<span class="go">[0 0 0 1], (1, 0, 0, 1)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.compose_lut_matrix">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">compose_lut_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_ct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#compose_lut_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.compose_lut_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT representing F A, F given as a lut and
+A given as a pair of a binary matrix and a binary constant</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.compose_matrix_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">compose_matrix_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bin_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_ct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#compose_matrix_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.compose_matrix_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the LUT representing A F, F given as a lut and
+A given as a pair of a binary matrix and a binary constant</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.substitute_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">substitute_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_bool_poly_ring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#substitute_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.substitute_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Substitute variables from the given anf according to the given dictionary.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identity</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">substitute_anf</span><span class="p">(</span><span class="n">identity</span><span class="p">,</span> <span class="p">{</span><span class="n">x0</span><span class="p">:</span><span class="n">x0</span><span class="p">,</span> <span class="n">x3</span><span class="p">:</span><span class="n">x3</span><span class="p">},</span> <span class="n">B</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0</span>
+<span class="go">x1</span>
+<span class="go">x2</span>
+<span class="go">x3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inv_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">inv_anf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">substitute_anf</span><span class="p">(</span><span class="n">inv_anf</span><span class="p">,</span> <span class="p">{</span><span class="n">B</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">B</span><span class="p">(</span><span class="mi">0</span><span class="p">)},</span> <span class="n">B</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x1*x2*x3 + x1*x2 + x1 + x2 + x3</span>
+<span class="go">x1*x2 + x1*x3 + x3</span>
+<span class="go">x2 + x3</span>
+<span class="go">x1*x2*x3 + x1*x3 + x1 + x2*x3 + x2 + x3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.compose_anf_fast">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">compose_anf_fast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_anf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#compose_anf_fast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.compose_anf_fast" title="Permalink to this definition"></a></dt>
+<dd><p>Compose two functions compatible given by their anf.</p>
+<p>The output size of right_anf must be the same as the input size of left_anf.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identity</span> <span class="o">=</span> <span class="n">BooleanPolynomialVector</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">compose_anf_fast</span><span class="p">(</span><span class="n">identity</span><span class="p">,</span> <span class="n">identity</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0</span>
+<span class="go">x1</span>
+<span class="go">x2</span>
+<span class="go">x3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inversion</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">compose_anf_fast</span><span class="p">(</span><span class="n">inversion</span><span class="p">,</span> <span class="n">inversion</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0</span>
+<span class="go">x1</span>
+<span class="go">x2</span>
+<span class="go">x3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.concatenate_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">concatenate_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#concatenate_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.concatenate_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return the concatenation of two permutations F || G given by their lut.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">identity</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">concatenate_lut</span><span class="p">(</span><span class="n">identity</span><span class="p">,</span> <span class="n">identity</span><span class="p">)):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0</span>
+<span class="go">x1</span>
+<span class="go">x2</span>
+<span class="go">x3</span>
+<span class="go">x4</span>
+<span class="go">x5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inversion</span> <span class="o">=</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">inversion</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0 + x1*x2 + x1 + x2</span>
+<span class="go">x0*x1 + x2</span>
+<span class="go">x0*x2 + x1 + x2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">concatenate_lut</span><span class="p">(</span><span class="n">inversion</span><span class="p">,</span> <span class="n">inversion</span><span class="p">)):</span> <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">x0 + x1*x2 + x1 + x2</span>
+<span class="go">x0*x1 + x2</span>
+<span class="go">x0*x2 + x1 + x2</span>
+<span class="go">x3 + x4*x5 + x4 + x5</span>
+<span class="go">x3*x4 + x5</span>
+<span class="go">x3*x5 + x4 + x5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.concatenate_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">concatenate_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars_left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars_right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#concatenate_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.concatenate_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return the concatenation of two functions given by their anf</p>
+<p>By default, the input variables of the concatenation are set to x0, x1, …
+If prefix=None, the input variables are set to the input variables
+of left concatenated to the input variables of right (assuming they
+don’t collide).</p>
+<p>If left/right are symbolic anf, input_vars_left/right must be given.</p>
+<p>The lists input_vars_* can be given as a list of Boolean variables or strings.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">concatenation</span> <span class="o">=</span> <span class="n">concatenate_anf</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">concatenation</span><span class="p">)</span>
+<span class="go">[x0, x1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">concatenation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+<span class="go">Boolean PolynomialRing in x0, x1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span> <span class="o">=</span> <span class="p">[</span><span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)(</span><span class="s2">&quot;x&quot;</span><span class="p">)],</span> <span class="p">[</span><span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)(</span><span class="s2">&quot;y&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">concatenation</span> <span class="o">=</span> <span class="n">concatenate_anf</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">concatenation</span><span class="p">)</span>
+<span class="go">[x, y]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">concatenation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+<span class="go">Boolean PolynomialRing in x, y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;x, a, b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">concatenation</span> <span class="o">=</span> <span class="n">concatenate_anf</span><span class="p">([</span><span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="p">],</span> <span class="n">input_vars_left</span><span class="o">=</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">input_vars_right</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">concatenation</span><span class="p">)</span>
+<span class="go">[x0 + a, x1 + a*b]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">concatenation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+<span class="go">Boolean PolynomialRing in x0, x1, a, b</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.concatenate_anf_fast">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">concatenate_anf_fast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">list_anfs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#concatenate_anf_fast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.concatenate_anf_fast" title="Permalink to this definition"></a></dt>
+<dd><p>Return the concatenation of several non-symbolic functions given by their anf-</p>
+<p>The inputs of each function must be x0, x1, …</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span><span class="p">,</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;x0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">concatenate_anf_fast</span><span class="p">([</span><span class="n">x0</span><span class="p">],</span> <span class="p">[</span><span class="n">x0</span><span class="p">],</span> <span class="p">[</span><span class="n">x0</span><span class="p">],</span> <span class="p">[</span><span class="n">x0</span><span class="p">]))</span>
+<span class="go">[x0, x1, x2, x3]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_upper_bound_monomials">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_upper_bound_monomials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alg_deg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int2log2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_upper_bound_monomials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_upper_bound_monomials" title="Permalink to this definition"></a></dt>
+<dd><p>Return the maximum number of monomials a function can have with given algebraic degree.</p>
+<p>If the domain is GF(2)**n, return the maximum number of GF(2) monomials of a component.
+If the domain is GF(2**n), return the maximum number of GF(2**n) monomials
+of the univariate representation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_upper_bound_monomials</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">8</span><span class="p">)</span>
+<span class="go">255</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_upper_bound_monomials</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">8</span><span class="p">),</span> <span class="n">int2log2</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">random_element</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">terms</span><span class="o">=</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">Infinity</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">get_upper_bound_monomials</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="n">n</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_upper_bound_gf2_splitdegree_monomials">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_upper_bound_gf2_splitdegree_monomials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dxy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int2log2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_upper_bound_gf2_splitdegree_monomials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_upper_bound_gf2_splitdegree_monomials" title="Permalink to this definition"></a></dt>
+<dd><p>Return the maximum number of monomials a bit-function with split degree.</p>
+<p>Return the maximum number of monomoials of a (nx,ny)-bit function
+f(x, y) with x-degree dx and y-degree dy and mixed degree dxy.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_upper_bound_monomials</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">8</span><span class="p">)</span>
+<span class="go">163</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_upper_bound_gf2_splitdegree_monomials</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">121</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_upper_bound_gf2_splitdegree_monomials</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">76</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_megabyte_size_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_megabyte_size_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_megabyte_size_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_megabyte_size_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return the maximum megabytes size of a system of m Boolean functions,
+where each n-bit Boolean function is of degree d.</p>
+<p>This is assuming we represent the coefficient of a monomial
+of each Boolean function with a unique n-bit integer.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_megabyte_size_splitdegree_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_megabyte_size_splitdegree_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dxy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_megabyte_size_splitdegree_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_megabyte_size_splitdegree_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return the maximum megabytes size of a system of m Boolean functions,
+where each (nx, ny)-bit Boolean function is of x-degree dx and y-degree dy
+and mixed degree dxy.</p>
+<p>This is assuming we represent the coefficient of a monomial
+of each Boolean function with a unique n-bit integer.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_algebraic_degree">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_algebraic_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_maximum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_algebraic_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_algebraic_degree" title="Permalink to this definition"></a></dt>
+<dd><p>Return the maximum and minumum algebraic degree of the canonical components of a permutation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="n">only_maximum</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">(7, 7)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span> <span class="n">only_maximum</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">(8, 8)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_all_algebraic_degrees">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_all_algebraic_degrees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_all_algebraic_degrees"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_all_algebraic_degrees" title="Permalink to this definition"></a></dt>
+<dd><p>Return the algebraic degree of all components of a permutation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_all_algebraic_degrees</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+<span class="go">[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">collections</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">collections</span><span class="o">.</span><span class="n">Counter</span><span class="p">(</span><span class="n">get_all_algebraic_degrees</span><span class="p">(</span><span class="n">lut</span><span class="p">)))</span>
+<span class="go">Counter({3: 15})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_differential_uniformity">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_differential_uniformity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_differential_uniformity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_differential_uniformity" title="Permalink to this definition"></a></dt>
+<dd><p>See sage.crypto.sbox.Sbox.maximal_difference_probability_absolute</p>
+<p>In other words, the biggest entry in the DDT table for a non-zero differential.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_differential_uniformity</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_differential_uniformity</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_linearity">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_linearity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_linearity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_linearity" title="Permalink to this definition"></a></dt>
+<dd><p>See sage.crypto.sbox.Sbox.maximal_linear_bias_absolute</p>
+<p>In other words, the biggest entry in the LAT table for a non-zero input mask.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_linearity</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_linearity</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+<span class="go">16</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.has_linear_structures">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">has_linear_structures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#has_linear_structures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.has_linear_structures" title="Permalink to this definition"></a></dt>
+<dd><p>See sage.crypto.sbox.Sbox.has_linear_structures</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">AES</span><span class="p">,</span> <span class="n">PRESENT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">has_linear_structures</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">AES</span><span class="p">))</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">has_linear_structures</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">PRESENT</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_all_components">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_all_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_all_components"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_all_components" title="Permalink to this definition"></a></dt>
+<dd><p>Return all components (in ANF) of a permutation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">get_all_components</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="go">{1: x0*x1*x2 + x0*x2 + x0 + x1*x2*x3 + x1*x2 + x1 + x2 + x3,</span>
+<span class="go"> 2: x0*x1*x3 + x0*x1 + x0*x2 + x1*x2 + x1*x3 + x3,</span>
+<span class="go"> 3: x0*x1*x2 + x0*x1*x3 + x0*x1 + x0 + x1*x2*x3 + x1*x3 + x1 + x2,</span>
+<span class="go"> 4: x0*x1 + x0*x2*x3 + x0*x2 + x0*x3 + x2 + x3,</span>
+<span class="go"> 5: x0*x1*x2 + x0*x1 + x0*x2*x3 + x0*x3 + x0 + x1*x2*x3 + x1*x2 + x1,</span>
+<span class="go"> 6: x0*x1*x3 + x0*x2*x3 + x0*x3 + x1*x2 + x1*x3 + x2,</span>
+<span class="go"> 7: x0*x1*x2 + x0*x1*x3 + x0*x2*x3 + x0*x2 + x0*x3 + x0 + x1*x2*x3 + x1*x3 + x1 + x3,</span>
+<span class="go"> 8: x0*x3 + x1*x2*x3 + x1*x3 + x1 + x2*x3 + x2 + x3,</span>
+<span class="go"> 9: x0*x1*x2 + x0*x2 + x0*x3 + x0 + x1*x2 + x1*x3 + x2*x3,</span>
+<span class="go"> 10: x0*x1*x3 + x0*x1 + x0*x2 + x0*x3 + x1*x2*x3 + x1*x2 + x1 + x2*x3 + x2,</span>
+<span class="go"> 11: x0*x1*x2 + x0*x1*x3 + x0*x1 + x0*x3 + x0 + x2*x3 + x3,</span>
+<span class="go"> 12: x0*x1 + x0*x2*x3 + x0*x2 + x1*x2*x3 + x1*x3 + x1 + x2*x3,</span>
+<span class="go"> 13: x0*x1*x2 + x0*x1 + x0*x2*x3 + x0 + x1*x2 + x1*x3 + x2*x3 + x2 + x3,</span>
+<span class="go"> 14: x0*x1*x3 + x0*x2*x3 + x1*x2*x3 + x1*x2 + x1 + x2*x3 + x3,</span>
+<span class="go"> 15: x0*x1*x2 + x0*x1*x3 + x0*x2*x3 + x0*x2 + x0 + x2*x3 + x2}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_symbolic_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_symbolic_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ct_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeff2ct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeff2expr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_varnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_symbolic_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_symbolic_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return an ANF with symbolic coefficients given as Boolean variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix_inputs</strong> (<em>-</em>) – the prefix string to label the input variables of the ANF.</p></li>
+<li><p><strong>prefix_coeffs</strong> (<em>-</em>) – the prefix string to label the coefficients of the ANF.</p></li>
+<li><p><strong>degree</strong> (<em>-</em>) – the algebraic degree of the ANF.</p></li>
+<li><p><strong>ct_terms</strong> (<em>-</em>) – whether to consider constant terms</p></li>
+<li><p><strong>num_inputs</strong> (<em>-</em>) – the dimension of the ANF</p></li>
+<li><p><strong>num_outputs</strong> – the dimension of the ANF</p></li>
+<li><p><strong>coeff2ct</strong> (<em>-</em>) – a dictionary mapping string/Boolean coefficient labels to constants
+to replace those coefficients to fixed values.</p></li>
+<li><p><strong>coeff2expr</strong> (<em>-</em>) – a dictionary mapping string/Boolean coefficient labels to Boolean
+to replace those coefficients to Boolean expressions (bpr must be given)</p></li>
+<li><p><strong>bpr</strong> (<em>-</em>) – if given, each ANF component is an element of given Boolean poly ring</p></li>
+<li><p><strong>return_varnames</strong> (<em>-</em>) – if True, return the varnames of the parent BooleanPolynomialRing
+of the symbolic anf.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="go">[  x0   x1   x2|   1]</span>
+<span class="go">[--------------+----]</span>
+<span class="go">[a0_0 a0_1 a0_2|  a0]</span>
+<span class="go">[a1_0 a1_1 a1_2|  a1]</span>
+<span class="go">[a2_0 a2_1 a2_2|  a2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix_inputs</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">prefix_coeffs</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">coeff2ct</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;b0_0&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="go">[ y0*y1  y0*y2  y1*y2|    y0     y1     y2]</span>
+<span class="go">[--------------------+--------------------]</span>
+<span class="go">[b0_0_1 b0_0_2 b0_1_2|     1   b0_1   b0_2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;a0_0&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix_inputs</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">prefix_coeffs</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">coeff2expr</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;a0_0&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">},</span> <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">])</span>
+<span class="go">[x0]</span>
+<span class="go">[--]</span>
+<span class="go">[ b]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">return_varnames</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[&#39;x0&#39;, &#39;x1&#39;, &#39;x2&#39;, &#39;a0_0&#39;, &#39;a0_1&#39;, &#39;a0_2&#39;, &#39;a0&#39;, &#39;a1_0&#39;, &#39;a1_1&#39;, &#39;a1_2&#39;, &#39;a1&#39;, &#39;a2_0&#39;, &#39;a2_1&#39;, &#39;a2_2&#39;, &#39;a2&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_symbolic_coeff">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_symbolic_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monomial</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_symbolic_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_symbolic_coeff" title="Permalink to this definition"></a></dt>
+<dd><p>Return the symbolic coefficient of a symbolic Boolean polynomial.</p>
+<p>A symbolic Boolean function is a Boolean function of the form
+f(x1, dots, xn-1, a1, dots,), where xi are the inputs
+and ai are parameters.</p>
+<p>Given a monomial x_i1 * dots * x_ir, it returns the
+symbolic coefficient (in terms of ai) of the monomial
+x_i1 * dots * x_ir.</p>
+<p>It is assumed the given monomial only contains input_vars variables.</p>
+<p>The list input_vars can be given as a list of Boolean variables,
+strings or input variable indices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y, a, b, c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_symbolic_coeff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">),</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="go">a + b + 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_symbolic_coeff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span><span class="o">.</span><span class="n">monomial_coefficient</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_symbolic_coeff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">a*b*c</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_all_symbolic_coeff">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_all_symbolic_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_terms_of_deg_strictly_less</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_all_symbolic_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_all_symbolic_coeff" title="Permalink to this definition"></a></dt>
+<dd><p>Return all the symbolic coefficients of a symbolic Boolean polynomial.</p>
+<p>A symbolic Boolean function is a Boolean function of the form
+f(x1, dots, xn-1, a1, dots,), where xi are the inputs
+and ai are parameters.</p>
+<p>It returns a dictionary with entries (X, A), where X is a monomial with input vars
+and A is a polynomial of symbolic variables corresponding to the monomial X.
+For example, the entry (x_0*x_1, a_0a_1+_a2), means the symbolic polynomial
+contains the monomial (a_0a_1+_a2) * x_0_x1 (after grouping).</p>
+<p>By default, the ct terms are always returned in the dictionary
+mapping the monomial to the coefficients.</p>
+<p>The list input_vars can be given as a list of Boolean variables,
+strings or input variable indices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y, a, b, c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">a</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span>
+<span class="go">x*y*a*b + x*y*c + x*a + x*b + x + a*b*c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_all_symbolic_coeff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">{x*y: a*b + c, x: a + b + 1, 1: a*b*c}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_all_symbolic_coeff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="go">{x*y: a*b + c, x: a + b + 1, 1: a*b*c}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_all_symbolic_coeff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">),</span> <span class="n">ignore_terms_of_deg_strictly_less</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">{x*y: a*b + c, x: a + b + 1}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_all_symbolic_coeff</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="go">{x*y*a*b: 1, x*y*c: 1, x*a: 1, x*b: 1, x: 1, a*b*c: 1}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.get_symbolic_alg_deg">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">get_symbolic_alg_deg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bool_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#get_symbolic_alg_deg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.get_symbolic_alg_deg" title="Permalink to this definition"></a></dt>
+<dd><p>“Return the algebraic degree of a symbolic Boolean function.</p>
+<p>A symbolic Boolean function is a Boolean function of the form
+f(x1, dots, xn-1, a1, dots,), where xi are the inputs
+and ai are parameters (not necessarily ordered).</p>
+<p>The list input_vars can be given as a list of Boolean variables,
+strings or input variable indices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, a, b&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_symbolic_alg_deg</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_symbolic_alg_deg</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">])</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">degree</span><span class="p">()</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.simplify_symbolic_matrix">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">simplify_symbolic_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#simplify_symbolic_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.simplify_symbolic_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Return a symbolic matrix where each symbolic coeff is replaced by a symbolic var.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[[</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span> <span class="o">+</span> <span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simplify_symbolic_matrix</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="go">[x0 x1  0]</span>
+<span class="go">[x0 x2  1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.utilities.simplify_symbolic_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.utilities.</span></span><span class="sig-name descname"><span class="pre">simplify_symbolic_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lex'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/utilities.html#simplify_symbolic_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.utilities.simplify_symbolic_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Return a symbolic anf where each symbolic coeff is replaced by a symbolic var.</p>
+<p>The list input_vars can be given as a list of Boolean variables,
+strings or input variable indices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y, z, a, b, c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f0</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">c</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simplify_symbolic_anf</span><span class="p">([</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+<span class="go">[x*y*z*a0 + x*y*a1 + x*a2 + y*z*a3 + z*a4 + a5, x*y*z*a5 + x*y + x*a4 + y*z + z*a2 + 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">simplify_symbolic_anf</span><span class="p">([</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">],</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;deglex&quot;</span><span class="p">)</span>
+<span class="go">[x*y*z*a0 + x*y*a1 + x*a3 + y*z*a2 + z*a4 + a5, x*y*z*a5 + x*y + x*a4 + y*z + z*a3 + 1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boolcrypt.html" class="btn btn-neutral float-left" title="API reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boolcrypt.equivalence.html" class="btn btn-neutral float-right" title="boolcrypt.equivalence module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

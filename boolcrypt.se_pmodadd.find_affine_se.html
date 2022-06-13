@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.se_pmodadd.find_affine_se module &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="boolcrypt.se_pmodadd.find_affinequadratic_se module" href="boolcrypt.se_pmodadd.find_affinequadratic_se.html" />
+    <link rel="prev" title="boolcrypt.se_pmodadd package" href="boolcrypt.se_pmodadd.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="boolcrypt.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.utilities.html">boolcrypt.utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.equivalence.html">boolcrypt.equivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.functionalequations.html">boolcrypt.functionalequations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.cczselfequivalence.html">boolcrypt.cczselfequivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.sboxes.html">boolcrypt.sboxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.modularaddition.html">boolcrypt.modularaddition module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="boolcrypt.se_pmodadd.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">boolcrypt.se_pmodadd.find_affine_se module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="boolcrypt.se_pmodadd.find_affinequadratic_se.html">boolcrypt.se_pmodadd.find_affinequadratic_se module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.classification.html">boolcrypt.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpoly.html">boolcrypt.findpoly module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolymodp.html">boolcrypt.findpolymodp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolyoptimal.html">boolcrypt.findpolyoptimal module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="boolcrypt.html">API reference</a> &raquo;</li>
+          <li><a href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a> &raquo;</li>
+      <li>boolcrypt.se_pmodadd.find_affine_se module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boolcrypt.se_pmodadd.find_affine_se.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-boolcrypt.se_pmodadd.find_affine_se">
+<span id="boolcrypt-se-pmodadd-find-affine-se-module"></span><h1>boolcrypt.se_pmodadd.find_affine_se module<a class="headerlink" href="#module-boolcrypt.se_pmodadd.find_affine_se" title="Permalink to this headline"></a></h1>
+<p>Find affine self-equivalences (ASE) of the permuted modular addition.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.se_pmodadd.find_affine_se.shape">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.se_pmodadd.find_affine_se.</span></span><span class="sig-name descname"><span class="pre">shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wordsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_symbolic_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/se_pmodadd/find_affine_se.html#shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.se_pmodadd.find_affine_se.shape" title="Permalink to this definition"></a></dt>
+<dd><p>Symbolic shape of the CCZ ASE of the “H” quadratic CCZ of the permuted modular addition.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.se_pmodadd.find_affine_se.graph_ase_coeffs2modadd_ase_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.se_pmodadd.find_affine_se.</span></span><span class="sig-name descname"><span class="pre">graph_ase_coeffs2modadd_ase_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coeff2expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wordsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/se_pmodadd/find_affine_se.html#graph_ase_coeffs2modadd_ase_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.se_pmodadd.find_affine_se.graph_ase_coeffs2modadd_ase_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Given the symbolic coefficients of the CCZ ASE of the “H” quadratic CCZ,
+return the symbolic anf ASE of the permuted modular addition.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.se_pmodadd.find_affine_se.find_ase_pmodadd_slow">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.se_pmodadd.find_affine_se.</span></span><span class="sig-name descname"><span class="pre">find_ase_pmodadd_slow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wordsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/se_pmodadd/find_affine_se.html#find_ase_pmodadd_slow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.se_pmodadd.find_affine_se.find_ase_pmodadd_slow" title="Permalink to this definition"></a></dt>
+<dd><p>Find all affine self-equivalences of the permuted modular addition for a fixed wordsize</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.se_pmodadd.find_affine_se.find_ase_pmodadd_with_shape">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.se_pmodadd.find_affine_se.</span></span><span class="sig-name descname"><span class="pre">find_ase_pmodadd_with_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wordsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_coeffs_eqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/se_pmodadd/find_affine_se.html#find_ase_pmodadd_with_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.se_pmodadd.find_affine_se.find_ase_pmodadd_with_shape" title="Permalink to this definition"></a></dt>
+<dd><p>Find all affine self-equivalences of the permuted modular addition for a fixed wordsize
+using a predefined shape.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.se_pmodadd.find_affine_se.get_zero_constant_terms_equations">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.se_pmodadd.find_affine_se.</span></span><span class="sig-name descname"><span class="pre">get_zero_constant_terms_equations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wordsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/se_pmodadd/find_affine_se.html#get_zero_constant_terms_equations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.se_pmodadd.find_affine_se.get_zero_constant_terms_equations" title="Permalink to this definition"></a></dt>
+<dd><p>Get the equations to reduce the ASE of pmodadd to LSE.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boolcrypt.se_pmodadd.html" class="btn btn-neutral float-left" title="boolcrypt.se_pmodadd package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boolcrypt.se_pmodadd.find_affinequadratic_se.html" class="btn btn-neutral float-right" title="boolcrypt.se_pmodadd.find_affinequadratic_se module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

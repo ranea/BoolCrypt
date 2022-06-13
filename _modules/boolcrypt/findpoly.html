@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.findpoly &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boolcrypt.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>boolcrypt.findpoly</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for boolcrypt.findpoly</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Functions to search for binary permutation polynomials.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_smart_print</span><span class="p">,</span> <span class="n">lut2hex_string</span><span class="p">,</span> <span class="n">poly2lut</span><span class="p">,</span> <span class="n">hex_string2lut</span><span class="p">,</span> <span class="n">invert_lut</span><span class="p">,</span>
+    <span class="n">lut2poly</span><span class="p">,</span> <span class="n">compose_lut</span><span class="p">,</span> <span class="n">get_time</span><span class="p">,</span> <span class="n">get_rijndael_field</span><span class="p">,</span> <span class="n">get_algebraic_degree</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">sage.all</span>
+
+<span class="n">GF</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">GF</span>
+<span class="n">PolynomialRing</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">PolynomialRing</span>
+<span class="n">BooleanPolynomialRing</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">BooleanPolynomialRing</span>
+
+
+<span class="n">zz_var</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">ZZ</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>  <span class="c1"># avoiding generating the PolynomialRing each time</span>
+
+
+<div class="viewcode-block" id="str2poly"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.str2poly">[docs]</a><span class="k">def</span> <span class="nf">str2poly</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">field_var</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse an string containing a finite field polynomial.</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PolynomialRing(get_rijndael_field(), &#39;x&#39;).gen()</span>
+<span class="sd">        &gt;&gt;&gt; fpoly = str2poly(&quot;53*x^208 + x^13&quot;, x)</span>
+<span class="sd">        &gt;&gt;&gt; fpoly</span>
+<span class="sd">        53*x^208 + x^13</span>
+<span class="sd">        &gt;&gt;&gt; fpoly.parent()</span>
+<span class="sd">        Univariate Polynomial Ring in x over Finite Field in a of size 2^8</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">zpoly</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">sage_eval</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="nb">locals</span><span class="o">=</span><span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">field_var</span><span class="p">):</span> <span class="n">zz_var</span><span class="p">})</span>
+
+    <span class="c1"># return zpoly2fpoly(zpoly, field_var)</span>
+
+    <span class="n">field</span> <span class="o">=</span> <span class="n">field_var</span><span class="o">.</span><span class="n">base_ring</span><span class="p">()</span>
+    <span class="n">fpoly</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">exp</span><span class="p">,</span> <span class="n">coeff</span> <span class="ow">in</span> <span class="n">zpoly</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">fpoly</span> <span class="o">+=</span> <span class="n">field</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="n">coeff</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">field_var</span> <span class="o">**</span> <span class="n">exp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fpoly</span></div>
+
+
+<div class="viewcode-block" id="is_permutation_poly"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.is_permutation_poly">[docs]</a><span class="k">def</span> <span class="nf">is_permutation_poly</span><span class="p">(</span><span class="n">polynomial</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check whether the input polynomial is a permutation.</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PolynomialRing(get_rijndael_field(), &#39;x&#39;).gen()</span>
+<span class="sd">        &gt;&gt;&gt; is_permutation_poly(x**3)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; is_permutation_poly(x**127)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; is_permutation_poly(str2poly(&quot;(23)*x^7 + x^28&quot;, x))</span>
+<span class="sd">        True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">collision</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">num_collisions</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">polynomial</span><span class="o">.</span><span class="n">base_ring</span><span class="p">():</span>
+        <span class="n">collision</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">polynomial</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">collision</span><span class="p">)</span> <span class="o">==</span> <span class="n">num_collisions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_collisions</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="poly2lut_fast"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.poly2lut_fast">[docs]</a><span class="k">def</span> <span class="nf">poly2lut_fast</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">output_lut</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the LUT representation of a permutation polynomial.</span>
+
+<span class="sd">        &gt;&gt;&gt; field = GF(2**4, repr=&quot;int&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x = PolynomialRing(field, &#39;x&#39;).gen()</span>
+<span class="sd">        &gt;&gt;&gt; output_lut = [None for i in range(2**4)]</span>
+<span class="sd">        &gt;&gt;&gt; poly2lut_fast(x, field, output_lut)</span>
+<span class="sd">        &gt;&gt;&gt; output_lut</span>
+<span class="sd">        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">output_lut</span><span class="p">)):</span>
+        <span class="n">output_lut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="o">.</span><span class="n">integer_representation</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="find_krssb"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.find_krssb">[docs]</a><span class="k">def</span> <span class="nf">find_krssb</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">terms</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_time</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find all k-rotation-symmetric S-boxes of given algebraic degree.</span>
+
+<span class="sd">    Find permutations S = sum(a_i + x^i), where a_i^(2^k) = a_i.</span>
+
+<span class="sd">    Some &quot;left&quot; affine equivalent krssb do not appear in the list,</span>
+<span class="sd">    that is, if f(x) and g(x) are two k-rssbb of the same alg_deg</span>
+<span class="sd">    and f(x) = A(g(x)), with A affine, then g(x) might not appear.</span>
+
+<span class="sd">    This function do not return anything (to prevent high memory usage).</span>
+
+<span class="sd">    Apart from the polynomials, the signature of the function</span>
+<span class="sd">    and the leading monomials (e.g., # x^192) is printed</span>
+<span class="sd">    to the output.</span>
+
+<span class="sd">        &gt;&gt;&gt; find_krssb(3, 2, 3, 1, verbose=True)</span>
+<span class="sd">        # find_krssb(3, 2, 3, 1)</span>
+<span class="sd">        valid_exponents: [6, 5, 4, 3, 2, 1]</span>
+<span class="sd">        valid_exponents_lsb_set: {1, 3, 5}</span>
+<span class="sd">        subfield: [1]</span>
+<span class="sd">        maximal_subfield: {1}</span>
+<span class="sd">        # x^3</span>
+<span class="sd">        recursion(x^3, 2, 3, True, False)</span>
+<span class="sd">        x^3 + x^2 + x</span>
+<span class="sd">        # x^5</span>
+<span class="sd">        recursion(x^5, 2, 1, True, False)</span>
+<span class="sd">        x^5 + x^4 + x</span>
+<span class="sd">        x^5 + x^3 + x</span>
+<span class="sd">        # x^6</span>
+<span class="sd">        recursion(x^6, 2, 0, False, False)</span>
+<span class="sd">        x^6 + x^5 + x^4</span>
+<span class="sd">        x^6 + x^3 + x^2</span>
+<span class="sd">        &gt;&gt;&gt; find_krssb(4, 2, 5, 2)</span>
+<span class="sd">        # find_krssb(4, 2, 5, 2)</span>
+<span class="sd">        # x^3</span>
+<span class="sd">        # x^5</span>
+<span class="sd">        # x^6</span>
+<span class="sd">        # x^9</span>
+<span class="sd">        # x^10</span>
+<span class="sd">        x^10 + 6*x^9 + 7*x^8 + 6*x^6 + 7*x^5</span>
+<span class="sd">        x^10 + 6*x^9 + 6*x^6 + 7*x^5 + x^4</span>
+<span class="sd">        x^10 + 6*x^9 + 6*x^6 + 7*x^5 + 7*x^2</span>
+<span class="sd">        x^10 + 6*x^9 + 6*x^6 + 7*x^5 + x</span>
+<span class="sd">        x^10 + 7*x^9 + 6*x^8 + 7*x^6 + 6*x^5</span>
+<span class="sd">        x^10 + 7*x^9 + 7*x^6 + 6*x^5 + x^4</span>
+<span class="sd">        x^10 + 7*x^9 + 7*x^6 + 6*x^5 + 6*x^2</span>
+<span class="sd">        x^10 + 7*x^9 + 7*x^6 + 6*x^5 + x</span>
+<span class="sd">        # x^12</span>
+<span class="sd">        x^12 + 6*x^10 + 7*x^8 + 7*x^5 + x^3</span>
+<span class="sd">        x^12 + 6*x^10 + 7*x^5 + 6*x^4 + x^3</span>
+<span class="sd">        x^12 + 6*x^10 + 7*x^5 + x^3 + 7*x^2</span>
+<span class="sd">        x^12 + 6*x^10 + 7*x^5 + x^3 + 6*x</span>
+<span class="sd">        x^12 + 7*x^10 + 6*x^8 + 6*x^5 + x^3</span>
+<span class="sd">        x^12 + 7*x^10 + 6*x^5 + 7*x^4 + x^3</span>
+<span class="sd">        x^12 + 7*x^10 + 6*x^5 + x^3 + 6*x^2</span>
+<span class="sd">        x^12 + 7*x^10 + 6*x^5 + x^3 + 7*x</span>
+<span class="sd">        x^12 + x^9 + 6*x^8 + x^6 + x^3</span>
+<span class="sd">        x^12 + x^9 + 7*x^8 + x^6 + x^3</span>
+<span class="sd">        x^12 + x^9 + x^6 + 6*x^4 + x^3</span>
+<span class="sd">        x^12 + x^9 + x^6 + 7*x^4 + x^3</span>
+<span class="sd">        x^12 + x^9 + x^6 + x^3 + 6*x^2</span>
+<span class="sd">        x^12 + x^9 + x^6 + x^3 + 7*x^2</span>
+<span class="sd">        x^12 + x^9 + x^6 + x^3 + 6*x</span>
+<span class="sd">        x^12 + x^9 + x^6 + x^3 + 7*x</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">get_rijndael_field</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">field_var</span><span class="o">.</span><span class="n">base_ring</span><span class="p">()</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">field_var</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">terms</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">%</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;# find_krssb(</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">terms</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+
+    <span class="c1"># from bigger to lower</span>
+    <span class="n">valid_exponents</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">valid_exponents_lsb_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">valid_exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">bin</span><span class="p">(</span><span class="n">valid_exp</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">d</span><span class="p">:</span>
+            <span class="n">valid_exponents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">valid_exp</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">bin</span><span class="p">(</span><span class="n">valid_exp</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+                <span class="n">valid_exponents_lsb_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">valid_exp</span><span class="p">)</span>
+
+    <span class="n">num_valid_exponents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_exponents</span><span class="p">)</span>
+
+    <span class="n">subfield</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">maximal_subfield</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">beta</span> <span class="ow">in</span> <span class="n">field</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">beta</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">beta</span> <span class="o">==</span> <span class="n">beta</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">k</span><span class="p">):</span>
+            <span class="n">subfield</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">maximal_subfield</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">beta</span> <span class="o">!=</span> <span class="n">beta</span><span class="o">**</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+                <span class="n">maximal_subfield</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;valid_exponents:&quot;</span><span class="p">,</span> <span class="n">valid_exponents</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;valid_exponents_lsb_set:&quot;</span><span class="p">,</span> <span class="n">valid_exponents_lsb_set</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;subfield:&quot;</span><span class="p">,</span> <span class="n">subfield</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;maximal_subfield:&quot;</span><span class="p">,</span> <span class="n">maximal_subfield</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">recursion</span><span class="p">(</span><span class="n">polynomial</span><span class="p">,</span> <span class="n">monomials_remaining</span><span class="p">,</span> <span class="n">last_index_exp</span><span class="p">,</span> <span class="n">lsb_exp_set</span><span class="p">,</span> <span class="n">maximal_subfield_set</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_valid_exponents</span> <span class="o">-</span> <span class="n">last_index_exp</span> <span class="o">&lt;=</span> <span class="n">monomials_remaining</span><span class="p">:</span>
+            <span class="c1"># example entering if: num_valid_exponents=4, last_index_exp=3 and monomials_remaining=1</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">monomials_remaining</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index_exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">last_index_exp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_valid_exponents</span><span class="p">):</span>
+                <span class="n">exp</span> <span class="o">=</span> <span class="n">valid_exponents</span><span class="p">[</span><span class="n">index_exp</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">subfield</span><span class="p">:</span>
+                    <span class="n">recursion</span><span class="p">(</span><span class="n">polynomial</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="n">exp</span><span class="p">),</span>
+                              <span class="n">monomials_remaining</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                              <span class="n">index_exp</span><span class="p">,</span>
+                              <span class="n">lsb_exp_set</span> <span class="o">|</span> <span class="p">(</span><span class="n">exp</span> <span class="ow">in</span> <span class="n">valid_exponents_lsb_set</span><span class="p">),</span>
+                              <span class="n">maximal_subfield_set</span> <span class="o">|</span> <span class="p">(</span><span class="n">alpha</span> <span class="ow">in</span> <span class="n">maximal_subfield</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index_exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">last_index_exp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_valid_exponents</span><span class="p">):</span>
+                <span class="n">exp</span> <span class="o">=</span> <span class="n">valid_exponents</span><span class="p">[</span><span class="n">index_exp</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">lsb_exp_set</span> <span class="ow">and</span> <span class="n">exp</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_exponents_lsb_set</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">subfield</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">maximal_subfield_set</span> <span class="ow">and</span> <span class="n">alpha</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">maximal_subfield</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="k">if</span> <span class="n">is_permutation_poly</span><span class="p">(</span><span class="n">polynomial</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="n">exp</span><span class="p">)):</span>
+                        <span class="c1"># avoid creating a long-lasting object</span>
+                        <span class="n">smart_print</span><span class="p">(</span><span class="n">polynomial</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="n">exp</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">index_leading_exp</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_valid_exponents</span><span class="p">)):</span>  <span class="c1"># from low to big</span>
+        <span class="n">leading_exp</span> <span class="o">=</span> <span class="n">valid_exponents</span><span class="p">[</span><span class="n">index_leading_exp</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">bin</span><span class="p">(</span><span class="n">leading_exp</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">d</span><span class="p">:</span>
+            <span class="c1"># fixing leading coefficient to one</span>
+            <span class="c1"># for alpha in subfield:</span>
+            <span class="k">if</span> <span class="n">print_time</span><span class="p">:</span>
+                <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;# x^</span><span class="si">{}</span><span class="se">\t</span><span class="s2">|</span><span class="se">\t</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">leading_exp</span><span class="p">),</span> <span class="n">get_time</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;# x^</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">leading_exp</span><span class="p">)))</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;recursion(</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, False)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">x</span> <span class="o">**</span> <span class="n">leading_exp</span><span class="p">,</span>
+                    <span class="n">terms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="n">index_leading_exp</span><span class="p">,</span>
+                    <span class="n">leading_exp</span> <span class="ow">in</span> <span class="n">valid_exponents_lsb_set</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">recursion</span><span class="p">(</span><span class="n">x</span> <span class="o">**</span> <span class="n">leading_exp</span><span class="p">,</span>
+                      <span class="n">terms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="n">index_leading_exp</span><span class="p">,</span>
+                      <span class="n">leading_exp</span> <span class="ow">in</span> <span class="n">valid_exponents_lsb_set</span><span class="p">,</span>
+                      <span class="kc">False</span><span class="p">)</span>  <span class="c1"># alpha in maximal_subfield)</span></div>
+
+
+<span class="c1"># def find_krssb8b_givaro(d, terms, k, output_filename):</span>
+<span class="c1">#     &quot;&quot;&quot;Find all 8-bit k-rotation-symmetric S-boxes of given algebraic degree.</span>
+<span class="c1">#</span>
+<span class="c1">#     This function is faster than find_find_rotation_symmetric_sboxes(),</span>
+<span class="c1">#     but only works with n = 8.</span>
+<span class="c1">#</span>
+<span class="c1">#         &gt;&gt;&gt; temp_file = sage.all.tmp_filename(&#39;testing_find_8b_krssb&#39;, &#39;.txt&#39;)</span>
+<span class="c1">#         &gt;&gt;&gt; find_krssb8b_givaro(d=2, terms=5, k=1, output_filename=temp_file)</span>
+<span class="c1">#         &gt;&gt;&gt; with open(temp_file, &quot;r&quot;) as file:</span>
+<span class="c1">#         ...     print(file.read())  # doctest: +ELLIPSIS</span>
+<span class="c1">#         # x^3</span>
+<span class="c1">#         # x^5</span>
+<span class="c1">#         # x^6</span>
+<span class="c1">#         # x^9</span>
+<span class="c1">#         # x^10</span>
+<span class="c1">#         # x^12</span>
+<span class="c1">#         # x^17</span>
+<span class="c1">#         # x^18</span>
+<span class="c1">#         # x^20</span>
+<span class="c1">#         # x^24</span>
+<span class="c1">#         # x^33</span>
+<span class="c1">#         # x^34</span>
+<span class="c1">#         # x^36</span>
+<span class="c1">#         # x^40</span>
+<span class="c1">#         # x^48</span>
+<span class="c1">#         x^3 + x^18 + x^32 + x^33 + x^48</span>
+<span class="c1">#         x^3 + x^16 + x^18 + x^33 + x^48</span>
+<span class="c1">#         x^3 + x^8 + x^18 + x^33 + x^48</span>
+<span class="c1">#         x^3 + x^4 + x^18 + x^33 + x^48</span>
+<span class="c1">#         x^2 + x^3 + x^18 + x^33 + x^48</span>
+<span class="c1">#         x + x^3 + x^18 + x^33 + x^48</span>
+<span class="c1">#         # x^65</span>
+<span class="c1">#         ...</span>
+<span class="c1">#</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     path_binary = &quot;./find_krss8b&quot;</span>
+<span class="c1">#     if not os.path.isfile(path_binary):</span>
+<span class="c1">#         raise ValueError(&quot;cannot find find_krss8b binary in &quot; + path_binary)</span>
+<span class="c1">#     subprocess.check_call([path_binary, str(d), str(terms), str(k), output_filename])</span>
+
+
+<div class="viewcode-block" id="find_divisors_or_selfequivs"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.find_divisors_or_selfequivs">[docs]</a><span class="k">def</span> <span class="nf">find_divisors_or_selfequivs</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">deg_remainder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deg_other_se</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">side_divisor</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">side_se</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+                                <span class="n">xor_cts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">field_var</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_char_per_elem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_marks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find divisors and/or self-equivalences of a permutation.</span>
+
+<span class="sd">    The list of candidates P can be given as a file</span>
+<span class="sd">    containing hex strings or str polynomials.</span>
+<span class="sd">    If given as hex strings, the number of characters used</span>
+<span class="sd">    element must be given (see hex_string2lut).</span>
+<span class="sd">    If given as str polynomials, the variable of the</span>
+<span class="sd">    polynomials must also be given.</span>
+
+<span class="sd">    The permutation S can be given as a LUT, a polynomial</span>
+<span class="sd">    or in the same format as the list of candidates.</span>
+
+<span class="sd">    If side_divisor=&quot;left&quot;, outputs the candidates P such that S = P R.</span>
+<span class="sd">    If side_divisor=&quot;right&quot;, outputs the candidates P such that S = R P.</span>
+<span class="sd">    In both cases, outputs those P when deg(R) &lt;= deg_remainder.</span>
+
+<span class="sd">    If side_se=&quot;left&quot;, outputs the candidates P such that S = P S R.</span>
+<span class="sd">    If side_se=&quot;right&quot;, outputs the candidates P such that S = R S P.</span>
+<span class="sd">    In both cases, outputs those P when deg(R) &lt;= deg_other_se.</span>
+
+<span class="sd">    If loop_over_all_ct=&quot;left&quot;, for each candidate P, check also k + P(x).</span>
+<span class="sd">    If loop_over_all_ct=&quot;right&quot;, for each candidate P, check also P(x+k).</span>
+
+<span class="sd">        &gt;&gt;&gt; temp_file = sage.all.tmp_filename(&#39;testing_find_all_divisor_se&#39;, &#39;.txt&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; find_krssb(n=3, d=2, terms=3, k=1, filename=temp_file)</span>
+<span class="sd">        &gt;&gt;&gt; x = PolynomialRing(GF(2**3, repr=&quot;int&quot;), &quot;x&quot;).gen()</span>
+<span class="sd">        &gt;&gt;&gt; # finding left divisors P such that S = P R, with deg(R)&lt;=2</span>
+<span class="sd">        &gt;&gt;&gt; find_divisors_or_selfequivs(&quot;x^6&quot;, temp_file, deg_remainder=2, side_divisor=&quot;left&quot;, field_var=x, verbose=True)</span>
+<span class="sd">        # found left divisor; deg(R): 2, poly(R): x^6 + x^3 + x^2</span>
+<span class="sd">        x^3 + x^2 + x</span>
+<span class="sd">        # found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^4</span>
+<span class="sd">        x^5 + x^4 + x</span>
+<span class="sd">        # found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^4 + x^3 + x^2</span>
+<span class="sd">        x^5 + x^3 + x</span>
+<span class="sd">        # found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^4 + x^3 + x</span>
+<span class="sd">        x^6 + x^5 + x^4</span>
+<span class="sd">        # found left divisor; deg(R): 2, poly(R): x^6 + x^5 + x^3 + x^2 + x</span>
+<span class="sd">        x^6 + x^3 + x^2</span>
+<span class="sd">        &gt;&gt;&gt; # finding left self-equivalences P such that S = P S R, with deg(R)&lt;=2</span>
+<span class="sd">        &gt;&gt;&gt; find_divisors_or_selfequivs(&quot;x^6&quot;, temp_file, deg_other_se=2, side_se=&quot;left&quot;, field_var=x, verbose=False)</span>
+<span class="sd">        [0, 1, 5, 2, 7, 4, 3, 6]</span>
+<span class="sd">        [0, 1, 3, 6, 5, 2, 7, 4]</span>
+<span class="sd">        [0, 1, 6, 5, 2, 7, 4, 3]</span>
+<span class="sd">        [0, 1, 4, 3, 6, 5, 2, 7]</span>
+<span class="sd">        [0, 1, 2, 7, 4, 3, 6, 5]</span>
+<span class="sd">        &gt;&gt;&gt; x =  PolynomialRing(get_rijndael_field(), &#39;x&#39;).gen()</span>
+<span class="sd">        &gt;&gt;&gt; temp_file = sage.all.tmp_filename(&#39;testing_find_all_divisor_se_part2&#39;, &#39;.txt&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; # find_krssb8b_givaro(d=2, terms=5, k=1, output_filename=temp_file)</span>
+<span class="sd">        &gt;&gt;&gt; # finding left divisors P such that x^13 = P R, with deg(R)&lt;=3</span>
+<span class="sd">        &gt;&gt;&gt; # find_divisors_or_selfequivs(&quot;x^13&quot;, temp_file, deg_remainder=3, side_divisor=&quot;left&quot;, field_var=x, verbose=True)</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^80 + x^65 + x^52 + x^20 + x^5</span>
+<span class="sd">        x^5 + x^20 + x^64 + x^65 + x^80</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^104 + x^80 + x^65 + x^20 + x^5</span>
+<span class="sd">        x^5 + x^20 + x^32 + x^65 + x^80</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^208 + x^80 + x^65 + x^20 + x^5</span>
+<span class="sd">        x^5 + x^16 + x^20 + x^65 + x^80</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^161 + x^80 + x^65 + x^20 + x^5</span>
+<span class="sd">        x^5 + x^8 + x^20 + x^65 + x^80</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^80 + x^67 + x^65 + x^20 + x^5</span>
+<span class="sd">        x^4 + x^5 + x^20 + x^65 + x^80</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^134 + x^80 + x^65 + x^20 + x^5</span>
+<span class="sd">        x^2 + x^5 + x^20 + x^65 + x^80</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^80 + x^65 + x^20 + x^13 + x^5</span>
+<span class="sd">        x + x^5 + x^20 + x^65 + x^80</span>
+<span class="sd">        # found left divisor; deg(R): 3, poly(R): x^160 + x^130 + x^40 + x^13 + x^10</span>
+<span class="sd">        x + x^10 + x^40 + x^130 + x^160</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">num_char_per_elem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">permutation_lut</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="s2">&quot;base_ring&quot;</span><span class="p">):</span>
+        <span class="c1"># is a polynomial whp</span>
+        <span class="n">permutation_lut</span> <span class="o">=</span> <span class="n">poly2lut</span><span class="p">(</span><span class="n">permutation</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">permutation_lut</span> <span class="o">=</span> <span class="n">poly2lut</span><span class="p">(</span><span class="n">str2poly</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="n">field_var</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">permutation_lut</span> <span class="o">=</span> <span class="n">hex_string2lut</span><span class="p">(</span><span class="n">permutation</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">num_char_per_elem</span><span class="p">)</span>
+
+    <span class="n">inv_permutation_lut</span> <span class="o">=</span> <span class="n">invert_lut</span><span class="p">(</span><span class="n">permutation_lut</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">field_var</span><span class="o">.</span><span class="n">base_ring</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">size_field</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">permutation_lut</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">xor_cts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">xor_cts</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="s2">&quot;left&quot;</span><span class="p">]</span>
+        <span class="n">cts</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_field</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">candidate_lut</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_field</span><span class="p">)]</span>
+    <span class="n">xor_candidate_lut</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_field</span><span class="p">)]</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_file</span><span class="p">))</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;find&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">time_marks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">index</span> <span class="o">%</span> <span class="n">time_marks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;# </span><span class="si">{}</span><span class="s2"> | index: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">get_time</span><span class="p">(),</span> <span class="n">index</span><span class="p">))</span>
+
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">poly2lut_fast</span><span class="p">(</span><span class="n">str2poly</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">field_var</span><span class="p">),</span> <span class="n">field</span><span class="p">,</span> <span class="n">candidate_lut</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">candidate_lut</span> <span class="o">=</span> <span class="n">hex_string2lut</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">num_char_per_elem</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">ct</span> <span class="ow">in</span> <span class="n">cts</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ct</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">xor_candidate_lut</span> <span class="o">=</span> <span class="n">candidate_lut</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">xor_cts</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_field</span><span class="p">):</span>
+                            <span class="n">xor_candidate_lut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate_lut</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="n">ct</span><span class="p">)]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_field</span><span class="p">):</span>
+                            <span class="n">xor_candidate_lut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidate_lut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+
+                <span class="n">inv_candidate_lut</span> <span class="o">=</span> <span class="n">invert_lut</span><span class="p">(</span><span class="n">xor_candidate_lut</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">deg_remainder</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">side_divisor</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span> <span class="ow">or</span> <span class="n">side_divisor</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+                        <span class="c1"># S = P R   &lt;==&gt;    P^(-1) S = R</span>
+                        <span class="n">composition</span> <span class="o">=</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">inv_candidate_lut</span><span class="p">,</span> <span class="n">permutation_lut</span><span class="p">)</span>
+                        <span class="n">degree</span> <span class="o">=</span> <span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">composition</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">degree</span> <span class="o">&lt;=</span> <span class="n">deg_remainder</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">candidate_lut</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">to_output</span> <span class="o">=</span> <span class="s2">&quot;# found left divisor; deg(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">xor_cts</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, ct:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, poly(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lut2poly</span><span class="p">(</span><span class="n">composition</span><span class="p">,</span> <span class="n">field_var</span><span class="p">))</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">to_output</span><span class="p">)</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">side_divisor</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span> <span class="ow">or</span> <span class="n">side_divisor</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+                        <span class="c1"># S = R P   &lt;==&gt;    S P^(-1) = R</span>
+                        <span class="n">composition</span> <span class="o">=</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">permutation_lut</span><span class="p">,</span> <span class="n">inv_candidate_lut</span><span class="p">)</span>
+                        <span class="n">degree</span> <span class="o">=</span> <span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">composition</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">degree</span> <span class="o">&lt;=</span> <span class="n">deg_remainder</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">candidate_lut</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">to_output</span> <span class="o">=</span> <span class="s2">&quot;# found right divisor; deg(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">xor_cts</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, ct:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, poly(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lut2poly</span><span class="p">(</span><span class="n">composition</span><span class="p">,</span> <span class="n">field_var</span><span class="p">))</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">to_output</span><span class="p">)</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">deg_other_se</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">side_se</span> <span class="o">==</span> <span class="s2">&quot;left&quot;</span> <span class="ow">or</span> <span class="n">side_se</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+                        <span class="c1"># S = P S R   &lt;==&gt;    S^(-1) P^(-1) S      = R</span>
+                        <span class="n">composition</span> <span class="o">=</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">inv_permutation_lut</span><span class="p">,</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">inv_candidate_lut</span><span class="p">,</span> <span class="n">permutation_lut</span><span class="p">))</span>
+                        <span class="n">degree</span> <span class="o">=</span> <span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">composition</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">degree</span> <span class="o">&lt;=</span> <span class="n">deg_other_se</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">candidate_lut</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">to_output</span> <span class="o">=</span> <span class="s2">&quot;# found left selfequiv; deg(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">xor_cts</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, ct:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, poly(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lut2poly</span><span class="p">(</span><span class="n">composition</span><span class="p">,</span> <span class="n">field_var</span><span class="p">))</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">to_output</span><span class="p">)</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">side_se</span> <span class="o">==</span> <span class="s2">&quot;right&quot;</span> <span class="ow">or</span> <span class="n">side_se</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
+                        <span class="c1"># S = R S P   &lt;==&gt;    S P^(-1) S^(-1) = R</span>
+                        <span class="n">composition</span> <span class="o">=</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">permutation_lut</span><span class="p">,</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">inv_candidate_lut</span><span class="p">,</span> <span class="n">inv_permutation_lut</span><span class="p">))</span>
+                        <span class="n">degree</span> <span class="o">=</span> <span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">composition</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">degree</span> <span class="o">&lt;=</span> <span class="n">deg_other_se</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">candidate_lut</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">to_output</span> <span class="o">=</span> <span class="s2">&quot;# right selfequiv; deg(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">degree</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">xor_cts</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, ct:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ct</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                                    <span class="n">to_output</span> <span class="o">+=</span> <span class="s2">&quot;, poly(R): </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lut2poly</span><span class="p">(</span><span class="n">composition</span><span class="p">,</span> <span class="n">field_var</span><span class="p">))</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">to_output</span><span class="p">)</span>
+                                <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_permutation"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.check_permutation">[docs]</a><span class="k">def</span> <span class="nf">check_permutation</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">field_var</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_char_per_elem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check properties of permutations given in a file.</span>
+
+<span class="sd">    The permutation can be given as hex strings or str polynomials.</span>
+<span class="sd">    If given as hex strings, the number of characters used</span>
+<span class="sd">    element must be given (see hex_string2lut).</span>
+<span class="sd">    If given as str polynomials, the variable of the</span>
+<span class="sd">    polynomials must also be given.</span>
+
+<span class="sd">    List of modes:</span>
+
+<span class="sd">    - &quot;is_odd&quot; outputs the permutations that are odd (like the inversion)</span>
+<span class="sd">    - &quot;inv_deg_max&quot; outputs the permutations whose inverse degree</span>
+<span class="sd">      are greater than the target degree</span>
+<span class="sd">    - &quot;inv_deg_min&quot; outputs the permutations whose inverse degree</span>
+<span class="sd">      are lower than the target degree</span>
+<span class="sd">    - &quot;unique&quot; outputs the list of permutations without duplicates</span>
+<span class="sd">    - &quot;invertible&quot; outputs the permutations that are invertible</span>
+<span class="sd">    - &quot;linear_repr&quot; outputs the linear representatives, without duplicates</span>
+
+<span class="sd">        &gt;&gt;&gt; x = PolynomialRing(get_rijndael_field(), &#39;x&#39;).gen()</span>
+<span class="sd">        &gt;&gt;&gt; temp_file = sage.all.tmp_filename(&#39;testing_check_lut&#39;, &#39;.txt&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; with open(temp_file, &quot;w&quot;) as file:</span>
+<span class="sd">        ...     print(&quot;x&quot;, file=file)</span>
+<span class="sd">        ...     print(&quot;x&quot;, file=file)</span>
+<span class="sd">        ...     print(&quot;x**127&quot;, file=file)</span>
+<span class="sd">        &gt;&gt;&gt; check_permutation(temp_file, &quot;is_odd&quot;, output_file=None, field_var=x)</span>
+<span class="sd">        x**127</span>
+<span class="sd">        &gt;&gt;&gt; check_permutation(temp_file, &quot;inv_deg_min&quot;, degree=3, output_file=None, field_var=x)</span>
+<span class="sd">        # 7</span>
+<span class="sd">        x**127</span>
+<span class="sd">        &gt;&gt;&gt; check_permutation(temp_file, &quot;inv_deg_max&quot;, degree=2, output_file=None, field_var=x)</span>
+<span class="sd">        # 1</span>
+<span class="sd">        x</span>
+<span class="sd">        # 1</span>
+<span class="sd">        x</span>
+<span class="sd">        &gt;&gt;&gt; check_permutation(temp_file, &quot;unique&quot;, output_file=None, field_var=x)</span>
+<span class="sd">        x</span>
+<span class="sd">        x**127</span>
+<span class="sd">        &gt;&gt;&gt; x = PolynomialRing(GF(2**4, repr=&quot;int&quot;), &#39;x&#39;).gen()</span>
+<span class="sd">        &gt;&gt;&gt; cpe = 2</span>
+<span class="sd">        &gt;&gt;&gt; temp_file = sage.all.tmp_filename(&#39;testing_check_lut2&#39;, &#39;.txt&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; with open(temp_file, &quot;w&quot;) as file:</span>
+<span class="sd">        ...     print(lut2hex_string(poly2lut(x**2), cpe), file=file)</span>
+<span class="sd">        ...     print(lut2hex_string(poly2lut(x**3), cpe), file=file)</span>
+<span class="sd">        ...     print(lut2hex_string(poly2lut(x**6), cpe), file=file)</span>
+<span class="sd">        &gt;&gt;&gt; check_permutation(temp_file, &quot;invertible&quot;, output_file=None, num_char_per_elem=cpe)</span>
+<span class="sd">        00010405030207060c0d08090f0e0b0a</span>
+<span class="sd">        &gt;&gt;&gt; check_permutation(temp_file, &quot;linear_repr&quot;, output_file=None, num_char_per_elem=cpe)</span>
+<span class="sd">        (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)</span>
+<span class="sd">        (16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">num_char_per_elem</span> <span class="o">==</span> <span class="mi">2</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">field_var</span><span class="o">.</span><span class="n">base_ring</span><span class="p">()</span>
+        <span class="n">lut</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">field</span><span class="p">))]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">lut</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">previous_lut</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">num_luts</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># avoid for 8-bit quadratic permutations</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;linear_repr&quot;</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">get_linear_repr</span>
+
+    <span class="c1"># if mode == &quot;linear_equiv&quot;:</span>
+    <span class="c1">#     previous_lut = []</span>
+    <span class="c1">#     num_luts = 0</span>
+    <span class="c1">#     import sboxu</span>
+    <span class="c1">#     import multiprocessing</span>
+    <span class="c1">#     import time</span>
+    <span class="c1">#</span>
+    <span class="c1">#     return_dictionary = {&#39;is_le&#39;: False}</span>
+    <span class="c1">#</span>
+    <span class="c1">#     def is_le(left_lut, right_lut, queue):</span>
+    <span class="c1">#         # https://stackoverflow.com/a/37736655/4355013</span>
+    <span class="c1">#         status = sboxu.linear_equivalence_fast(left_lut, right_lut)</span>
+    <span class="c1">#         print(&quot;is_le?:&quot;, len(status) &gt; 0)</span>
+    <span class="c1">#         ret = queue.get()</span>
+    <span class="c1">#         ret[&#39;is_le&#39;] = True</span>
+    <span class="c1">#         queue.put(ret)</span>
+    <span class="c1">#         # return_dictionary_input[&quot;is_le&quot;] = len(status) &gt; 0</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_file</span><span class="p">))</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;find&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">poly2lut_fast</span><span class="p">(</span><span class="n">str2poly</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">field_var</span><span class="p">),</span> <span class="n">field</span><span class="p">,</span> <span class="n">lut</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lut</span> <span class="o">=</span> <span class="n">hex_string2lut</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">num_char_per_elem</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;is_odd&quot;</span><span class="p">:</span>
+                <span class="c1"># noinspection PyArgumentList</span>
+                <span class="n">is_even</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">Permutation</span><span class="p">([</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lut</span><span class="p">])</span><span class="o">.</span><span class="n">is_even</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_even</span><span class="p">:</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;inv_deg_min&quot;</span><span class="p">:</span>
+                <span class="n">inv_lut</span> <span class="o">=</span> <span class="n">invert_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+                <span class="n">deg</span> <span class="o">=</span> <span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">inv_lut</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">deg</span> <span class="o">&gt;=</span> <span class="n">degree</span><span class="p">:</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;# &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">deg</span><span class="p">))</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;inv_deg_max&quot;</span><span class="p">:</span>
+                <span class="n">inv_lut</span> <span class="o">=</span> <span class="n">invert_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+                <span class="n">deg</span> <span class="o">=</span> <span class="n">get_algebraic_degree</span><span class="p">(</span><span class="n">inv_lut</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">deg</span> <span class="o">&lt;=</span> <span class="n">degree</span><span class="p">:</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;# &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">deg</span><span class="p">))</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;unique&quot;</span><span class="p">:</span>
+                <span class="n">previous_lut</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">lut</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">num_luts</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_lut</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="n">num_luts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_lut</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;invertible&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">lut</span><span class="p">)):</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;linear_repr&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> | computing get_linear_repr(candidate[</span><span class="si">{}</span><span class="s2">])&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">get_time</span><span class="p">(),</span> <span class="n">index</span><span class="p">))</span>
+
+                <span class="n">lr</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">get_linear_repr</span><span class="p">(</span><span class="n">lut</span><span class="p">))</span>  <span class="c1"># to get hashed</span>
+
+                <span class="n">previous_lut</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">num_luts</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_lut</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span>  <span class="c1"># prints linear reprs, not luts!</span>
+                <span class="n">num_luts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">previous_lut</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;invalid mode&quot;</span><span class="p">)</span></div>
+
+            <span class="c1"># elif mode == &quot;linear_equiv&quot;:</span>
+            <span class="c1">#     for i, p_lut in enumerate(reversed(previous_lut)):</span>
+            <span class="c1">#         print(&quot;{} | computing le(candidate[{}], lut[-{}])&quot;.format(get_time(), index, i))</span>
+            <span class="c1">#         # is_le = linear_equivalence(p_lut, lut)</span>
+            <span class="c1">#</span>
+            <span class="c1">#         queue = multiprocessing.Queue()</span>
+            <span class="c1">#         queue.put(return_dictionary)</span>
+            <span class="c1">#         p = multiprocessing.Process(target=is_le, args=(p_lut, lut, queue))</span>
+            <span class="c1">#         p.start()</span>
+            <span class="c1">#         p.join(1)  # Wait a maximum of 10 seconds for foo</span>
+            <span class="c1">#         result = queue.get()[&#39;is_le&#39;]</span>
+            <span class="c1">#         print(&quot;queue.get()[&#39;is_le&#39;]:&quot;, result)</span>
+            <span class="c1">#         if result:</span>
+            <span class="c1">#             break</span>
+            <span class="c1">#         return_dictionary[&#39;is_le&#39;] = False</span>
+            <span class="c1">#         if p.is_alive():</span>
+            <span class="c1">#             print(&quot;aborting...&quot;)</span>
+            <span class="c1">#             p.terminate()</span>
+            <span class="c1">#             p.join()</span>
+            <span class="c1">#     else:</span>
+            <span class="c1">#         smart_print(line)</span>
+            <span class="c1">#         previous_lut.append(lut)</span>
+
+
+<div class="viewcode-block" id="polyfile2hex"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.polyfile2hex">[docs]</a><span class="k">def</span> <span class="nf">polyfile2hex</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_var</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the hex representation of permutation polynomials.</span>
+
+<span class="sd">        &gt;&gt;&gt; temp_file = sage.all.tmp_filename(&#39;test_poly2hex&#39;, &#39;.txt&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; with open(temp_file, &quot;w&quot;) as file:</span>
+<span class="sd">        ...     print(&quot;x&quot;, file=file)</span>
+<span class="sd">        ...     print(&quot;x**127&quot;, file=file)</span>
+<span class="sd">        &gt;&gt;&gt; polyfile2hex(4, temp_file, output_file=None)</span>
+<span class="sd">        000102030405060708090a0b0c0d0e0f</span>
+<span class="sd">        00010b0d090e06070c0508030f02040a</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">field_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">field_var</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">field_var</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">get_rijndael_field</span><span class="p">(),</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+
+    <span class="n">field</span> <span class="o">=</span> <span class="n">field_var</span><span class="o">.</span><span class="n">base_ring</span><span class="p">()</span>
+
+    <span class="n">lut</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">)]</span>
+    <span class="n">size_lut</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">input_file</span><span class="p">))</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;find&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="c1"># avoid poly2lut() for efficiency</span>
+            <span class="c1"># lut = poly2lut(str2poly(line, field_var))</span>
+            <span class="n">polynomial</span> <span class="o">=</span> <span class="n">str2poly</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">field_var</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size_lut</span><span class="p">):</span>
+                <span class="n">lut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">polynomial</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">fetch_int</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="o">.</span><span class="n">integer_representation</span><span class="p">()</span>
+
+            <span class="n">smart_print</span><span class="p">(</span><span class="n">lut2hex_string</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">num_char_per_elem</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_sas_decomposition"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.get_sas_decomposition">[docs]</a><span class="k">def</span> <span class="nf">get_sas_decomposition</span><span class="p">(</span><span class="n">exponent</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">degree</span><span class="p">,</span> <span class="n">max_degree</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find an SAS decomposition of a given power function f(x)=x^exponent,</span>
+<span class="sd">    where A is an invertible linear monomial (x^2^i) and</span>
+<span class="sd">    the S&#39;s are invertible non-linear monomials with given algebraic degree.</span>
+
+<span class="sd">    Each decomposition is given by a triplet [a, b, c] where (a, c)</span>
+<span class="sd">    are the exponents of the non-linear monomials and b is the exponent</span>
+<span class="sd">    of the linear monomial.</span>
+
+<span class="sd">        &gt;&gt;&gt; decompositions = get_sas_decomposition(127, 8, 3)</span>
+<span class="sd">        &gt;&gt;&gt; decompositions[:5]</span>
+<span class="sd">        [[13, 1, 49], [13, 2, 152], [13, 4, 76], [13, 8, 38], [13, 16, 19]]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">itertools</span>
+    <span class="n">ring_exps</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">IntegerModRing</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">exponent</span> <span class="o">=</span> <span class="n">ring_exps</span><span class="p">(</span><span class="n">exponent</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">max_degree</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">max_degree</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">n</span>
+
+    <span class="n">linear_exps</span> <span class="o">=</span> <span class="p">[</span><span class="n">ring_exps</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+    <span class="n">nonlin_exps</span> <span class="o">=</span> <span class="p">[</span><span class="n">ring_exps</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">bin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">degree</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">max_degree</span><span class="p">]</span>
+
+    <span class="n">decompositions</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">s_1</span><span class="p">,</span> <span class="n">a_1</span><span class="p">,</span> <span class="n">s_2</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">nonlin_exps</span><span class="p">,</span> <span class="n">linear_exps</span><span class="p">,</span> <span class="n">nonlin_exps</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">s_1</span> <span class="o">*</span> <span class="n">a_1</span> <span class="o">*</span> <span class="n">s_2</span> <span class="o">==</span> <span class="n">exponent</span><span class="p">:</span>
+            <span class="c1"># print(s_1, a_1, s_2)</span>
+            <span class="n">decompositions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">s_1</span><span class="p">,</span> <span class="n">a_1</span><span class="p">,</span> <span class="n">s_2</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">decompositions</span></div>
+
+
+<div class="viewcode-block" id="get_monomial_permutation"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.get_monomial_permutation">[docs]</a><span class="k">def</span> <span class="nf">get_monomial_permutation</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">alg_deg</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignore_le</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get all permutation monomials in GF(2^n) with given algebraic degree.</span>
+
+<span class="sd">        &gt;&gt;&gt; get_monomial_permutation(4, 3, ignore_le=True, verbose=True)</span>
+<span class="sd">        x^7</span>
+<span class="sd">        found x^11 but is LE to x^7</span>
+<span class="sd">        found x^13 but is LE to x^7</span>
+<span class="sd">        found x^14 but is LE to x^7</span>
+<span class="sd">        [x^7]</span>
+<span class="sd">        &gt;&gt;&gt; get_monomial_permutation(4, 3)</span>
+<span class="sd">        [x^7, x^11, x^13, x^14]</span>
+<span class="sd">        &gt;&gt;&gt; get_monomial_permutation(8, 3, ignore_le=True, verbose=True)  # doctest: +SKIP</span>
+<span class="sd">        x^7</span>
+<span class="sd">        x^11</span>
+<span class="sd">        x^13</span>
+<span class="sd">        found x^14 but is LE to x^7</span>
+<span class="sd">        x^19</span>
+<span class="sd">        found x^22 but is LE to x^11</span>
+<span class="sd">        found x^26 but is LE to x^13</span>
+<span class="sd">        found x^28 but is LE to x^7</span>
+<span class="sd">        x^37</span>
+<span class="sd">        found x^38 but is LE to x^19</span>
+<span class="sd">        found x^41 but is LE to x^37</span>
+<span class="sd">        found x^44 but is LE to x^11</span>
+<span class="sd">        found x^49 but is LE to x^19</span>
+<span class="sd">        found x^52 but is LE to x^13</span>
+<span class="sd">        found x^56 but is LE to x^7</span>
+<span class="sd">        found x^67 but is LE to x^13</span>
+<span class="sd">        found x^73 but is LE to x^37</span>
+<span class="sd">        found x^74 but is LE to x^37</span>
+<span class="sd">        found x^76 but is LE to x^19</span>
+<span class="sd">        found x^82 but is LE to x^37</span>
+<span class="sd">        found x^88 but is LE to x^11</span>
+<span class="sd">        found x^97 but is LE to x^11</span>
+<span class="sd">        found x^98 but is LE to x^19</span>
+<span class="sd">        found x^104 but is LE to x^13</span>
+<span class="sd">        found x^112 but is LE to x^7</span>
+<span class="sd">        found x^131 but is LE to x^7</span>
+<span class="sd">        found x^133 but is LE to x^11</span>
+<span class="sd">        found x^134 but is LE to x^13</span>
+<span class="sd">        found x^137 but is LE to x^19</span>
+<span class="sd">        found x^146 but is LE to x^37</span>
+<span class="sd">        found x^148 but is LE to x^37</span>
+<span class="sd">        found x^152 but is LE to x^19</span>
+<span class="sd">        found x^161 but is LE to x^13</span>
+<span class="sd">        found x^164 but is LE to x^37</span>
+<span class="sd">        found x^176 but is LE to x^11</span>
+<span class="sd">        found x^193 but is LE to x^7</span>
+<span class="sd">        found x^194 but is LE to x^11</span>
+<span class="sd">        found x^196 but is LE to x^19</span>
+<span class="sd">        found x^208 but is LE to x^13</span>
+<span class="sd">        found x^224 but is LE to x^7</span>
+<span class="sd">        [x^7, x^11, x^13, x^19, x^37]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">get_linear_repr</span>
+
+    <span class="k">if</span> <span class="n">field</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">get_rijndael_field</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">GF</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">PolynomialRing</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gen</span><span class="p">()</span>
+
+    <span class="c1"># looping over all polynomials x^(le)</span>
+    <span class="c1"># - ignoring affine constant</span>
+
+    <span class="n">monomial_permutations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">lin_reprs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">exp</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">bin</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">alg_deg</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">monomial</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="n">exp</span>
+        <span class="k">if</span> <span class="n">is_permutation_poly</span><span class="p">(</span><span class="n">monomial</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">ignore_le</span><span class="p">:</span>
+                <span class="n">lr</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">get_linear_repr</span><span class="p">(</span><span class="n">poly2lut</span><span class="p">(</span><span class="n">monomial</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">lr</span> <span class="ow">in</span> <span class="n">lin_reprs</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found </span><span class="si">{}</span><span class="s2"> but is LE to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">monomial</span><span class="p">,</span> <span class="n">lin_reprs</span><span class="p">[</span><span class="n">lr</span><span class="p">]))</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lin_reprs</span><span class="p">[</span><span class="n">lr</span><span class="p">]</span> <span class="o">=</span> <span class="n">monomial</span>
+
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">monomial</span><span class="p">)</span>
+
+            <span class="n">monomial_permutations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">monomial</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">monomial_permutations</span></div>
+
+
+<div class="viewcode-block" id="find_quadratic_permutations"><a class="viewcode-back" href="../../boolcrypt.findpoly.html#boolcrypt.findpoly.find_quadratic_permutations">[docs]</a><span class="k">def</span> <span class="nf">find_quadratic_permutations</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">strong</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find quadratic permutation in ANF form.</span>
+
+<span class="sd">    If strong=True, find permutations without linear components</span>
+<span class="sd">    and with good differential properties. In this cases,</span>
+<span class="sd">    LUTs are printed (instead of ANFs) together with their</span>
+<span class="sd">    differential uniformity.</span>
+
+<span class="sd">        &gt;&gt;&gt; find_quadratic_permutations(n=3)</span>
+<span class="sd">        [x0, x1, x2]</span>
+<span class="sd">        [x0, x1, x0*x1 + x2]</span>
+<span class="sd">        [x0, x0*x2 + x1, x2]</span>
+<span class="sd">        [x0, x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="sd">        [x0, x0*x1 + x0*x2 + x1, x0*x1 + x2]</span>
+<span class="sd">        [x0, x0*x1 + x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="sd">        [x0 + x1*x2, x1, x2]</span>
+<span class="sd">        [x0 + x1*x2, x1, x0*x1 + x1*x2 + x2]</span>
+<span class="sd">        [x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="sd">        [x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="sd">        [x0 + x1*x2, x0*x2 + x1*x2 + x1, x2]</span>
+<span class="sd">        [x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="sd">        [x0*x1 + x0 + x1*x2, x1, x0*x1 + x2]</span>
+<span class="sd">        [x0*x1 + x0 + x1*x2, x1, x0*x1 + x1*x2 + x2]</span>
+<span class="sd">        [x0*x1 + x0 + x1*x2, x0*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="sd">        [x0*x1 + x0 + x1*x2, x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="sd">        [x0*x1 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x2]</span>
+<span class="sd">        [x0*x1 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x0*x2 + x2]</span>
+<span class="sd">        [x0*x2 + x0 + x1*x2, x0*x2 + x1, x2]</span>
+<span class="sd">        [x0*x2 + x0 + x1*x2, x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="sd">        [x0*x2 + x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x2]</span>
+<span class="sd">        [x0*x2 + x0 + x1*x2, x0*x1 + x0*x2 + x1, x0*x1 + x1*x2 + x2]</span>
+<span class="sd">        [x0*x2 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x2]</span>
+<span class="sd">        [x0*x2 + x0 + x1*x2, x0*x2 + x1*x2 + x1, x0*x1 + x2]</span>
+<span class="sd">        &gt;&gt;&gt; find_quadratic_permutations(n=3, strong=True)</span>
+<span class="sd">        2 [0, 1, 2, 5, 4, 7, 3, 6]</span>
+<span class="sd">        2 [0, 1, 2, 7, 4, 3, 5, 6]</span>
+<span class="sd">        2 [0, 1, 2, 6, 4, 3, 7, 5]</span>
+<span class="sd">        2 [0, 1, 2, 6, 4, 7, 5, 3]</span>
+<span class="sd">        2 [0, 1, 2, 7, 4, 6, 3, 5]</span>
+<span class="sd">        2 [0, 1, 2, 5, 4, 6, 7, 3]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">vector2int</span>
+    <span class="kn">import</span> <span class="nn">itertools</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="c1"># smart_print(&quot;sample_quadratic_boolfunc({})&quot;.format(n))</span>
+
+    <span class="n">balanced</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">VectorSpace</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">n</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">vector_space_gf2n</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">VectorSpace</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="nd">@sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">cached_function</span>
+    <span class="k">def</span> <span class="nf">is_balanced</span><span class="p">(</span><span class="n">my_component</span><span class="p">):</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">vector_space_gf2n</span><span class="p">:</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">my_component</span><span class="p">(</span><span class="o">*</span><span class="n">w</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">counter</span> <span class="o">==</span> <span class="n">balanced</span>
+
+    <span class="k">def</span> <span class="nf">are_balanced</span><span class="p">(</span><span class="n">old_components</span><span class="p">,</span> <span class="n">new_component</span><span class="p">):</span>
+        <span class="c1"># check all combinations considering new_component are balanced</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_components</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>  <span class="c1"># i = 1, r in [1,]</span>
+            <span class="k">for</span> <span class="n">combination</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">r</span><span class="p">):</span>  <span class="c1"># i = 1, combinations = (0,)</span>
+                <span class="n">aux</span> <span class="o">=</span> <span class="n">bool_ring</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">combination</span><span class="p">:</span>
+                    <span class="n">aux</span> <span class="o">+=</span> <span class="n">old_components</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+
+                <span class="n">aux</span> <span class="o">=</span> <span class="n">aux</span> <span class="o">+</span> <span class="n">new_component</span>
+
+                <span class="k">if</span> <span class="n">strong</span> <span class="ow">and</span> <span class="n">aux</span><span class="o">.</span><span class="n">degree</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_balanced</span><span class="p">(</span><span class="n">aux</span><span class="p">):</span>
+                    <span class="c1"># print(len(old_components)*&quot;\t&quot; + &quot;non-balanced {} &lt;-&gt; {}&quot;.format(new_component, combination))</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">is_permutation</span><span class="p">(</span><span class="n">anf</span><span class="p">):</span>
+        <span class="n">collision</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">n</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">vector_space_gf2n</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">vector2int</span><span class="p">([</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">anf</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">collision</span><span class="p">[</span><span class="n">result</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">collision</span><span class="p">[</span><span class="n">result</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="n">bool_ring</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+
+    <span class="c1"># affine ct to zero</span>
+    <span class="n">quadratic_terms</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list(B.gens())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="n">quadratic_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bool_ring</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="n">bool_ring</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+    <span class="n">quadratic_terms</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">vector</span><span class="p">(</span><span class="n">quadratic_terms</span><span class="p">)</span>
+
+    <span class="n">quadratic_coeff_space</span> <span class="o">=</span> <span class="p">[</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">VectorSpace</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">quadratic_terms</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+
+    <span class="c1"># if randomized is True:</span>
+    <span class="c1">#     _quadratic_coeff_space = quadratic_coeff_space[:]</span>
+    <span class="c1">#</span>
+    <span class="c1">#     for i in range(n):</span>
+    <span class="c1">#         quadratic_coeff_space[i] = (_quadratic_coeff_space[i].random_element() for _ in range(1000000))</span>
+
+    <span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">get_differential_uniformity</span><span class="p">,</span> <span class="n">anf2lut</span>
+
+    <span class="k">def</span> <span class="nf">recursion</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_permutation</span><span class="p">(</span><span class="n">components</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">strong</span><span class="p">:</span>
+                    <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">components</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lut</span> <span class="o">=</span> <span class="n">anf2lut</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+                    <span class="n">du</span> <span class="o">=</span> <span class="n">get_differential_uniformity</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">du</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">:</span>
+                        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">du</span><span class="p">,</span> <span class="n">lut</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">quadratic_coeff</span> <span class="ow">in</span> <span class="n">quadratic_coeff_space</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">strong</span> <span class="ow">and</span> <span class="n">quadratic_coeff</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">new_component</span> <span class="o">=</span> <span class="n">quadratic_coeff</span> <span class="o">*</span> <span class="n">quadratic_terms</span> <span class="o">+</span> <span class="n">bool_ring</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">is_balanced</span><span class="p">(</span><span class="n">new_component</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">are_balanced</span><span class="p">(</span><span class="n">components</span><span class="p">,</span> <span class="n">new_component</span><span class="p">):</span>
+                        <span class="c1"># smart_print(len(components)*&quot;\t&quot; + &quot;found {}-th component: {}&quot;.format(</span>
+                        <span class="c1">#             len(components), new_component))</span>
+                        <span class="c1"># components.append(new_component)</span>
+                        <span class="n">recursion</span><span class="p">(</span><span class="n">components</span> <span class="o">+</span> <span class="p">[</span><span class="n">new_component</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="c1"># smart_print(len(components)*&quot;\t&quot; + &quot;non-balanced {}-th component: {}&quot;.format(</span>
+                    <span class="c1">#             len(components), new_component))</span>
+
+    <span class="k">for</span> <span class="n">leading_quadratic_coeff</span> <span class="ow">in</span> <span class="n">quadratic_coeff_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">strong</span> <span class="ow">and</span> <span class="n">leading_quadratic_coeff</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="n">component</span> <span class="o">=</span> <span class="n">leading_quadratic_coeff</span> <span class="o">*</span> <span class="n">quadratic_terms</span> <span class="o">+</span> <span class="n">bool_ring</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_balanced</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
+            <span class="c1"># smart_print(&quot;found 0-th component:&quot;, component)</span>
+            <span class="n">recursion</span><span class="p">([</span><span class="n">component</span><span class="p">],)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+            <span class="c1">#  smart_print(&quot;non-balanced 0-th component:&quot;, component)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

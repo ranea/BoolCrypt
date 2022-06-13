@@ -1,0 +1,6 @@
+boolcrypt.se\_pmodadd.find\_affine\_se module
+=============================================
+
+.. automodule:: boolcrypt.se_pmodadd.find_affine_se
+   :members:
+   :show-inheritance:

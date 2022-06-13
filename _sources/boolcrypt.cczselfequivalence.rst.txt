@@ -1,0 +1,6 @@
+boolcrypt.cczselfequivalence module
+===================================
+
+.. automodule:: boolcrypt.cczselfequivalence
+   :members:
+   :show-inheritance:

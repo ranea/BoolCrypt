@@ -1,0 +1,6 @@
+boolcrypt.utilities module
+==========================
+
+.. automodule:: boolcrypt.utilities
+   :members:
+   :show-inheritance:

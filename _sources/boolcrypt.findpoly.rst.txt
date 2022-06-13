@@ -1,0 +1,6 @@
+boolcrypt.findpoly module
+=========================
+
+.. automodule:: boolcrypt.findpoly
+   :members:
+   :show-inheritance:

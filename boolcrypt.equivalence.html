@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.equivalence module &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="boolcrypt.functionalequations module" href="boolcrypt.functionalequations.html" />
+    <link rel="prev" title="boolcrypt.utilities module" href="boolcrypt.utilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="boolcrypt.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.utilities.html">boolcrypt.utilities module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">boolcrypt.equivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.functionalequations.html">boolcrypt.functionalequations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.cczselfequivalence.html">boolcrypt.cczselfequivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.sboxes.html">boolcrypt.sboxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.modularaddition.html">boolcrypt.modularaddition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.classification.html">boolcrypt.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpoly.html">boolcrypt.findpoly module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolymodp.html">boolcrypt.findpolymodp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolyoptimal.html">boolcrypt.findpolyoptimal module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="boolcrypt.html">API reference</a> &raquo;</li>
+      <li>boolcrypt.equivalence module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boolcrypt.equivalence.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-boolcrypt.equivalence">
+<span id="boolcrypt-equivalence-module"></span><h1>boolcrypt.equivalence module<a class="headerlink" href="#module-boolcrypt.equivalence" title="Permalink to this headline"></a></h1>
+<p>Find whether two functions are linear/affine equivalent and
+count the number of linear/affine self-equivalences.</p>
+<p>For equivalence-based functions solved via a functional equation
+with a SAT solver, see functionalequation.py</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.has_affine_but_no_linear_se">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">has_affine_but_no_linear_se</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_self_ae</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">len_common_reprs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#has_affine_but_no_linear_se"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.has_affine_but_no_linear_se" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether the permutation has affine but no linear self equivalences.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">has_affine_but_no_linear_se</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_lut</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">^</span> <span class="n">lut</span><span class="p">[</span><span class="n">i</span> <span class="o">^</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lut</span><span class="p">))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">has_affine_but_no_linear_se</span><span class="p">(</span><span class="n">new_lut</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.sboxes</span> <span class="kn">import</span> <span class="n">high_se_4bit_sboxes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">has_affine_but_no_linear_se</span><span class="p">(</span><span class="n">high_se_4bit_sboxes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.get_common_linear_reprs">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">get_common_linear_reprs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#get_common_linear_reprs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.get_common_linear_reprs" title="Permalink to this definition"></a></dt>
+<dd><p>Return the common linear representatives between F(x + c) and F(x) + d.</p>
+<p>It return a dictionary with entries lr -&gt; (left_cts, right_cts) where</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>lr is a linear representative</p></li>
+<li><p>left_cts are those constants c such that c + F has representative lr</p></li>
+<li><p>right_cts are those constants c such that F(x + c) has representative lr</p></li>
+</ul>
+</div></blockquote>
+<p>If for some lr, left_cts or right_cts is empty, lr is not included in the dictionary.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_common_linear_reprs</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">for i in (0,), i + F(x) is linear equivalent to F(x + 0)</span>
+<span class="go">{(0, 1, 2, 3, 4, 6, 8, 11, 5, 14, 15, 7, 12, 10, 13, 9): ((0,), (0,))}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_common_linear_reprs</span><span class="p">([</span><span class="mi">0</span> <span class="o">^</span> <span class="n">lut</span><span class="p">[</span><span class="n">i</span> <span class="o">^</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lut</span><span class="p">))])</span>  
+<span class="go">{(1, 0, 2, 3, 4, 6, 8, 11, 5, 13, 7, 12, 9, 15, 14, 10):</span>
+<span class="go">((0,), (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_common_linear_reprs</span><span class="p">([</span><span class="mi">1</span> <span class="o">^</span> <span class="n">lut</span><span class="p">[</span><span class="n">i</span> <span class="o">^</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lut</span><span class="p">))])</span>  
+<span class="go">{(1, 0, 2, 3, 4, 6, 8, 11, 5, 12, 7, 13, 14, 9, 10, 15):</span>
+<span class="go">((0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15), (0,))}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_common_linear_reprs</span><span class="p">([</span><span class="mi">2</span> <span class="o">^</span> <span class="n">lut</span><span class="p">[</span><span class="n">i</span> <span class="o">^</span> <span class="mi">5</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lut</span><span class="p">))])</span>  
+<span class="go">{(1, 0, 2, 4, 3, 5, 8, 15, 6, 10, 11, 14, 13, 9, 12, 7): ((0, 1, 5, 15), (0, 1, 3, 11)),</span>
+<span class="go">(1, 0, 2, 4, 3, 6, 8, 15, 5, 13, 7, 10, 14, 12, 11, 9): ((3, 7, 8, 12), (4, 7, 13, 14)),</span>
+<span class="go">(1, 0, 2, 4, 3, 6, 8, 12, 5, 14, 13, 15, 10, 7, 9, 11): ((4, 10, 11, 14), (2, 8, 9, 10)),</span>
+<span class="go">(1, 0, 2, 3, 4, 6, 8, 11, 5, 14, 7, 15, 13, 10, 9, 12): ((6, 13), (6, 15)),</span>
+<span class="go">(0, 1, 2, 3, 4, 6, 8, 11, 5, 12, 13, 7, 15, 9, 14, 10): ((9,), (12,))}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.get_number_self_le">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">get_number_self_le</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#get_number_self_le"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.get_number_self_le" title="Permalink to this definition"></a></dt>
+<dd><p>Return the number of self linear equivalences.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_le</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_le</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">60</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">PRESENT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_le</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">PRESENT</span><span class="p">))</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_le</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+<span class="go">889</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_le</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+<span class="go">2040</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_le</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">AES</span><span class="p">))</span>
+<span class="go">8</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.get_number_self_ae">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">get_number_self_ae</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">common_reprs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#get_number_self_ae"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.get_number_self_ae" title="Permalink to this definition"></a></dt>
+<dd><p>Return the number of affine self-equivalences.</p>
+<p>For 8-bit functions or bigger, it can take more than 1 minute.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_ae</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">24</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_ae</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">60</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">PRESENT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_ae</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">PRESENT</span><span class="p">))</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_ae</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>  
+<span class="go">889</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_number_self_ae</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">AES</span><span class="p">))</span>  
+<span class="go">2040</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.get_all_self_le">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">get_all_self_le</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_matrices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#get_all_self_le"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.get_all_self_le" title="Permalink to this definition"></a></dt>
+<dd><p>Return all the linear self-equivalences as pairs of LUTs or GF(2)-matrices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_all_self_le</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">[[0, 3, 2, 1], [0, 3, 2, 1]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_le</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">return_matrices</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">])</span>
+<span class="go">[1 0|1 0]</span>
+<span class="go">[1 1|1 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2lut</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="n">matrix2lut</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+<span class="go">([0, 3, 2, 1], [0, 3, 2, 1])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_le</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">return_matrices</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">])</span>
+<span class="go">[1 1 1 1|1 1 1 1]</span>
+<span class="go">[1 0 0 0|1 0 0 0]</span>
+<span class="go">[1 1 0 0|1 1 0 0]</span>
+<span class="go">[1 1 1 0|1 1 1 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">get_all_self_le</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">AES</span><span class="p">),</span> <span class="n">return_matrices</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  
+<span class="go">[0 1 0 0 0 1 1 1|1 1 0 0 1 1 0 1]</span>
+<span class="go">[0 0 1 1 0 0 1 1|1 0 1 1 0 1 1 1]</span>
+<span class="go">[0 1 1 1 0 0 1 1|0 1 0 1 1 0 1 1]</span>
+<span class="go">[0 0 0 1 0 0 0 0|1 0 0 1 1 0 1 1]</span>
+<span class="go">[0 0 1 1 0 1 1 0|0 0 1 1 1 0 0 0]</span>
+<span class="go">[1 1 0 0 0 0 1 1|0 1 0 0 1 0 0 0]</span>
+<span class="go">[1 0 0 0 1 1 0 0|1 1 0 0 0 1 0 1]</span>
+<span class="go">[0 1 1 1 1 0 0 0|1 1 1 0 0 1 1 1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.get_all_self_ae">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">get_all_self_ae</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_lut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#get_all_self_ae"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.get_all_self_ae" title="Permalink to this definition"></a></dt>
+<dd><p>Return all the affine self-equivalences as LUTS or (matrix, vector) pairs.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_all_self_ae</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">return_lut</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="go">[[3, 1, 2, 0], [3, 1, 2, 0]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_ae</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">to_m</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">right</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">left</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">to_m</span><span class="p">(</span><span class="n">right</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">to_m</span><span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+<span class="go">[0 1|0 1]</span>
+<span class="go">[1 0|1 0]</span>
+<span class="go">[---+---]</span>
+<span class="go">[1 1|1 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_ae</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">right</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">left</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">to_m</span><span class="p">(</span><span class="n">right</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">to_m</span><span class="p">(</span><span class="n">left</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+<span class="go">[0 1|0 1]</span>
+<span class="go">[1 0|1 0]</span>
+<span class="go">[---+---]</span>
+<span class="go">[1 1|1 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">PRESENT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">self_ae</span> <span class="o">=</span> <span class="n">get_all_self_ae</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">PRESENT</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">self_ae</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">to_m</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">to_m</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">])]))</span>
+<span class="go">[1 0 0 0|1 0 0 0]</span>
+<span class="go">[0 1 0 0|0 1 0 0]</span>
+<span class="go">[0 0 1 0|0 0 1 0]</span>
+<span class="go">[0 0 0 1|0 0 0 1]</span>
+<span class="go">[-------+-------]</span>
+<span class="go">[0 0 0 0|0 0 0 0]</span>
+<span class="go">[1 0 0 0|1 0 0 0]</span>
+<span class="go">[0 0 1 0|0 0 0 1]</span>
+<span class="go">[0 1 0 0|0 0 1 0]</span>
+<span class="go">[0 0 0 1|0 1 0 0]</span>
+<span class="go">[-------+-------]</span>
+<span class="go">[1 1 1 1|0 0 1 0]</span>
+<span class="go">[1 0 0 0|1 0 0 0]</span>
+<span class="go">[0 0 1 0|0 1 0 0]</span>
+<span class="go">[0 1 0 0|0 1 1 1]</span>
+<span class="go">[0 1 1 1|0 0 0 1]</span>
+<span class="go">[-------+-------]</span>
+<span class="go">[0 0 0 1|1 1 0 1]</span>
+<span class="go">[1 0 0 0|1 0 0 0]</span>
+<span class="go">[0 1 0 0|0 0 0 1]</span>
+<span class="go">[0 0 1 0|0 1 1 1]</span>
+<span class="go">[0 1 1 1|0 1 0 0]</span>
+<span class="go">[-------+-------]</span>
+<span class="go">[1 1 1 0|1 1 1 1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.check_self_le_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">check_self_le_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_le</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_le</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#check_self_le_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.check_self_le_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Check that the given right-left pair is a linear SE of the given lut.</p>
+<p>If return_missing is True, it returns the right (left) SE part if the
+left (right) SE is given. In that case, if raises an Exception
+if the input half pair is not a SE.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right_le</span><span class="o">=</span><span class="n">right</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">left_le</span><span class="o">=</span><span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right_le</span><span class="o">=</span><span class="n">right</span><span class="p">,</span> <span class="n">return_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[0, 3, 2, 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_le</span><span class="p">(</span><span class="n">lut</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right_le</span><span class="o">=</span><span class="n">right</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_le_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">left_le</span><span class="o">=</span><span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.check_self_ae_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">check_self_ae_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_le</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_le</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#check_self_ae_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.check_self_ae_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Check that the given right-left pair is an affine SE of the given lut.</p>
+<p>If return_missing is True, it returns the right (left) SE part if the
+left (right) SE is given. In that case, if raises an Exception
+if the input half pair is not a SE.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right_le</span><span class="o">=</span><span class="n">right</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_ae_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">left_le</span><span class="o">=</span><span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">left_le</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> <span class="n">return_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">[3, 1, 2, 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">PRESENT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">PRESENT</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_ae</span><span class="p">(</span><span class="n">lut</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">right_le</span><span class="o">=</span><span class="n">right</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_ae_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">left_le</span><span class="o">=</span><span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.check_self_le_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">check_self_le_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_le_anf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_le_anf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anf_inv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_anf_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_right_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_left_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_inv_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#check_self_le_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.check_self_le_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Check that the given right-left pair is a linear SE of the given anf.</p>
+<p>If a function is symbolic, its input variables must be given
+as a list of Boolean variables or strings.</p>
+<p>If right or left is not given, the inverse of anf must be given.</p>
+<p>If both right and left are given, this function can also check for
+non-linear self-equivalences.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">anf</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">anf</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_le</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">anf</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">anf</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.check_self_ae_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">check_self_ae_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_ae_anf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_ae_anf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anf_inv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_anf_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_right_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_left_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_inv_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#check_self_ae_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.check_self_ae_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Check that the given right-left pair is an affine SE of the given anf.</p>
+<p>If a function is symbolic, its input variables must be given
+as a list of Boolean variables or strings.</p>
+<p>If right or left is not given, the inverse of anf must be given.</p>
+<p>If both right and left are given, this function can also check for
+non-linear self-equivalences.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">anf</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_ae_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">anf</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">PRESENT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lut</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">PRESENT</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf_inv</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">invert_lut</span><span class="p">(</span><span class="n">lut</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">get_all_self_ae</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">return_lut</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">right</span><span class="p">),</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_self_ae_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">anf_inv</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_self_ae_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">anf_inv</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.are_linear_equivalent_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">are_linear_equivalent_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#are_linear_equivalent_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.are_linear_equivalent_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return a pair of invertible matrices (a,b) such that f = b g a.</p>
+<p>The permutations f, g are given as LUT.</p>
+<p>If no such pair exists, return an empty list.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">are_linear_equivalent_lut</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">[[0, 1, 2, 3], [0, 1, 2, 3]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">are_linear_equivalent_lut</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">are_linear_equivalent_lut</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">)),</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">repr_inv</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span> <span class="o">=</span> <span class="n">are_linear_equivalent_lut</span><span class="p">(</span><span class="n">repr_inv</span><span class="p">,</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right</span><span class="p">,</span> <span class="n">left</span>
+<span class="go">([0, 1, 7, 6, 5, 4, 2, 3, 12, 13, 11, 10, 9, 8, 14, 15], [0, 1, 12, 13, 14, 15, 2, 3, 9, 8, 5, 4, 7, 6, 11, 10])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">repr_inv</span> <span class="o">==</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">compose_lut</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">right</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.are_affine_equivalent_lut">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">are_affine_equivalent_lut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#are_affine_equivalent_lut"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.are_affine_equivalent_lut" title="Permalink to this definition"></a></dt>
+<dd><p>Return a pair of affine permutations (a,b) such that f = b g a.</p>
+<p>The permutations f,g are given as LUT.</p>
+<p>If no such pair exists, return an empty list.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">are_affine_equivalent_lut</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">[[0, 1, 2, 3], [0, 1, 2, 3]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">are_affine_equivalent_lut</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="go">[[0, 3, 1, 2], [3, 1, 0, 2]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">are_affine_equivalent_lut</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">)),</span> <span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sboxes</span> <span class="kn">import</span> <span class="n">SERPENT_S3</span><span class="p">,</span> <span class="n">Golden_S0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">are_affine_equivalent_lut</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">SERPENT_S3</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">Golden_S0</span><span class="p">))</span>
+<span class="go">[[13, 2, 15, 0, 3, 12, 1, 14, 4, 11, 6, 9, 10, 5, 8, 7], [7, 11, 6, 10, 0, 12, 1, 13, 8, 4, 9, 5, 15, 3, 14, 2]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.equivalence.check_ccz_equivalence_anf">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.equivalence.</span></span><span class="sig-name descname"><span class="pre">check_ccz_equivalence_anf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_input_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_input_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_input_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/equivalence.html#check_ccz_equivalence_anf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.equivalence.check_ccz_equivalence_anf" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether A(Graph(f)) = Graph(g).</p>
+<p>Graph(f) is is the set of points {(x, f(x))}, and similar for Graph(g).
+However, if g_implicit=True, Graph(g) is built as {(x, y) : g(x, y) = 0}.</p>
+<p>The admissible mapping A can be given in ANF, as a matrix or as
+a pair (matrix, vector).</p>
+<p>If F = G, this methods checks whether A is a CCZ self-equivalence.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sbox</span> <span class="kn">import</span> <span class="n">SBox</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># CCZ of inversion found with sboxU.ccz_equivalent_permutations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">am</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_ccz_equivalence_anf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">am</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">boolean_vars</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iv</span><span class="p">,</span> <span class="n">ov</span> <span class="o">=</span> <span class="n">boolean_vars</span><span class="p">[:</span><span class="mi">4</span><span class="p">],</span> <span class="n">boolean_vars</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iv</span><span class="p">,</span> <span class="n">ov</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">iv</span><span class="p">)),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">ov</span><span class="p">))</span>  <span class="c1"># polynomials() takes x0 as MSB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g_implicit</span> <span class="o">=</span> <span class="n">SBox</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">polynomials</span><span class="p">(</span><span class="n">iv</span><span class="p">,</span> <span class="n">ov</span><span class="p">,</span> <span class="n">groebner</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_ccz_equivalence_anf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g_implicit</span><span class="p">,</span> <span class="n">am</span><span class="p">,</span> <span class="n">g_implicit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Graph-SE found with sat.find_ccz_equivalence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">3</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">am</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_ccz_equivalence_anf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">am</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check_ccz_equivalence_anf</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">am</span><span class="p">,</span> <span class="n">f_input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">g_input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">],</span> <span class="n">a_input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boolcrypt.utilities.html" class="btn btn-neutral float-left" title="boolcrypt.utilities module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boolcrypt.functionalequations.html" class="btn btn-neutral float-right" title="boolcrypt.functionalequations module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

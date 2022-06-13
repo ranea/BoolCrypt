@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.functionalequations module &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="boolcrypt.cczselfequivalence module" href="boolcrypt.cczselfequivalence.html" />
+    <link rel="prev" title="boolcrypt.equivalence module" href="boolcrypt.equivalence.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="boolcrypt.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.utilities.html">boolcrypt.utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.equivalence.html">boolcrypt.equivalence module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">boolcrypt.functionalequations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.cczselfequivalence.html">boolcrypt.cczselfequivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.sboxes.html">boolcrypt.sboxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.modularaddition.html">boolcrypt.modularaddition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.classification.html">boolcrypt.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpoly.html">boolcrypt.findpoly module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolymodp.html">boolcrypt.findpolymodp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolyoptimal.html">boolcrypt.findpolyoptimal module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="boolcrypt.html">API reference</a> &raquo;</li>
+      <li>boolcrypt.functionalequations module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boolcrypt.functionalequations.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-boolcrypt.functionalequations">
+<span id="boolcrypt-functionalequations-module"></span><h1>boolcrypt.functionalequations module<a class="headerlink" href="#module-boolcrypt.functionalequations" title="Permalink to this headline"></a></h1>
+<p>Solve functional equations with a SAT solver.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.reduce">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gauss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#reduce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.reduce" title="Permalink to this definition"></a></dt>
+<dd><p>Reduce a Boolean system of equations given as a list of Boolean polynomials.</p>
+<p>mode can be “gauss” (a BooleanPolynomialVector is returned)
+or “groebner” (a PolynomialSequence_gf2 is returned)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">matrix2anf</span><span class="p">,</span> <span class="n">compose_anf_fast</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sbox3b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>  <span class="c1"># one linear component</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;x0, x1, x2&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">equations</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">sbox3b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">equations</span><span class="p">)</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x2 + x1, x2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">bpr</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">equations</span> <span class="o">=</span> <span class="n">compose_anf_fast</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">equations</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">equations</span><span class="p">)</span>
+<span class="go">[x0*x2 + x0 + x1*x2 + x2, x0 + x1*x2 + x1 + x2, x0 + x1*x2 + x1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">reduce</span><span class="p">(</span><span class="n">equations</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;gauss&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="go">reducing 3 equations with mode gauss and degrees (d,#) Counter({2: 3})</span>
+<span class="go">system coefficient matrix:</span>
+<span class="go">[x0*x2    x0 x1*x2    x1    x2]</span>
+<span class="go">[-----------------------------]</span>
+<span class="go">[    1     1     1     0     1]</span>
+<span class="go">[    0     1     1     1     1]</span>
+<span class="go">[    0     1     1     1     0]</span>
+<span class="go">reduced system coefficient matrix:</span>
+<span class="go">[x0*x2    x0 x1*x2    x1    x2]</span>
+<span class="go">[-----------------------------]</span>
+<span class="go">[    1     0     0     1     0]</span>
+<span class="go">[    0     1     1     1     0]</span>
+<span class="go">[    0     0     0     0     1]</span>
+<span class="go">gauss-reduction obtained 3 equations with degrees (d,#) Counter({2: 2, 1: 1})</span>
+<span class="go">[x0*x2 + x1, x0 + x1*x2 + x1, x2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reduce</span><span class="p">(</span><span class="n">equations</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;groebner&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># sbox3b is a permutation</span>
+<span class="go">reducing 3 equations with mode groebner and degrees (d,#) Counter({2: 3})</span>
+<span class="go">groebner-reduction obtained 3 equations with degrees (d,#) Counter({1: 3})</span>
+<span class="go">[x0, x1, x2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_fixed_vars">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_fixed_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">equations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_r_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat_with_r_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_fixed_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_fixed_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_fixed_vars" title="Permalink to this definition"></a></dt>
+<dd><p>Find fixed variables in a system of equations given as a list of Boolean polynomials.</p>
+<p>Given a system with Boolean variables x0 &gt; … &gt; xi &gt; … &gt; xn,
+find fixed/dependent variables, that is, assignments x{i} = f(x{i+1},..,xn).
+Note that the term order of the Boolean polynomial ring
+affects the variables that are fixed.</p>
+<p>This method returns a pair containing an OrderedDic with the
+fixed variables found and a BooleanPolynomialVector with the
+resulting system after replacing the fixed variables by their
+value/expression.</p>
+<p>The parameters initial_r_mode and repeat_with_r_mode can be “gauss” or “groebner”
+as in reduce(). initial_r_mode is used to reduce the the given list of equations.
+If repeat_with_r_mode is given, this method is repeatdly called again
+(with initial reduction the one given by repeat_with_r_mode) until
+no fixed variables are found.</p>
+<p>If the optional parameter initial_fixed_vars is given with a
+dictionary containing initial fixed variables, this method
+replaces the expression of these initial fixed variables
+with the new fixed variables found.</p>
+<p>If only_linear=True, only find linear assignment, that is,
+relations x{i} = f(x{i+1},..,xn) with f of degree up to 1.</p>
+<p>If check=True, ensures that no fixed variables appears in the
+resulting system or in the value/expression of other fixed variable.</p>
+<p>verbose and debug determine the amount of information printed to the output.
+if a string is given to filename, the output is printed to that file</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sage.crypto.sbox</span> <span class="kn">import</span> <span class="n">SBox</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sbox3b</span> <span class="o">=</span> <span class="n">SBox</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>  <span class="c1"># one linear component</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">lut2anf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">sbox3b</span><span class="p">)))</span>
+<span class="go">[x0*x2 + x0 + x1*x2, x0*x2 + x1, x2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;y0, y1, y2, x0, x1, x2&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;lex&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_vars</span><span class="p">,</span> <span class="n">output_vars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">3</span><span class="p">:])),</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eqs</span> <span class="o">=</span> <span class="p">[</span><span class="n">bpr</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">sbox3b</span><span class="o">.</span><span class="n">polynomials</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">input_vars</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">output_vars</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eqs</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">eqs</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;groebner&quot;</span><span class="p">,</span> <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">eqs</span><span class="p">)</span>
+<span class="go">[y0 + x0*x2 + x0 + x1*x2, y1 + x0*x2 + x1, y2 + x2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_vars</span><span class="p">,</span> <span class="n">new_eqs</span> <span class="o">=</span> <span class="n">find_fixed_vars</span><span class="p">(</span><span class="n">eqs</span><span class="p">,</span> <span class="n">only_linear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">finding fixed variables in 3 equations with degrees (d, #) Counter({2: 2, 1: 1})</span>
+<span class="go">in Boolean PolynomialRing in y0, y1, y2, x0, x1, x2 with term order Lexicographic term order</span>
+<span class="go">    eqs[2] = y2 + x2</span>
+<span class="go">        found fixed variable y2 &lt;- x2</span>
+<span class="go">    eqs[1] = y1 + x0*x2 + x1</span>
+<span class="go">        found fixed variable y1 &lt;- x0*x2 + x1</span>
+<span class="go">    eqs[0] = y0 + x0*x2 + x0 + x1*x2</span>
+<span class="go">        found fixed variable y0 &lt;- x0*x2 + x0 + x1*x2</span>
+<span class="go">found 3 fixed variables, resulting in 0 equations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_vars</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_eqs</span><span class="p">)</span>
+<span class="go">(OrderedDict([(y2, x2), (y1, x0*x2 + x1), (y0, x0*x2 + x0 + x1*x2)]), [])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_vars</span><span class="p">,</span> <span class="n">new_eqs</span> <span class="o">=</span> <span class="n">find_fixed_vars</span><span class="p">(</span><span class="n">eqs</span><span class="p">,</span> <span class="n">only_linear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">initial_r_mode</span><span class="o">=</span><span class="s2">&quot;gauss&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">repeat_with_r_mode</span><span class="o">=</span><span class="s2">&quot;gauss&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+<span class="go">reducing 3 equations with mode gauss and degrees (d,#) Counter({2: 2, 1: 1})</span>
+<span class="go">gauss-reduction obtained 3 equations with degrees (d,#) Counter({2: 2, 1: 1})</span>
+<span class="go">found 1 fixed variables, resulting in 2 equations with degrees (d, #) Counter({2: 2})</span>
+<span class="go">&gt; repeating find_fixed_vars with initial reduction_mode gauss</span>
+<span class="go">reducing 2 equations with mode gauss and degrees (d,#) Counter({2: 2})</span>
+<span class="go">gauss-reduction obtained 2 equations with degrees (d,#) Counter({2: 2})</span>
+<span class="go">found 1 fixed variables, resulting in 2 equations with degrees (d, #) Counter({2: 2})</span>
+<span class="go">&gt; last find_fixed_vars call found 0 new fixed variables and removed 0 equations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_vars</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_eqs</span><span class="p">)</span>
+<span class="go">(OrderedDict([(y2, x2)]), [y0 + x0*x2 + x0 + x1*x2, y1 + x0*x2 + x1])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="s2">&quot;x, y, z, t&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gens</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eqs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">z</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="n">z</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_vars</span><span class="p">,</span> <span class="n">new_eqs</span> <span class="o">=</span> <span class="n">find_fixed_vars</span><span class="p">(</span><span class="n">eqs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">finding fixed variables in 1 equations with degrees (d, #) Counter({4: 1})</span>
+<span class="go">in Boolean PolynomialRing in x, y, z, t with term order Lexicographic term order</span>
+<span class="go">    eqs[0] = x*y*z*t + x*y + y*z + y + 1</span>
+<span class="go">        adding equations from common factors</span>
+<span class="go">    eqs[1] = y + 1</span>
+<span class="go">        found fixed variable y &lt;- 1</span>
+<span class="go">    eqs[0] = x*z*t + x + z</span>
+<span class="go">found 1 fixed variables, resulting in 1 equations with degrees (d, #) Counter({3: 1})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fixed_vars</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">new_eqs</span><span class="p">)</span>
+<span class="go">(OrderedDict([(y, 1)]), [x*z*t + x + z])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.solve_functional_equation">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">solve_functional_equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs_anfs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs_anfs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lhs_input_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs_input_vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sat_solutions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_redundant_equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_fixed_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gauss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_linear_fixed_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_linear_combinations_in_solutions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sols_per_base_sol_to_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_varnames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_initial_parsing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_find_fixed_vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_total_num_solutions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#solve_functional_equation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.solve_functional_equation" title="Permalink to this definition"></a></dt>
+<dd><p>Solve a functional equation F = G given by list of Boolean polynomials.</p>
+<p>This methods requires the CryptoMiniSat package to be installed in SageMath.</p>
+<p>The left hand side F(x) = …F1(F0(x)) is given a list of ANF [F0, F1, …],
+where some of them can be symbolic ANFs.
+The right hand side G(x) = …G1(G0(x)) can be given similarly [G0, G1, …],
+or it can be given a list of integers [d0, d1, …, dd].
+In the latter case, the problem changes to find F that only have
+monomials with degrees [d0, d1, …, dd].
+At least one of the ANFs Fi or Gj should be a symbolic anf.</p>
+<p>lhs_input_vars is a list of the inputs vars (a list of Boolean variables
+or strings) for each ANF in F (similarly for rhs_input_vars and G).
+If rhs_anfs is given as a list of integers, the value of rhs_input_vars
+is ignored.</p>
+<p>num_sat_solutions is the number of solutions to be found by the SAT solver.
+To find all solutions, use None or sage.all.infinity.
+Note that number of actual solutions can be higher than the
+number of solutions internally found by the SAT solver,
+as fixed variables and free variables are not passed to the SAT solver.</p>
+<p>If the system of equations is found to be inconsistent (unsatisfiable),
+a ValueError exception is raised.</p>
+<p>If return_mode=”list_anfs”, return a list of solutions [s0, s1, …],
+where each solution si = [siF, siG] is a pair containing the list of
+non-symbolic ANFs of the left and right side, that is,
+[siF, siG] = [[siF0, siF1, …], [siG0, siG1, …]].</p>
+<p>If return_mode=”list_coeffs”, return a tuple containing
+the list of solutions [s0, s1, …], where each si is a list
+containing the ANF coefficients of [siF, siG], and a list
+with the free variables.</p>
+<p>If return_mode=”symbolic_anf”, the solutions are given symbolically
+that is, a 4-tuple is returned (symF, symG, eqs, num_sols).
+For symF = [symF0, symF1, …], symFi is the symbolic ANF of Fi,
+where each coefficient is substituted with the fixed variables found
+(and similar for symG and symGi).
+The list eqs contain the equations that the symbolic coefficients
+satisfy that could not be reduced more.
+The number num_sols represents the total number of solutions found.</p>
+<p>If return_mode=”symbolic_coeffs”, the solutions are given symbolically
+but a 3-tuple is returned (fvs, eqs, num_sols).
+fvs is a dictionary of fixed variables mapping the variables
+to their symbolic or constant values,
+and (eqs, num_sols) is similar as in return_mode=”symbolic_anf”.</p>
+<p>If return_mode=raw_equations, return the list of equations associated
+to the functional problem before finding fixed variables and before
+calling the SAT solver.</p>
+<p>If return_mode=”lincomb_solutions”, it returns the linear combinations
+among the solutions obtained from the SAT solver (see below the explanation
+regarding find_linear_combinations_in_solutions).</p>
+<p>A Boolean polynomial ring bpr can be given to determine the
+term order. Otherwise, lexicographic order will be used
+(x0 &gt; x1 &gt; …, F0 &gt; F1 &gt; … &gt; G0 &gt; G1 &gt; … ).</p>
+<p>A list of equations can be given in find_redundant_equations.
+In that case, instead of solving the functional equation,
+it is returned the list of equations that are satisfied by all solutions.</p>
+<p>A list of fixed variables can be given in initial_fixed_vars
+as a dictionary mapping variables to their constant or symbolic values.</p>
+<p>A list of Boolean equations (or strings) can be given in initial_equations
+which will be added as extra constraints to the funcional equation.</p>
+<p>reduction_mode is the type of reduction (None, “gauss” or “groebner”)
+to apply before the SAT solver.</p>
+<p>Before the SAT solver is called, fixed variables are searched
+in the equations. If only_linear_fixed_vars is True, only
+linear assignments are searched, that is,
+relations x{i} = f(x{i+1},..,xn) with f of degree up to 1.</p>
+<p>find_linear_combinations_in_solutions determines whether to search
+for linear combinations among the solutions obtained from the SAT solver.
+The obtained linear combinations are used to simplify
+the system of equations and the list of fixed variables.
+If the number of obtained SAT solutions is less than the given
+num_sat_solutions, find_linear_combinations_in_solutions is
+automatically enabled.</p>
+<p>If return_total_num_solutions is True, append to the output
+the number of total solutions (taking into account the free variables).</p>
+<p>If ignore_initial_parsing is True, then initial_fixed_vars is not used to replace
+variables in the list of ANF or in the list of initial equations (in the first pass),
+and other checks regarding the BooleanPolynomialRing are ignored.
+The default value of ignore_initial_parsing (False) is recommended.</p>
+<p>If check_find_fixed_vars is True, internal calls to find_fixed_vars
+are done with check=True (see find_fixed_vars).</p>
+<p>A list of variables (strings or Boolean variables) can be given in
+ignore_varnames, which won’t be included in the solutions and will
+be set to 0 if they are free variables.</p>
+<p>num_sols_per_base_sol_to_check determines the number of solutions
+per base solution that are checked, that is, that are given
+to the verification test F = G where F and G are substituted with
+the exact non-symbolic coefficients of the solution.</p>
+<p>threads determines the number of threads for the SAT solver to use.</p>
+<p>verbose and debug (True or False values) determine
+the amount of information printed to the output.
+if a string is given to filename, the output is printed to that file</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">invert_lut</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># example 1: finding the inverse of F0 by solving F1(F0) = Identity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f0</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g0</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">3</span><span class="p">)))</span>  <span class="c1"># identity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="s2">&quot;x3&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_anfs</span> <span class="o">=</span> <span class="n">solve_functional_equation</span><span class="p">([</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">],</span> <span class="p">[</span><span class="n">g0</span><span class="p">],</span> <span class="p">[</span><span class="n">input_vars</span><span class="p">,</span> <span class="n">input_vars</span><span class="p">],</span> <span class="p">[</span><span class="n">input_vars</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">num_sat_solutions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">return_mode</span><span class="o">=</span><span class="s2">&quot;list_anfs&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">solving the functional equation F1(F0) = G0</span>
+<span class="go">- F1:</span>
+<span class="go">[ x0*x1  x0*x2  x1*x2|    x0     x1     x2|     1]</span>
+<span class="go">[--------------------+--------------------+------]</span>
+<span class="go">[a0_0_1 a0_0_2 a0_1_2|  a0_0   a0_1   a0_2|    a0]</span>
+<span class="go">[a1_0_1 a1_0_2 a1_1_2|  a1_0   a1_1   a1_2|    a1]</span>
+<span class="go">[a2_0_1 a2_0_2 a2_1_2|  a2_0   a2_1   a2_2|    a2]</span>
+<span class="go">- F0:</span>
+<span class="go">[x0*x2 x1*x2|   x0    x1    x2]</span>
+<span class="go">[-----------+-----------------]</span>
+<span class="go">[    1     1|    1     0     0]</span>
+<span class="go">[    1     0|    0     1     0]</span>
+<span class="go">[    0     0|    0     0     1]</span>
+<span class="go">- G0:</span>
+<span class="go">[x0 x1 x2]</span>
+<span class="go">[--------]</span>
+<span class="go">[ 1  0  0]</span>
+<span class="go">[ 0  1  0]</span>
+<span class="go">[ 0  0  1]</span>
+<span class="go">number of input variables: 4</span>
+<span class="go">number of symbolic coefficients: 21</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">computing</span> <span class="n">F</span> <span class="ow">and</span> <span class="n">G</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">getting</span> <span class="n">equations</span> <span class="kn">from</span> <span class="nn">F</span> <span class="o">+</span> <span class="n">G</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">finding</span> <span class="n">fixed</span> <span class="ow">and</span> <span class="n">free</span> <span class="n">variables</span> <span class="ow">and</span> <span class="n">reducing</span> <span class="n">system</span>
+<span class="go">reducing 21 equations with mode gauss and degrees (d,#) Counter({1: 21})</span>
+<span class="go">gauss-reduction obtained 21 equations with degrees (d,#) Counter({1: 21})</span>
+<span class="go">found 21 fixed variables, resulting in 0 equations</span>
+<span class="go">&gt; repeating find_fixed_vars with initial reduction_mode gauss</span>
+<span class="go">&gt; last find_fixed_vars call found 0 new fixed variables and removed 0 equations</span>
+<span class="go">fixed variables (21): [(&#39;a2&#39;, 0), (&#39;a2_2&#39;, 1), (&#39;a2_1&#39;, 0), (&#39;a2_0&#39;, 0), (&#39;a2_1_2&#39;, 0), (&#39;a2_0_2&#39;, 0),</span>
+<span class="go">(&#39;a2_0_1&#39;, 0), (&#39;a1&#39;, 0), (&#39;a1_2&#39;, 0), (&#39;a1_1&#39;, 1), (&#39;a1_0&#39;, 0), (&#39;a1_1_2&#39;, 1), (&#39;a1_0_2&#39;, 1),</span>
+<span class="go">(&#39;a1_0_1&#39;, 0), (&#39;a0&#39;, 0), (&#39;a0_2&#39;, 0), (&#39;a0_1&#39;, 0), (&#39;a0_0&#39;, 1), (&#39;a0_1_2&#39;, 1), (&#39;a0_0_2&#39;, 0), (&#39;a0_0_1&#39;, 0)]</span>
+<span class="go">free variables (0): []</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">ignoring</span> <span class="n">SAT</span> <span class="n">solving</span> <span class="n">step</span>
+<span class="go">total number of solutions: 1</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">returning</span> <span class="n">outputs</span> <span class="k">with</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;list_anfs&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">list_anfs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">input_vars</span><span class="p">)</span>  <span class="c1"># f1</span>
+<span class="go">[x0*x2 x1*x2|   x0    x1    x2]</span>
+<span class="go">[-----------+-----------------]</span>
+<span class="go">[    0     1|    1     0     0]</span>
+<span class="go">[    1     1|    0     1     0]</span>
+<span class="go">[    0     0|    0     0     1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># same example, but now f1 is given and f0 is symbolic</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f0</span> <span class="o">=</span> <span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">invert_lut</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">list_anfs</span> <span class="o">=</span> <span class="n">solve_functional_equation</span><span class="p">([</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">],</span> <span class="p">[</span><span class="n">g0</span><span class="p">],</span> <span class="p">[</span><span class="n">input_vars</span><span class="p">,</span> <span class="n">input_vars</span><span class="p">],</span> <span class="p">[</span><span class="n">input_vars</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">num_sat_solutions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">return_mode</span><span class="o">=</span><span class="s2">&quot;list_anfs&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">list_anfs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">input_vars</span><span class="p">)</span>  <span class="c1"># f0</span>
+<span class="go">[x0*x2 x1*x2|   x0    x1    x2]</span>
+<span class="go">[-----------+-----------------]</span>
+<span class="go">[    1     1|    1     0     0]</span>
+<span class="go">[    1     0|    0     1     0]</span>
+<span class="go">[    0     0|    0     0     1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># example 2: finding a 2-bit linear permutation F0 by solving [(y,x), F0] = [1, 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#            with the extra condition a0_0 + 0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f0</span> <span class="o">=</span> <span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>  <span class="c1"># (x, y) to (y, x)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">init_eq</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a0_0&quot;</span><span class="p">,</span> <span class="n">anf2matrix</span><span class="p">(</span><span class="n">f0</span><span class="p">,</span> <span class="n">input_vars</span><span class="p">)</span><span class="o">.</span><span class="n">determinant</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">solve_functional_equation</span><span class="p">([</span><span class="n">f0</span><span class="p">,</span> <span class="n">f1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">input_vars</span><span class="p">,</span> <span class="n">input_vars</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">num_sat_solutions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_mode</span><span class="o">=</span><span class="s2">&quot;symbolic_anf&quot;</span><span class="p">,</span> <span class="n">initial_equations</span><span class="o">=</span><span class="n">init_eq</span><span class="p">,</span> <span class="n">reduction_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">solving the functional equation F1(F0) = degrees([1, 1])</span>
+<span class="go">- F1:</span>
+<span class="go">[x0 x1]</span>
+<span class="go">[-----]</span>
+<span class="go">[ 0  1]</span>
+<span class="go">[ 1  0]</span>
+<span class="go">- F0:</span>
+<span class="go">[  x0   x1]</span>
+<span class="go">[---------]</span>
+<span class="go">[a0_0 a0_1]</span>
+<span class="go">[a1_0 a1_1]</span>
+<span class="go">input variables (2): [&#39;x0&#39;, &#39;x1&#39;]</span>
+<span class="go">symbolic coefficients (4): [&#39;a0_0&#39;, &#39;a0_1&#39;, &#39;a1_0&#39;, &#39;a1_1&#39;]</span>
+<span class="go">Boolean PolynomialRing in x0, x1, a0_0, a0_1, a1_0, a1_1</span>
+<span class="go">initial equations (2):</span>
+<span class="go">    a0_0</span>
+<span class="go">    a0_0*a1_1 + a0_1*a1_0 + 1</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">computing</span> <span class="n">F</span> <span class="ow">and</span> <span class="n">G</span>
+<span class="go">- F (after composition):</span>
+<span class="go">[  x0   x1]</span>
+<span class="go">[---------]</span>
+<span class="go">[a1_0 a1_1]</span>
+<span class="go">[a0_0 a0_1]</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">getting</span> <span class="n">equations</span> <span class="kn">from</span> <span class="nn">F</span> <span class="o">+</span> <span class="n">G</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="go">no equation added from F + G = 0</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">finding</span> <span class="n">fixed</span> <span class="ow">and</span> <span class="n">free</span> <span class="n">variables</span>
+<span class="go">finding fixed variables in 2 equations with degrees (d, #) Counter({1: 1, 2: 1})</span>
+<span class="go">in Boolean PolynomialRing in x0, x1, a0_0, a0_1, a1_0, a1_1 with term order Lexicographic term order</span>
+<span class="go">    eqs[1] = a0_0*a1_1 + a0_1*a1_0 + 1</span>
+<span class="go">    eqs[0] = a0_0</span>
+<span class="go">        found fixed variable a0_0 &lt;- 0</span>
+<span class="go">            prev_eqs[0] &lt;-- a0_1*a1_0 + 1</span>
+<span class="go">found 1 fixed variables, resulting in 1 equations with degrees (d, #) Counter({2: 1})</span>
+<span class="go">fixed variables (1): [(&#39;a0_0&#39;, 0)]</span>
+<span class="go">free variables (1): [a1_1]</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">solving</span> <span class="mi">1</span> <span class="n">equations</span> <span class="k">with</span> <span class="mi">2</span> <span class="n">variables</span> <span class="n">using</span> <span class="n">SAT</span> <span class="n">solver</span>
+<span class="go">solver options: num_sat_solutions=+Infinity, threads=1</span>
+<span class="go">system variables: [a1_0, a0_1]</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">parsing</span> <span class="mi">1</span> <span class="n">SAT</span> <span class="n">solutions</span> <span class="n">found</span> <span class="p">(</span><span class="n">total</span> <span class="n">number</span> <span class="n">of</span> <span class="n">solutions</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">^</span><span class="p">{</span><span class="mi">1</span><span class="p">})</span>
+<span class="go">SAT solutions:</span>
+<span class="go">    {a0_1: 1, a1_0: 1}</span>
+<span class="go">Base solution 1 out of 1, checking full solution 1 out of 1:</span>
+<span class="go"> - sat solution                          : {a0_1: 1, a1_0: 1}</span>
+<span class="go"> - sat solution + fixed vars             : OrderedDict([(a0_1, 1), (a1_0, 1), (a0_0, 0)])</span>
+<span class="go"> - sat solution + fixed vars + free vars : {a0_1: 1, a1_0: 1, a0_0: 0, a1_1: 0}</span>
+<span class="go"> - F:</span>
+<span class="go">[x0 x1]</span>
+<span class="go">[-----]</span>
+<span class="go">[ 1  0]</span>
+<span class="go">[ 0  1]</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">finding</span> <span class="n">linear</span> <span class="n">combinations</span> <span class="n">of</span> <span class="n">variables</span> <span class="n">among</span> <span class="n">the</span> <span class="n">SAT</span> <span class="n">solutions</span>
+<span class="go">linear combinations (2): [&#39;a1_0 + 1&#39;, &#39;a0_1 + 1&#39;]</span>
+<span class="go">linear combinations (matrix form)</span>
+<span class="go">[a1_0 a0_1    1]</span>
+<span class="go">[--------------]</span>
+<span class="go">[   1    0    1]</span>
+<span class="go">[   0    1    1]</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">reducing</span> <span class="n">system</span> <span class="k">with</span> <span class="n">the</span> <span class="n">linear</span> <span class="n">combinations</span> <span class="n">obtained</span>
+<span class="go">finding fixed variables in 3 equations with degrees (d, #) Counter({1: 2, 2: 1})</span>
+<span class="go">in Boolean PolynomialRing in x0, x1, a0_0, a0_1, a1_0, a1_1 with term order Lexicographic term order</span>
+<span class="go">    eqs[2] = a0_1 + 1</span>
+<span class="go">        found fixed variable a0_1 &lt;- 1</span>
+<span class="go">    eqs[1] = a1_0 + 1</span>
+<span class="go">        found fixed variable a1_0 &lt;- 1</span>
+<span class="go">found 2 fixed variables, resulting in 0 equations</span>
+<span class="go">fixed variables (3): [(&#39;a0_0&#39;, 0), (&#39;a0_1&#39;, 1), (&#39;a1_0&#39;, 1)]</span>
+<span class="go">number of system variables changed to 0</span>
+<span class="go">system variables (0): []</span>
+<span class="go">number of equations changed to 0</span>
+<span class="gp">... </span><span class="o">|</span> <span class="n">returning</span> <span class="n">outputs</span> <span class="k">with</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;symbolic_anf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">input_vars</span><span class="p">)</span>  <span class="c1"># f0</span>
+<span class="go">[  x0   x1]</span>
+<span class="go">[---------]</span>
+<span class="go">[   0    1]</span>
+<span class="go">[   1 a1_1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># equations</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_inverse">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv_degree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_inv_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_inverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_inverse" title="Permalink to this definition"></a></dt>
+<dd><p>Find the inverse of an ANF by calling solve_functional_equation().</p>
+<p>Given a function F, find A s.t. A(F) = Identity if inv_position=”left”.
+If inv_position=”right”,  find A’ s.t. F(A) = Identity.
+If no inverse is found, None returned.</p>
+<p>This method does not support symbolic ANF, and the input function F
+must be defined in the boolean polynomial ring
+BooleanPolynomialRing(n,’x’) with n the number of input variables.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+By default, return_mode=”list_anfs” and num_sat_solutions=”1”.
+If these two parameters are not given, only one solution is found
+and the ANF of the inverse is returned.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">matrix2anf</span><span class="p">,</span> <span class="n">compose_anf_fast</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inv_anf</span> <span class="o">=</span> <span class="n">find_inverse</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">inv_anf</span><span class="p">)</span>  <span class="c1"># , input_vars=[&quot;x0&quot;, &quot;x1&quot;, &quot;x2&quot;])</span>
+<span class="go">[x0*x2 x1*x2|   x0    x1    x2]</span>
+<span class="go">[-----------+-----------------]</span>
+<span class="go">[    0     1|    1     0     0]</span>
+<span class="go">[    1     1|    0     1     0]</span>
+<span class="go">[    0     0|    0     0     1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">compose_anf_fast</span><span class="p">(</span><span class="n">inv_anf</span><span class="p">,</span> <span class="n">anf</span><span class="p">),</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x0 x1 x2]</span>
+<span class="go">[--------]</span>
+<span class="go">[ 1  0  0]</span>
+<span class="go">[ 0  1  0]</span>
+<span class="go">[ 0  0  1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">GF</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">find_inverse</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inv_position</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">return_mode</span><span class="o">=</span><span class="s2">&quot;symbolic_anf&quot;</span><span class="p">,</span> <span class="n">num_sat_solutions</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[      x0       x1       x2|       1]</span>
+<span class="go">[--------------------------+--------]</span>
+<span class="go">[a1_0 + 1     a1_1     a1_2|      a1]</span>
+<span class="go">[    a1_0     a1_1     a1_2|      a1]</span>
+<span class="go">[       1        1        0|       0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># equations</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">*</span> <span class="n">anf2matrix</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[1 0 0]</span>
+<span class="go">[0 1 0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_equivalence">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_equivalence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_equiv_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_equiv_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equiv_ct_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_left_equiv_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'b'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_right_equiv_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_invertibility_equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_equivalence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_equivalence" title="Permalink to this definition"></a></dt>
+<dd><p>Find a pair of functions (A, B) such that B F A = G.</p>
+<p>Given the left function F and the right function G,
+this method finds a pair of functions (A, B) of given degrees
+such that B F A = G. If no solution is found, None is returned.</p>
+<p>If given degrees are 1 and equiv_ct_terms=True (resp. False),
+this methods finds whether F and G are affine (resp. linear) equivalent.
+Note that right_equiv_degree affects the right equivalence A and
+left_equiv_degree affects the left equivalence B.</p>
+<p>If F and G are the same, this methods finds self-equivalences.</p>
+<p>The pair (A, B) is found by solving the functional equation B F A = G.</p>
+<p>The parameter add_invertibility_equations can be [False, “right”, “left”, “both”].
+If “right” or “both”, an additional constraint is added to ensure
+the affine function B is a permutation (only supported with degree=1).
+If “left” or “both”, an additional constraint is added to ensure
+the affine function A is a permutation (only supported with degree=1).
+If False, no additional constraint is added regarding invertibility.
+Note that if F and G are permutations with the same input size,
+then no invertibility constraint is needed.</p>
+<p>This method does not support symbolic ANF, and the input functions F and G
+must be defined in the boolean polynomial ring
+BooleanPolynomialRing(n, ‘x’) with n the number of input variables.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+By default, return_mode=”list_anfs” and num_sat_solutions=”1”.
+If these two parameters are not given, only one solution is found
+and a pair containing the ANF of A and B is returned.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">get_lut_inversion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">get_linear_repr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">check_self_le_anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_linear_repr</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_lin</span><span class="p">,</span> <span class="n">left_lin</span> <span class="o">=</span> <span class="n">find_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">,</span> <span class="n">equiv_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># linear</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_lin</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x0 x1 x2]</span>
+<span class="go">[--------]</span>
+<span class="go">[ 0  1  0]</span>
+<span class="go">[ 1  1  1]</span>
+<span class="go">[ 0  0  1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">,</span> <span class="n">equiv_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">No solution found (found invalid equation 0 == 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_aff</span><span class="p">,</span> <span class="n">left_aff</span> <span class="o">=</span> <span class="n">find_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">,</span> <span class="n">equiv_ct_terms</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># affine</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_aff</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x0 x1 x2| 1]</span>
+<span class="go">[--------+--]</span>
+<span class="go">[ 0  1  0| 0]</span>
+<span class="go">[ 1  0  0| 0]</span>
+<span class="go">[ 0  0  1| 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+<span class="go">No solution found (system of equations is inconsistent (unsatisfiable))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_se</span><span class="p">,</span> <span class="n">left_se</span> <span class="o">=</span> <span class="n">find_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">left_anf</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">equiv_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># linear SE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_se</span><span class="p">,</span> <span class="n">left_se</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_se</span><span class="p">,</span> <span class="n">left_se</span> <span class="o">=</span> <span class="n">find_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">left_anf</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">equiv_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># non-linear SE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_se</span><span class="p">,</span> <span class="n">left_se</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_se</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x0*x1 x0*x2 x1*x2|   x0    x1    x2]</span>
+<span class="go">[-----------------+-----------------]</span>
+<span class="go">[    0     0     0|    0     1     1]</span>
+<span class="go">[    1     1     1|    0     1     1]</span>
+<span class="go">[    0     0     0|    1     0     1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_half_affine_equivalence">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_half_affine_equivalence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv_right_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_equiv_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_invertibility_equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_half_affine_equivalence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_half_affine_equivalence" title="Permalink to this definition"></a></dt>
+<dd><p>Find an affine permutation A such that F A G^{-1} is affine.</p>
+<p>Given the left permutation F and the right permutation G^{-1},
+this method finds an affine permutation A such that F A G^{-1} is affine
+Note that this is equivalent to the existence of B such that B F A = G.
+In particular, if F = G, A is a right affine self-equivalence of F.
+If no solution is found, None is returned.</p>
+<p>If add_invertibility_equations is True, an additional constraint is added to ensure
+A is invertible (not needed if F and G are permutations with the same input size).</p>
+<p>This method does not support symbolic ANF, and the input functions F and G
+must be defined in the boolean polynomial ring
+BooleanPolynomialRing(n, ‘x’) with n the number of input variables.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+By default, return_mode=”list_anfs” and num_sat_solutions=”1”.
+If these two parameters are not given, only one solution is found
+and the ANF of A is returned.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">invert_lut</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">check_self_ae_anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inv_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">invert_lut</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="fm">__xor__</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_se</span> <span class="o">=</span> <span class="n">find_half_affine_equivalence</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">inv_anf</span><span class="p">)</span>
+<span class="go">setting to 0 the free variables [a0_2, a0, a1_2, a1, a2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_se</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x0 x1 x2]</span>
+<span class="go">[--------]</span>
+<span class="go">[ 1  1  0]</span>
+<span class="go">[ 1  0  0]</span>
+<span class="go">[ 0  0  1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inv_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">invert_lut</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_se</span> <span class="o">=</span> <span class="n">find_half_affine_equivalence</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">inv_anf</span><span class="p">)</span>
+<span class="go">setting to 0 the free variables [a0_2, a0, a1_2, a1, a2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">check_self_ae_anf</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="n">right_se</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">inv_anf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_se</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x0 x1 x2]</span>
+<span class="go">[--------]</span>
+<span class="go">[ 1  1  0]</span>
+<span class="go">[ 1  0  0]</span>
+<span class="go">[ 0  0  1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_nondiagonal_ase">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_nondiagonal_ase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se_ct_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_se_left_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'b'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_se_right_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_nondiagonal_ase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_nondiagonal_ase" title="Permalink to this definition"></a></dt>
+<dd><p>Find an affine non-diagonal self-equivalence of F || G.</p>
+<p>Given the function F by left_anf and G by right_anf,
+finds an affine self-equivalence (A, B) of the concatenation F || G,
+where A is non-diagonal (A in matrix form is not a block
+diagonal matrix up to block row permutations).
+If no solution is found, None is returned.</p>
+<p>If se_ct_terms=False, the constant terms of A and B are set to zero.</p>
+<p>This method does not support symbolic ANF, and the input functions F and G
+must be defined in the boolean polynomial ring
+BooleanPolynomialRing(n, ‘x’) with n the number of input variables.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+By default, return_mode=”list_anfs” and num_sat_solutions=”1”.
+If these two parameters are not given, only one solution is found
+and a pair with the ANF of A and B is returned.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">invert_lut</span><span class="p">,</span> <span class="n">get_lut_inversion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">check_self_le_anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_anf</span> <span class="o">=</span> <span class="n">left_anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_se</span><span class="p">,</span> <span class="n">left_se</span> <span class="o">=</span> <span class="n">find_nondiagonal_ase</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">,</span> <span class="n">se_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">concat_anf</span> <span class="o">=</span> <span class="n">concatenate_anf</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">check_self_le_anf</span><span class="p">(</span><span class="n">concat_anf</span><span class="p">,</span> <span class="n">right_se</span><span class="p">,</span> <span class="n">left_se</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_se</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)])</span>
+<span class="go">[x0 x1 x2 x3 x4 x5]</span>
+<span class="go">[-----------------]</span>
+<span class="go">[ 1  0  1  0  1  0]</span>
+<span class="go">[ 0  1  0  0  0  0]</span>
+<span class="go">[ 0  1  1  0  0  0]</span>
+<span class="go">[ 0  0  0  1  0  0]</span>
+<span class="go">[ 0  0  0  0  0  1]</span>
+<span class="go">[ 0  0  0  0  1  0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_anf</span> <span class="o">=</span> <span class="n">left_anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_nondiagonal_ase</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">,</span> <span class="n">se_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  
+<span class="go">No solution found (system of equations is inconsistent (unsatisfiable))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_noninvertible_ase">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_noninvertible_ase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">se_ct_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_left_se_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'b'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_right_se_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_noninvertible_ase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_noninvertible_ase" title="Permalink to this definition"></a></dt>
+<dd><p>Find a non-invertible pair (A, B) such that F A = B F.</p>
+<p>An affine non-invertible self-equivalence of F is a pair of
+non-invertible affine functions (A, B) such that B F = F A.
+A is also called a right SE and B a left SE.
+If no solution is found, None is returned.</p>
+<p>If se_ct_terms=False, the constant terms of A and B are set to zero.</p>
+<p>This method does not support symbolic ANF, and the input function F
+must be defined in the boolean polynomial ring
+BooleanPolynomialRing(n,’x’) with n the number of input variables.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+By default, return_mode=”list_anfs” and num_sat_solutions=”1”.
+If these two parameters are not given, only one solution is found
+and a pair containing the ANF of A and B is returned.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">get_lut_inversion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_se</span><span class="p">,</span> <span class="n">left_se</span> <span class="o">=</span> <span class="n">find_noninvertible_ase</span><span class="p">(</span><span class="n">anf</span><span class="p">)</span>
+<span class="go">setting to 0 the free variables [b0, b1, b2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_se</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x1]</span>
+<span class="go">[--]</span>
+<span class="go">[ 0]</span>
+<span class="go">[ 0]</span>
+<span class="go">[ 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">left_se</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">])</span>
+<span class="go">[x1]</span>
+<span class="go">[--]</span>
+<span class="go">[ 0]</span>
+<span class="go">[ 0]</span>
+<span class="go">[ 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_noninvertible_ase</span><span class="p">(</span><span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+<span class="go">No solution found (system of equations is inconsistent (unsatisfiable))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_horizontal_decomposition">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_horizontal_decomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degree_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_inputs_first_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aff_ct_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_left_aff_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'b'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_right_aff_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_first_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_second_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'q'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_horizontal_decomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_horizontal_decomposition" title="Permalink to this definition"></a></dt>
+<dd><p>Find an horizontal decomposition P(x’)|Q(x’’) of G(x) in the affine class.</p>
+<p>An horizontal decomposition of G(x) is a pair of functions P(x’), Q(x’’),
+such that x = x’ || x’’ and (P,Q) and G are affine equivalent
+(linear equivalent if aff_ct_terms=False), that is, B (P, Q) A = G.
+P and Q are called the first and the second factor, respectively.
+If no solution is found, None is returned.</p>
+<p>The triple ((P, Q), A, B) is found by solving B (P, Q) A = G.</p>
+<p>If aff_ct_terms=False, finds A and B linear instead of affine.</p>
+<p>This method does not support symbolic ANF, and the input function G
+must be defined in the boolean polynomial ring
+BooleanPolynomialRing(n,’x’) with n the number of input variables.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+By default, return_mode=”list_anfs” and num_sat_solutions=”1”.
+If these two parameters are not given, only one solution is found
+abd the triple ((P, Q), A, B), each one in ANF form, is returned.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">lut2anf</span><span class="p">,</span> <span class="n">get_lut_inversion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>  <span class="c1"># 2nd to last 4b aff class</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decomp</span><span class="p">,</span> <span class="n">right_aff</span><span class="p">,</span> <span class="n">left_aff</span> <span class="o">=</span> <span class="n">find_horizontal_decomposition</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">setting to 0 the free variables [a0, p0, q0, q1, q2]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">decomp</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="s2">&quot;x3&quot;</span><span class="p">])</span>
+<span class="go">[x2*x3|   x0    x1    x2    x3]</span>
+<span class="go">[-----+-----------------------]</span>
+<span class="go">[    0|    1     0     0     0]</span>
+<span class="go">[    0|    0     0     1     0]</span>
+<span class="go">[    0|    0     0     0     1]</span>
+<span class="go">[    1|    0     1     1     1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">right_aff</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="s2">&quot;x3&quot;</span><span class="p">])</span>
+<span class="go">[x0 x1 x2 x3]</span>
+<span class="go">[-----------]</span>
+<span class="go">[ 0  1  0  0]</span>
+<span class="go">[ 1  0  0  0]</span>
+<span class="go">[ 0  0  1  0]</span>
+<span class="go">[ 0  0  0  1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">left_aff</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;x1&quot;</span><span class="p">,</span> <span class="s2">&quot;x2&quot;</span><span class="p">,</span> <span class="s2">&quot;x3&quot;</span><span class="p">])</span>
+<span class="go">[x0 x1 x2 x3| 1]</span>
+<span class="go">[-----------+--]</span>
+<span class="go">[ 0  0  0  1| 1]</span>
+<span class="go">[ 1  0  0  0| 0]</span>
+<span class="go">[ 0  1  0  0| 0]</span>
+<span class="go">[ 0  0  1  0| 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_horizontal_decomposition</span><span class="p">(</span><span class="n">anf</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># non-linear 3b cannot be decomposed</span>
+<span class="go">No solution found (system of equations is inconsistent (unsatisfiable))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.functionalequations.find_ccz_equivalence">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.functionalequations.</span></span><span class="sig-name descname"><span class="pre">find_ccz_equivalence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right_anf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equiv_degree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equiv_ct_terms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_invertibility_equations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_am_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">solve_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/functionalequations.html#find_ccz_equivalence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.functionalequations.find_ccz_equivalence" title="Permalink to this definition"></a></dt>
+<dd><p>Find an affine A such that A(graph F) = graph G.</p>
+<p>Given the left function F and the right function G,
+this method finds an invertible admissible mapping A of given degree
+such that the graph of G is equal to the graph of F transformed by A.
+If no solution is found, None is returned.</p>
+<p>Graph(f) is is the set of points {(x, F(x))}, and similar for Graph(G).</p>
+<p>If the given degree is 1 and equiv_ct_terms=True (resp. False),
+this method finds an affine (resp. linear) admissible mapping.</p>
+<p>If F and G are the same, this methods finds
+Graph(F) self-equivalences/automorphisms, that is,
+invertibles A such that A(graph F) = graph F.</p>
+<p>A = (a_0, a_1) is returned by solving the functional equation
+G(a_0(u, F(u))) = a_1(u, F(u)).</p>
+<p>If add_invertibility_equations=True, the equations that
+impose A to be invertible are added to the system of equations
+(only supported for equiv_degree=1).</p>
+<p>This method does not support symbolic ANF, and the input functions F and G
+must be defined in the boolean polynomial ring
+BooleanPolynomialRing(n, ‘x’) with n the number of input variables.</p>
+<p>Named arguments from <code class="docutils literal notranslate"><span class="pre">**solve_args</span></code> are passed to solve_functional_equation().
+By default, return_mode=”list_anfs” and num_sat_solutions=”1”.
+If these two parameters are not given, only one solution is found
+and the ANF of A is returned.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="n">get_lut_inversion</span><span class="p">,</span> <span class="n">lut2anf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="n">find_ccz_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">left_anf</span><span class="p">,</span> <span class="n">only_linear_fixed_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">equiv_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">am</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="mi">2</span><span class="p">)])</span>  <span class="c1"># Graph-SE</span>
+<span class="go">[x0 x1 x2 x3 x4 x5]</span>
+<span class="go">[-----------------]</span>
+<span class="go">[ 0  0  0  0  1  0]</span>
+<span class="go">[ 1  0  0  0  0  0]</span>
+<span class="go">[ 0  0  0  0  0  1]</span>
+<span class="go">[ 1  1  0  1  0  0]</span>
+<span class="go">[ 0  0  1  1  0  1]</span>
+<span class="go">[ 0  0  1  0  0  0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">find_ccz_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">only_linear_fixed_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">No solution found (system of equations is inconsistent (unsatisfiable))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># CCZ of inversion found with sboxU.ccz_equivalent_permutations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_anf</span> <span class="o">=</span> <span class="n">lut2anf</span><span class="p">(</span><span class="n">get_lut_inversion</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># next call might require to increase Python&#39;s recursionlimit</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">am</span> <span class="o">=</span> <span class="n">find_ccz_equivalence</span><span class="p">(</span><span class="n">left_anf</span><span class="p">,</span> <span class="n">right_anf</span><span class="p">,</span> <span class="n">equiv_ct_terms</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">only_linear_fixed_vars</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">am</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="p">)])</span>  
+<span class="go">[x0 x1 x2 x3 x4 x5 x6 x7]</span>
+<span class="go">[-----------------------]</span>
+<span class="go">[ 0  1  0  1  0  0  0  0]</span>
+<span class="go">[ 0  0  1  1  0  0  0  0]</span>
+<span class="go">[ 1  1  1  1  0  0  0  0]</span>
+<span class="go">[ 1  1  0  1  0  0  0  0]</span>
+<span class="go">[ 0  1  1  1  1  1  0  0]</span>
+<span class="go">[ 0  1  0  1  1  1  1  0]</span>
+<span class="go">[ 0  0  0  0  1  0  1  0]</span>
+<span class="go">[ 0  0  1  0  1  0  1  1]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boolcrypt.equivalence.html" class="btn btn-neutral float-left" title="boolcrypt.equivalence module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boolcrypt.cczselfequivalence.html" class="btn btn-neutral float-right" title="boolcrypt.cczselfequivalence module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

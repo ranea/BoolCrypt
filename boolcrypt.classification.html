@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.classification module &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="boolcrypt.findpoly module" href="boolcrypt.findpoly.html" />
+    <link rel="prev" title="boolcrypt.se_pmodadd.find_affinequadratic_se module" href="boolcrypt.se_pmodadd.find_affinequadratic_se.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="boolcrypt.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.utilities.html">boolcrypt.utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.equivalence.html">boolcrypt.equivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.functionalequations.html">boolcrypt.functionalequations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.cczselfequivalence.html">boolcrypt.cczselfequivalence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.sboxes.html">boolcrypt.sboxes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.modularaddition.html">boolcrypt.modularaddition module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.se_pmodadd.html">boolcrypt.se_pmodadd package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">boolcrypt.classification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpoly.html">boolcrypt.findpoly module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolymodp.html">boolcrypt.findpolymodp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="boolcrypt.findpolyoptimal.html">boolcrypt.findpolyoptimal module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="boolcrypt.html">API reference</a> &raquo;</li>
+      <li>boolcrypt.classification module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/boolcrypt.classification.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-boolcrypt.classification">
+<span id="boolcrypt-classification-module"></span><h1>boolcrypt.classification module<a class="headerlink" href="#module-boolcrypt.classification" title="Permalink to this headline"></a></h1>
+<p>Classify a list of permutations of the same bitsize according to given properties.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="boolcrypt.classification.Properties">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">boolcrypt.classification.</span></span><span class="sig-name descname"><span class="pre">Properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndSE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/classification.html#Properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.classification.Properties" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#boolcrypt.classification.Properties" title="boolcrypt.classification.Properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">boolcrypt.classification.Properties</span></code></a></p>
+<p>Abstract class that list the cryptographic properties to classify a list of permutations.</p>
+<p>Subclasses override the bitsize n of the functions and
+whether to ignore the self-equivalence properties ignore_se
+and the decomposition properties ignore_dec.</p>
+<p>An instance of a subclass represents the properties of a particular permutations.</p>
+<p>Base cryptographic properties:
+- diff: differential uniformity (log2)
+- lin: linearity (log2)
+- maxD: high (max) degree
+- minD: low (min) degree
+- linC: an n-bit hex value with i-th bit active if i-th component is linear
+- linS: an n-bit hex value with i-th bit active if i-th component has a linear structure</p>
+<p>Self-equivalence properties:
+- linSE: number of linear self-equivalences (log2)
+- affSE: number of affine self-equivalences (log2)
+- addSE: number of additive self-equivalences (log2)
+- niSE: whether has non-invertible affine self-equivalences
+- ndSE: whether has non-diagonal affine self-equivalence when concatenated with itself</p>
+<p>Decomposition property:
+- dec: an n-bit hex value with i-th bit active if is affine equivalent to
+F(x1,..,xi)|G(x{i+1),…)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.classification.get_properties">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.classification.</span></span><span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bitsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_se_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_dec_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/classification.html#get_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.classification.get_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Return a subclass of Properties used in classify_sboxes_properties().</p>
+<p>Return a subclass of Properties where it is fixed the bitsize and whether
+to include self-equivalence and decomposition properties.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Prop3b</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Prop3b</span><span class="o">.</span><span class="n">get_property_names</span><span class="p">()</span>
+<span class="go">&#39;diff,lin,maxD,minD,linC,linS,linSE,affSE,addSE,niSE,ndSE,dec&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">Prop3b</span><span class="o">.</span><span class="n">get_properties_identity</span><span class="p">())</span>
+<span class="go">&#39;8,4,1,1,0x7f,0xfe,168,1344,8,True,True,0x2&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">Prop3b</span><span class="o">.</span><span class="n">get_properties_inversion</span><span class="p">())</span>  
+<span class="go">&#39;2,2,2,2,0x0,0xfe,21,168,1,False,False,0x0&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Prop4b</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Prop4b</span><span class="o">.</span><span class="n">get_property_names</span><span class="p">()</span>
+<span class="go">&#39;diff,lin,maxD,minD,linC,linS&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">Prop4b</span><span class="o">.</span><span class="n">get_properties_identity</span><span class="p">())</span>
+<span class="go">&#39;16,8,1,1,0x7fff,0xfffe&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">Prop4b</span><span class="o">.</span><span class="n">get_properties_inversion</span><span class="p">())</span>
+<span class="go">&#39;4,4,3,3,0x0,0x0&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="boolcrypt.classification.classify_sboxes">
+<span class="sig-prename descclassname"><span class="pre">boolcrypt.classification.</span></span><span class="sig-name descname"><span class="pre">classify_sboxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">candidates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_identity_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_inversion_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">sat_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/boolcrypt/classification.html#classify_sboxes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#boolcrypt.classification.classify_sboxes" title="Permalink to this definition"></a></dt>
+<dd><p>Classify a list of permutations of the same bitsize according to given properties.</p>
+<p>Returns a CSV-like list, where each row is the list of properties of an S-box.
+The first row is the header with the names of each column property.</p>
+<p>The argument properties can be obtained from get_properties().</p>
+<p>If add_identity_row=True, the properties of the identity function are added
+after the header.
+If add_inversion_row=True, the properties of the inversion function are added
+after the header.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.sboxes</span> <span class="kn">import</span> <span class="n">affine_3b_classes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Prop3b</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">ignore_se_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dec_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classify_sboxes</span><span class="p">(</span><span class="n">affine_3b_classes</span><span class="p">,</span> <span class="n">Prop3b</span><span class="p">)</span>  
+<span class="go">lut,diff,lin,maxD,minD,linC,linS,linSE,affSE,addSE,niSE,ndSE,dec</span>
+<span class="go">01234567,8,4,1,1,0x7f,0xfe,168,1344,8,True,True,0x6</span>
+<span class="go">01234576,8,4,2,1,0x2a,0xfe,24,192,2,True,True,0x0</span>
+<span class="go">01234675,4,4,2,1,0x8,0xfe,12,96,1,True,False,0x0</span>
+<span class="go">01243675,2,2,2,2,0x0,0xfe,21,168,1,False,False,0x0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">boolcrypt.sboxes</span> <span class="kn">import</span> <span class="n">high_se_4bit_2deg_sboxes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Prop4b</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">ignore_se_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dec_properties</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">classify_sboxes</span><span class="p">(</span><span class="n">high_se_4bit_2deg_sboxes</span><span class="p">,</span> <span class="n">Prop4b</span><span class="p">,</span> <span class="n">add_identity_row</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  
+<span class="go">lut,diff,lin,maxD,minD,linC,linS,linSE,affSE,addSE,niSE,ndSE,dec</span>
+<span class="go">0123456789abcdef,16,8,1,1,0x7fff,0xfffe,20160,322560,16,True,True,0x6</span>
+<span class="go">6512304789abcdef,8,8,2,1,0x80,0xfffe,8,448,1,True,False,0x0</span>
+<span class="go">40132567c89badef,16,8,2,1,0x80,0xfffe,3,336,2,True,True,0x0</span>
+<span class="go">40623517a98bcdef,16,8,2,1,0x80,0xfffe,4,384,2,True,True,0x0</span>
+<span class="go">2013645789abcdef,16,8,2,1,0x888,0xfffe,8,384,2,True,True,0x0</span>
+<span class="go">1032456789abcdef,16,8,2,1,0x2aaa,0xfffe,192,3072,4,True,True,0x0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="boolcrypt.se_pmodadd.find_affinequadratic_se.html" class="btn btn-neutral float-left" title="boolcrypt.se_pmodadd.find_affinequadratic_se module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="boolcrypt.findpoly.html" class="btn btn-neutral float-right" title="boolcrypt.findpoly module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

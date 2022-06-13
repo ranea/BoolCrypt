@@ -1,0 +1,6 @@
+boolcrypt.modularaddition module
+================================
+
+.. automodule:: boolcrypt.modularaddition
+   :members:
+   :show-inheritance:

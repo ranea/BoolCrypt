@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>boolcrypt.se_pmodadd.find_affine_se &mdash; BoolCrypt 0.1.dev documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> BoolCrypt
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">BoolCrypt 0.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boolcrypt.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">BoolCrypt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>boolcrypt.se_pmodadd.find_affine_se</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for boolcrypt.se_pmodadd.find_affine_se</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Find affine self-equivalences (ASE) of the permuted modular addition.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">from</span> <span class="nn">boolcrypt.utilities</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">str2bp</span><span class="p">,</span> <span class="n">get_time</span><span class="p">,</span> <span class="n">get_smart_print</span><span class="p">,</span> <span class="n">BooleanPolynomialRing</span><span class="p">,</span> <span class="n">get_symbolic_anf</span><span class="p">,</span>
+    <span class="n">get_anf_coeffmatrix_str</span><span class="p">,</span> <span class="n">matrix2anf</span><span class="p">,</span> <span class="n">anf2matrix</span><span class="p">,</span> <span class="n">get_ct_coeff</span><span class="p">,</span> <span class="n">substitute_anf</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">boolcrypt.functionalequations</span> <span class="kn">import</span> <span class="n">find_fixed_vars</span>
+<span class="kn">from</span> <span class="nn">boolcrypt.cczselfequivalence</span> <span class="kn">import</span> <span class="n">find_self_equivalence</span>
+<span class="kn">from</span> <span class="nn">boolcrypt.modularaddition</span> <span class="kn">import</span> <span class="n">get_modadd_anf</span><span class="p">,</span> <span class="n">get_ccz_modadd_anf</span><span class="p">,</span> <span class="n">get_admissible_mapping</span>
+
+<span class="kn">import</span> <span class="nn">sage.all</span>
+
+
+<div class="viewcode-block" id="shape"><a class="viewcode-back" href="../../../boolcrypt.se_pmodadd.find_affine_se.html#boolcrypt.se_pmodadd.find_affine_se.shape">[docs]</a><span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">prefix_symbolic_anf</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Symbolic shape of the CCZ ASE of the &quot;H&quot; quadratic CCZ of the permuted modular addition.&quot;&quot;&quot;</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">wordsize</span>
+
+    <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">3</span>  <span class="c1"># for ws = 3, all non-zero blocks have no shape</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">prefix_symbolic_anf</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix_symbolic_anf</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">))</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">var2val</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+
+    <span class="c1"># ----- LINEAR COEFFS -----</span>
+
+    <span class="c1"># identity-based blocks</span>
+    <span class="c1"># ws = 3</span>
+    <span class="c1"># x 0 0, 0 1 0, x x x A</span>
+    <span class="c1"># x 0 0, x 1 0, x x x B</span>
+    <span class="c1"># ws = 4</span>
+    <span class="c1"># x 0 0 0, 0 1 0 0, 0 0 1 0, x x x x A</span>
+    <span class="c1"># x 0 0 0, x 1 0 0, x 0 1 0, x x x x B</span>
+    <span class="c1"># ws = 5</span>
+    <span class="c1"># x 0 0 0 0, 0 1 0 0 0, ..., x x x x x A</span>
+    <span class="c1"># x 0 0 0 0, x 1 0 0 0, ..., x x x x x B</span>
+
+    <span class="k">def</span> <span class="nf">get_A_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">SR</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span>
+        <span class="n">block</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span><span class="p">):</span>
+            <span class="n">block</span><span class="p">[</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">block</span>
+
+    <span class="k">def</span> <span class="nf">get_B_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">identity_matrix</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">SR</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">block</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span><span class="p">):</span>
+            <span class="n">block</span><span class="p">[</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">block</span>
+
+    <span class="c1"># x000/0000-based blocks</span>
+    <span class="c1"># ws = 3</span>
+    <span class="c1"># x 0 0, 0 0 0, x x x C</span>
+    <span class="c1"># x 0 0, 0 0 0, x x 0 D</span>
+    <span class="c1"># ws = 4</span>
+    <span class="c1"># x 0 0 0, 0 0 0 0, 0 0 0 0, x x x x C</span>
+    <span class="c1"># x 0 0 0, 0 0 0 0, 0 0 0 0, x x x 0 D</span>
+    <span class="c1"># ws = 5</span>
+    <span class="c1"># x 0 0 0 0, 0 0 0 0 0, ..., 0 0 0 0 0, x x x x x C</span>
+    <span class="c1"># x 0 0 0 0, 0 0 0 0 0, ..., 0 0 0 0 0, x x x x x D</span>
+
+    <span class="k">def</span> <span class="nf">get_C_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">zero_matrix</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">SR</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span>
+        <span class="n">block</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span><span class="p">):</span>
+            <span class="n">block</span><span class="p">[</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">block</span>
+
+    <span class="k">def</span> <span class="nf">get_D_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">get_C_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="n">block</span><span class="p">[</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">block</span>
+
+    <span class="c1"># x000/x000-based blocks</span>
+    <span class="c1"># ws = 3</span>
+    <span class="c1"># x 0 0, x 0 0, x x x E</span>
+    <span class="c1"># x 0 0, x 0 0, x x 0 F</span>
+    <span class="c1"># ws = 4</span>
+    <span class="c1"># x 0 0 0, x 0 0 0, x 0 0 0, x x x x E</span>
+    <span class="c1"># x 0 0 0, x 0 0 0, x 0 0 0, x x x 0 F</span>
+    <span class="c1"># ws = 5</span>
+    <span class="c1"># x 0 0 0 0, ..., x 0 0 0 0, x x x x x E</span>
+    <span class="c1"># x 0 0 0 0, ..., x 0 0 0 0, x x x x 0 F</span>
+
+    <span class="k">def</span> <span class="nf">get_E_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;E&quot;</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">zero_matrix</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">SR</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">block</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ws</span><span class="p">):</span>
+            <span class="n">block</span><span class="p">[</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">block</span>
+
+    <span class="k">def</span> <span class="nf">get_F_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">):</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">get_E_block</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="n">block</span><span class="p">[</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">block</span>
+
+    <span class="c1"># def get_full_block(index, prefix):</span>
+    <span class="c1">#     block = sage.all.zero_matrix(sage.all.SR, nrows=ws, ncols=ws)</span>
+    <span class="c1">#     for i in range(ws):</span>
+    <span class="c1">#         for j in range(ws):</span>
+    <span class="c1">#             block[i, j] = sage.all.var(&quot;ab{}{}_{}_{}&quot;.format(index, prefix, i, j))</span>
+    <span class="c1">#     return block</span>
+
+    <span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_A_block</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+    <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_B_block</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+    <span class="n">C0</span><span class="p">,</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_C_block</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_D_block</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+    <span class="n">E0</span><span class="p">,</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_E_block</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_F_block</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+    <span class="n">right_ct</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">zero_matrix</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">SR</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">ws</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">wordsize</span><span class="p">):</span>
+        <span class="n">right_ct</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s2">&quot;a&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+    <span class="n">varnames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="p">[</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">E0</span><span class="p">,</span> <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">right_ct</span><span class="p">]:</span>
+        <span class="n">varnames</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">matrix</span><span class="o">.</span><span class="n">variables</span><span class="p">()])</span>
+
+    <span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="n">varnames</span><span class="p">)</span>
+
+    <span class="n">aux</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">matrix</span> <span class="ow">in</span> <span class="p">[</span><span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">E0</span><span class="p">,</span> <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">right_ct</span><span class="p">]:</span>
+        <span class="n">aux</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">bpr</span><span class="p">,</span> <span class="n">matrix</span><span class="o">.</span><span class="n">nrows</span><span class="p">(),</span> <span class="n">matrix</span><span class="o">.</span><span class="n">ncols</span><span class="p">(),</span>
+                                   <span class="p">[</span><span class="n">bpr</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">matrix</span><span class="o">.</span><span class="n">list</span><span class="p">()]))</span>
+    <span class="n">A0</span><span class="p">,</span> <span class="n">A1</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">E0</span><span class="p">,</span> <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">right_ct</span> <span class="o">=</span> <span class="n">aux</span>
+
+    <span class="c1"># -----</span>
+
+    <span class="k">class</span> <span class="nc">MyOrderedDict</span><span class="p">(</span><span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="n">bpr_gens_dict</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens_dict</span><span class="p">()</span>
+    <span class="n">to_sr</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">str2bp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bpr_gens_dict</span><span class="p">)</span>
+
+    <span class="n">replacements</span> <span class="o">=</span> <span class="n">MyOrderedDict</span><span class="p">()</span>
+
+    <span class="c1"># -----</span>
+
+    <span class="c1"># a</span>
+    <span class="c1"># w = 4</span>
+    <span class="c1"># (&#39;a1&#39;, 0),</span>
+    <span class="c1"># (&#39;a5&#39;, 0),</span>
+    <span class="c1"># (&#39;a13&#39;, 0)</span>
+    <span class="c1"># w = 5</span>
+    <span class="c1"># (&#39;a1&#39;, 0), (&#39;a2&#39;, 0),</span>
+    <span class="c1"># (&#39;a6&#39;, 0), (&#39;a7&#39;, 0),</span>
+    <span class="c1"># (&#39;a16&#39;, 0), (&#39;a17&#39;, 0)</span>
+    <span class="c1"># w = 6</span>
+    <span class="c1"># (&#39;a1&#39;, 0), (&#39;a2&#39;, 0), (&#39;a3&#39;, 0),</span>
+    <span class="c1"># (&#39;a7&#39;, 0), (&#39;a8&#39;, 0), (&#39;a9&#39;, 0),</span>
+    <span class="c1"># (&#39;a19&#39;, 0), (&#39;a20&#39;, 0), (&#39;a21&#39;, 0)</span>
+    <span class="c1"># w = 7</span>
+    <span class="c1"># (&#39;a1&#39;, 0), (&#39;a2&#39;, 0), (&#39;a3&#39;, 0), (&#39;a4&#39;, 0),</span>
+    <span class="c1"># (&#39;a8&#39;, 0), (&#39;a9&#39;, 0), (&#39;a10&#39;, 0), (&#39;a11&#39;, 0),</span>
+    <span class="c1"># (&#39;a22&#39;, 0), (&#39;a23&#39;, 0), (&#39;a24&#39;, 0), (&#39;a25&#39;, 0)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;a</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;a</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;a</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">ws</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># not all aB</span>
+    <span class="c1"># w = 4, (&#39;aB0_2_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1"># w = 5, (&#39;aB0_2_0&#39;, &#39;aB0_1_0&#39;), (&#39;aB0_3_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1"># w = 6, (&#39;aB0_2_0&#39;, &#39;aB0_1_0&#39;), (&#39;aB0_3_0&#39;, &#39;aB0_1_0&#39;), (&#39;aB0_4_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1"># w = 7, (&#39;aB0_2_0&#39;, &#39;aB0_1_0&#39;), (&#39;aB0_3_0&#39;, &#39;aB0_1_0&#39;), (&#39;aB0_4_0&#39;, &#39;aB0_1_0&#39;), (&#39;aB0_5_0&#39;, &#39;aB0_1_0&#39;)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aB0_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aB0_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># not all AC (w from 4 to 7)</span>
+    <span class="c1"># (&#39;aC0_3_1&#39;, &#39;aA0_3_1&#39;),</span>
+    <span class="c1"># (&#39;aC0_4_1&#39;, &#39;aA0_4_1&#39;), (&#39;aC0_4_2&#39;, &#39;aA0_4_2&#39;),</span>
+    <span class="c1"># (&#39;aC0_5_1&#39;, &#39;aA0_5_1&#39;), (&#39;aC0_5_2&#39;, &#39;aA0_5_2&#39;), (&#39;aC0_5_3&#39;, &#39;aA0_5_3&#39;),</span>
+    <span class="c1"># (&#39;aC0_6_1&#39;, &#39;aA0_6_1&#39;), (&#39;aC0_6_2&#39;, &#39;aA0_6_2&#39;), (&#39;aC0_6_3&#39;, &#39;aA0_6_3&#39;), (&#39;aC0_6_4&#39;, &#39;aA0_6_4&#39;),</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aC0_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aA0_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))</span>
+
+    <span class="c1"># not all aD0/aD1</span>
+    <span class="c1"># (&#39;aD0_3_1&#39;, &#39;aB0_3_1 + aA0_3_1&#39;),</span>
+    <span class="c1"># (&#39;aD0_4_1&#39;, &#39;aB0_4_1 + aA0_4_1&#39;), (&#39;aD0_4_2&#39;, &#39;aB0_4_2 + aA0_4_2&#39;),</span>
+    <span class="c1"># (&#39;aD0_5_1&#39;, &#39;aB0_5_1 + aA0_5_1&#39;), (&#39;aD0_5_2&#39;, &#39;aB0_5_2 + aA0_5_2&#39;), (&#39;aD0_5_3&#39;, &#39;aB0_5_3 + aA0_5_3&#39;),</span>
+    <span class="c1"># (&#39;aD0_6_1&#39;, &#39;aB0_6_1 + aA0_6_1&#39;), (&#39;aD0_6_2&#39;, &#39;aB0_6_2 + aA0_6_2&#39;), (&#39;aD0_6_3&#39;, &#39;aB0_6_3 + aA0_6_3&#39;), (&#39;aD0_6_4&#39;, &#39;aB0_6_4 + aA0_6_4&#39;),</span>
+    <span class="c1">#</span>
+    <span class="c1"># (&#39;aD1_3_1&#39;, &#39;aB0_3_1 + aA0_3_1&#39;),</span>
+    <span class="c1"># (&#39;aD1_4_1&#39;, &#39;aB0_4_1 + aA0_4_1&#39;), (&#39;aD1_4_2&#39;, &#39;aB0_4_2 + aA0_4_2&#39;),</span>
+    <span class="c1"># (&#39;aD1_5_1&#39;, &#39;aB0_5_1 + aA0_5_1&#39;), (&#39;aD1_5_2&#39;, &#39;aB0_5_2 + aA0_5_2&#39;), (&#39;aD1_5_3&#39;, &#39;aB0_5_3 + aA0_5_3&#39;),</span>
+    <span class="c1"># (&#39;aD1_6_1&#39;, &#39;aB0_6_1 + aA0_6_1&#39;), (&#39;aD1_6_2&#39;, &#39;aB0_6_2 + aA0_6_2&#39;), (&#39;aD1_6_3&#39;, &#39;aB0_6_3 + aA0_6_3&#39;), (&#39;aD1_6_4&#39;, &#39;aB0_6_4 + aA0_6_4&#39;),</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aD0_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aB0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2"> + aA0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aD1_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aB0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2"> + aA0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))</span>
+
+    <span class="c1"># not all E0 (from w=3 to w=7)</span>
+    <span class="c1"># (&#39;aE0_1_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aE0_1_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_2_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aE0_1_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_2_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_3_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aE0_1_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_2_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_3_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_4_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aE0_1_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_2_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_3_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_4_0&#39;, &#39;aB0_1_0&#39;), (&#39;aE0_5_0&#39;, &#39;aB0_1_0&#39;),</span>
+    <span class="c1">#</span>
+    <span class="c1"># ()</span>
+    <span class="c1"># (&#39;aE0_3_1&#39;, &#39;aA0_3_1&#39;),</span>
+    <span class="c1"># (&#39;aE0_4_1&#39;, &#39;aA0_4_1&#39;), (&#39;aE0_4_2&#39;, &#39;aA0_4_2&#39;),</span>
+    <span class="c1"># (&#39;aE0_5_1&#39;, &#39;aA0_5_1&#39;), (&#39;aE0_5_2&#39;, &#39;aA0_5_2&#39;), (&#39;aE0_5_3&#39;, &#39;aA0_5_3&#39;),</span>
+    <span class="c1"># (&#39;aE0_6_1&#39;, &#39;aA0_6_1&#39;), (&#39;aE0_6_2&#39;, &#39;aA0_6_2&#39;), (&#39;aE0_6_3&#39;, &#39;aA0_6_3&#39;), (&#39;aE0_6_4&#39;, &#39;aA0_6_4&#39;),</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aE0_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aB0_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aE0_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aA0_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))</span>
+
+    <span class="c1"># not all F0</span>
+    <span class="c1"># (&#39;aF0_2_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aF0_2_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF0_3_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aF0_2_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF0_3_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF0_4_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aF0_2_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF0_3_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF0_4_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF0_5_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1">#</span>
+    <span class="c1"># (&#39;aF0_3_1&#39;, &#39;aB0_3_1 + aA0_3_1&#39;),</span>
+    <span class="c1"># (&#39;aF0_4_1&#39;, &#39;aB0_4_1 + aA0_4_1&#39;), (&#39;aF0_4_2&#39;, &#39;aB0_4_2 + aA0_4_2&#39;),</span>
+    <span class="c1"># (&#39;aF0_5_1&#39;, &#39;aB0_5_1 + aA0_5_1&#39;), (&#39;aF0_5_2&#39;, &#39;aB0_5_2 + aA0_5_2&#39;), (&#39;aF0_5_3&#39;, &#39;aB0_5_3 + aA0_5_3&#39;),</span>
+    <span class="c1"># (&#39;aF0_6_1&#39;, &#39;aB0_6_1 + aA0_6_1&#39;), (&#39;aF0_6_2&#39;, &#39;aB0_6_2 + aA0_6_2&#39;), (&#39;aF0_6_3&#39;, &#39;aB0_6_3 + aA0_6_3&#39;), (&#39;aF0_6_4&#39;, &#39;aB0_6_4 + aA0_6_4&#39;),</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aF0_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aF0_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aF0_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aB0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2"> + aA0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))</span>
+
+    <span class="c1"># not all F1</span>
+    <span class="c1"># (&#39;aF1_1_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aF1_1_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_2_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aF1_1_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_2_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_3_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aF1_1_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_2_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_3_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_4_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1"># (&#39;aF1_1_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_2_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_3_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_4_0&#39;, &#39;aF0_1_0&#39;), (&#39;aF1_5_0&#39;, &#39;aF0_1_0&#39;),</span>
+    <span class="c1">#</span>
+    <span class="c1"># ()</span>
+    <span class="c1"># (&#39;aF1_3_1&#39;, &#39;aB0_3_1 + aA0_3_1&#39;),</span>
+    <span class="c1"># (&#39;aF1_4_1&#39;, &#39;aB0_4_1 + aA0_4_1&#39;), (&#39;aF1_4_2&#39;, &#39;aB0_4_2 + aA0_4_2&#39;),</span>
+    <span class="c1"># (&#39;aF1_5_1&#39;, &#39;aB0_5_1 + aA0_5_1&#39;), (&#39;aF1_5_2&#39;, &#39;aB0_5_2 + aA0_5_2&#39;), (&#39;aF1_5_3&#39;, &#39;aB0_5_3 + aA0_5_3&#39;),</span>
+    <span class="c1"># (&#39;aF1_6_1&#39;, &#39;aB0_6_1 + aA0_6_1&#39;), (&#39;aF1_6_2&#39;, &#39;aB0_6_2 + aA0_6_2&#39;), (&#39;aF1_6_3&#39;, &#39;aB0_6_3 + aA0_6_3&#39;), (&#39;aF1_6_4&#39;, &#39;aB0_6_4 + aA0_6_4&#39;),</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aF1_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aF0_</span><span class="si">{}</span><span class="s2">_0&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ws</span> <span class="o">-</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">ws</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="n">replacements</span><span class="p">[</span><span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aF1_</span><span class="si">{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))]</span> <span class="o">=</span> <span class="n">to_sr</span><span class="p">(</span><span class="s2">&quot;aB0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2"> + aA0_</span><span class="si">{0}</span><span class="s2">_</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ws</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">i</span><span class="p">))</span>
+
+    <span class="c1"># -----</span>
+
+    <span class="c1"># A0, A1 = A0.subs(replacements), A1.subs(replacements)</span>
+    <span class="n">B0</span> <span class="o">=</span> <span class="n">B0</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span>
+    <span class="c1"># B1 = B1.subs(replacements)</span>
+    <span class="n">C0</span> <span class="o">=</span> <span class="n">C0</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span>
+    <span class="n">D0</span><span class="p">,</span> <span class="n">D1</span> <span class="o">=</span> <span class="n">D0</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">),</span> <span class="n">D1</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span>
+    <span class="n">E0</span> <span class="o">=</span> <span class="n">E0</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span>
+    <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span> <span class="o">=</span> <span class="n">F0</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">),</span> <span class="n">F1</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span>
+    <span class="n">right_ct</span> <span class="o">=</span> <span class="n">right_ct</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">)</span>
+
+    <span class="c1"># ----</span>
+
+    <span class="n">B1</span> <span class="o">=</span> <span class="n">F1</span> <span class="o">+</span> <span class="n">B0</span>
+    <span class="n">A1</span> <span class="o">=</span> <span class="n">D0</span> <span class="o">+</span> <span class="n">A0</span>
+
+    <span class="n">zz</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">zero_matrix</span><span class="p">(</span><span class="n">bpr</span><span class="p">,</span> <span class="n">ws</span><span class="p">,</span> <span class="n">ws</span><span class="p">)</span>
+
+    <span class="c1"># Z0, Z1, Z2, Z3, Z4, Z5, Z6, Z7, Z8, Z9, ZA, ZB, ZC, ZD = [get_full_block(i, i) for i in range(14)]</span>
+
+    <span class="c1"># A0 C0 C0 0</span>
+    <span class="c1"># F0 B0 F1 E0</span>
+    <span class="c1"># E0 0  B1 E0</span>
+    <span class="c1"># D0 C0 D1 A1</span>
+
+    <span class="n">right_matrix</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">block_matrix</span><span class="p">([</span>
+        <span class="p">[</span><span class="n">A0</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">zz</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">F0</span><span class="p">,</span> <span class="n">B0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">E0</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">E0</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">E0</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">D0</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">D1</span><span class="p">,</span> <span class="n">A1</span><span class="p">],</span> <span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;matrix shape:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">right_matrix</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;ct shape:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">right_ct</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">set_final_varnames</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">right_matrix</span><span class="o">.</span><span class="n">nrows</span><span class="p">()):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">right_matrix</span><span class="o">.</span><span class="n">ncols</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">:</span>
+                <span class="n">varname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">varname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">),</span> <span class="n">j</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">varname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var2val</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">right_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">str_var</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="s2">&quot;+&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;*&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+                    <span class="n">set_final_varnames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">str_var</span><span class="p">)</span>
+            <span class="n">var2val</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">right_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span> <span class="k">if</span> <span class="n">right_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> \
+                <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">right_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="n">right_ct</span><span class="o">.</span><span class="n">nrows</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">right_ct</span><span class="o">.</span><span class="n">ncols</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">:</span>
+            <span class="n">varname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">varname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix_symbolic_anf</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">varname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var2val</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">right_ct</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">str_var</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="s2">&quot;+&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;*&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">str_var</span>
+                <span class="n">set_final_varnames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+        <span class="n">var2val</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">right_ct</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span> <span class="k">if</span> <span class="n">right_ct</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> \
+            <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">right_ct</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+
+    <span class="c1"># checked for w = 3,4,5 and 6</span>
+    <span class="n">inv_equations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;aF0_0_0*aE0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aC0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aC0_0_0 + aF0_0_0*aC0_0_0*aB0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aA0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1"> + &#39;</span>
+         <span class="sa">f</span><span class="s1">&#39;aE0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aE0_0_0*aC0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aC0_0_0 + aE0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aC0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aB0_0_0*aA0_0_0 + &#39;</span>
+         <span class="sa">f</span><span class="s1">&#39;aE0_0_0*aC0_0_0*aB0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aA0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1"> + aB0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aB0_0_0*aA0_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">ws</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s1">*aA0_0_0 + 1&#39;</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">varnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">vn</span> <span class="k">for</span> <span class="n">vn</span> <span class="ow">in</span> <span class="n">varnames</span> <span class="k">if</span> <span class="n">vn</span> <span class="ow">in</span> <span class="n">set_final_varnames</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">var2val</span><span class="p">,</span> <span class="n">inv_equations</span><span class="p">,</span> <span class="n">varnames</span></div>
+
+
+<div class="viewcode-block" id="graph_ase_coeffs2modadd_ase_anf"><a class="viewcode-back" href="../../../boolcrypt.se_pmodadd.find_affine_se.html#boolcrypt.se_pmodadd.find_affine_se.graph_ase_coeffs2modadd_ase_anf">[docs]</a><span class="k">def</span> <span class="nf">graph_ase_coeffs2modadd_ase_anf</span><span class="p">(</span><span class="n">coeff2expr</span><span class="p">,</span> <span class="n">wordsize</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">equations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given the symbolic coefficients of the CCZ ASE of the &quot;H&quot; quadratic CCZ,</span>
+<span class="sd">    return the symbolic anf ASE of the permuted modular addition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span> <span class="ow">or</span> <span class="n">debug</span>
+
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">wordsize</span>
+    <span class="n">ccz_anf_name</span> <span class="o">=</span> <span class="s2">&quot;H&quot;</span>
+    <span class="n">permuted</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">D</span><span class="si">{}</span><span class="s2">H</span><span class="si">{}</span><span class="s2">M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result-graph_ase_coeffs2modadd_ase_anf-w</span><span class="si">{</span><span class="n">ws</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+
+    <span class="n">admissible_mapping</span> <span class="o">=</span> <span class="n">get_admissible_mapping</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">ccz_anf_name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+
+    <span class="n">x_varnames</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">ws</span><span class="p">)]</span>
+    <span class="n">coeff_varnames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coeff2expr</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="n">coeff2expr</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">(</span><span class="n">coeff2expr</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">coeff2expr</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">symbolic_expression</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">variables</span><span class="p">():</span>
+            <span class="n">varname</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">varname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">coeff_varnames</span><span class="p">:</span>
+                <span class="n">coeff_varnames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">varname</span><span class="p">)</span>
+    <span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="n">x_varnames</span> <span class="o">+</span> <span class="n">coeff_varnames</span><span class="p">)</span>
+
+    <span class="n">prefix_get_symbolic_anf</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ws</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ws</span><span class="p">,</span> <span class="n">ct_terms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix_inputs</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+                         <span class="n">prefix_coeffs</span><span class="o">=</span><span class="n">prefix_get_symbolic_anf</span><span class="p">,</span>
+                         <span class="n">coeff2expr</span><span class="o">=</span><span class="n">coeff2expr</span><span class="p">,</span> <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">)</span>
+    <span class="n">c_input_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">bpr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_varnames</span><span class="p">]</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">free variables (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">coeff_varnames</span><span class="p">)</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">coeff_varnames</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- C:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">))</span>
+
+    <span class="kn">from</span> <span class="nn">sage.structure.element</span> <span class="kn">import</span> <span class="n">is_Matrix</span>
+    <span class="k">if</span> <span class="n">is_Matrix</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">):</span>
+        <span class="n">am_anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">,</span> <span class="n">bool_poly_ring</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">c_input_vars</span><span class="p">)</span>
+        <span class="n">am_matrix</span> <span class="o">=</span> <span class="n">admissible_mapping</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">is_Matrix</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;affine admissible mappings not supported&quot;</span><span class="p">)</span>
+        <span class="n">am_anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bool_poly_ring</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span>
+                            <span class="n">input_vars</span><span class="o">=</span><span class="n">c_input_vars</span><span class="p">,</span> <span class="n">bin_vector</span><span class="o">=</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">am_matrix</span> <span class="o">=</span> <span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">am_anf</span> <span class="o">=</span> <span class="n">admissible_mapping</span>
+        <span class="n">am_matrix</span> <span class="o">=</span> <span class="n">anf2matrix</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_input_vars</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">get_ct_coeff</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_input_vars</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;affine admissible mappings not supported&quot;</span><span class="p">)</span>
+    <span class="n">inv_am_anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">am_matrix</span><span class="o">.</span><span class="n">inverse</span><span class="p">(),</span> <span class="n">bool_poly_ring</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">c_input_vars</span><span class="p">)</span>
+
+    <span class="n">num_c_input_vars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_input_vars</span><span class="p">)</span>
+    <span class="n">l_c_linv</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span>
+        <span class="n">c</span><span class="p">,</span> <span class="p">{</span><span class="n">c_input_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">inv_am_anf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_c_input_vars</span><span class="p">)},</span> <span class="n">bpr</span><span class="p">)</span>
+    <span class="n">l_c_linv</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span>
+        <span class="n">am_anf</span><span class="p">,</span> <span class="p">{</span><span class="n">c_input_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">l_c_linv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_c_input_vars</span><span class="p">)},</span> <span class="n">bpr</span><span class="p">)</span>
+
+    <span class="n">l_c_linv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">l_c_linv</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- L C L^(-1):&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">l_c_linv</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">))</span>
+
+    <span class="n">aux_rep</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">bpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">c_input_vars</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">:]}</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span><span class="n">l_c_linv</span><span class="p">[:</span><span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">],</span> <span class="n">aux_rep</span><span class="p">,</span> <span class="n">bpr</span><span class="p">)</span>
+    <span class="n">aux_rep</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_c_input_vars</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">:</span>
+            <span class="n">aux_rep</span><span class="p">[</span><span class="n">c_input_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">bpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">aux_rep</span><span class="p">[</span><span class="n">c_input_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">c_input_vars</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">]</span>
+    <span class="n">b_inv</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span><span class="n">l_c_linv</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">:],</span> <span class="n">aux_rep</span><span class="p">,</span> <span class="n">bpr</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- SE (A, B) of F:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot; - A:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">[:</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ws</span><span class="p">]))</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot; - B^(-1):&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">b_inv</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">[:</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ws</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">equations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># print the self-equivalence with variables c0, c1, c2,..</span>
+        <span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">bpr</span><span class="o">.</span><span class="n">variable_names</span><span class="p">())</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;c&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coeff_varnames</span><span class="p">))])</span>
+        <span class="n">aux_rep</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coeff_varnames</span><span class="p">):</span>
+            <span class="n">aux_rep</span><span class="p">[</span><span class="n">bpr</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">bpr</span><span class="p">(</span><span class="s2">&quot;c&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">aux_rep</span><span class="p">,</span> <span class="n">bpr</span><span class="p">)</span>
+        <span class="n">b_inv</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span><span class="n">b_inv</span><span class="p">,</span> <span class="n">aux_rep</span><span class="p">,</span> <span class="n">bpr</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- SE (A, B) of permuted modular addition for wordsize </span><span class="si">{</span><span class="n">ws</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot; - Variables: &quot;</span><span class="p">,</span> <span class="n">aux_rep</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot; - A:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">[:</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ws</span><span class="p">]))</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot; - B^(-1):&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">b_inv</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">[:</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ws</span><span class="p">]))</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> - Constrains:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="n">equations</span><span class="p">:</span>
+            <span class="n">smart_print</span><span class="p">(</span><span class="n">bpr</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">aux_rep</span><span class="p">))</span>
+
+    <span class="c1"># from boolcrypt.utilities import simplify_symbolic_anf</span>
+    <span class="c1"># a_b_inv = simplify_symbolic_anf(list(a) + list(b_inv), c_input_vars[:2 * ws], prefix=&quot;c&quot;)</span>
+    <span class="c1"># a, b_inv = a_b_inv[:2*ws], a_b_inv[2*ws:]</span>
+    <span class="c1"># # b_inv = simplify_symbolic_anf(b_inv, c_input_vars[:2 * ws])</span>
+    <span class="c1"># smart_print(f&quot;\n- Simplified SE (A, B) of F:&quot;)</span>
+    <span class="c1"># smart_print(&quot; - A:&quot;)</span>
+    <span class="c1"># smart_print(get_anf_coeffmatrix_str(a, c_input_vars[:2 * ws], full_repr=True))</span>
+    <span class="c1"># smart_print(&quot; - B^(-1):&quot;)</span>
+    <span class="c1"># smart_print(get_anf_coeffmatrix_str(b_inv, c_input_vars[:2 * ws], full_repr=True))</span>
+    <span class="c1"># smart_print()</span>
+
+    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">b_inv</span></div>
+
+
+<div class="viewcode-block" id="find_ase_pmodadd_slow"><a class="viewcode-back" href="../../../boolcrypt.se_pmodadd.find_affine_se.html#boolcrypt.se_pmodadd.find_affine_se.find_ase_pmodadd_slow">[docs]</a><span class="k">def</span> <span class="nf">find_ase_pmodadd_slow</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find all affine self-equivalences of the permuted modular addition for a fixed wordsize&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">6</span>
+
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span> <span class="ow">or</span> <span class="n">debug</span>
+
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">wordsize</span>
+    <span class="n">ccz_anf_name</span> <span class="o">=</span> <span class="s2">&quot;H&quot;</span>
+    <span class="n">permuted</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">D</span><span class="si">{}</span><span class="s2">H</span><span class="si">{}</span><span class="s2">M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result-find_ase_pmodadd_slow-w</span><span class="si">{</span><span class="n">ws</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+
+    <span class="n">ccz_modadd_anf</span> <span class="o">=</span> <span class="n">get_ccz_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">ccz_anf_name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+    <span class="n">admissible_mapping</span> <span class="o">=</span> <span class="n">get_admissible_mapping</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">ccz_anf_name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+
+    <span class="n">num_input_anf_vars</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">ws</span>
+    <span class="k">if</span> <span class="n">ws</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="n">modadd_anf</span> <span class="o">=</span> <span class="n">get_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">modadd_anf</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">prefix_se_coeffs</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
+
+    <span class="n">deg</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ct_terms</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">return_ccz_se</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># 1st pass without invertibility</span>
+
+    <span class="n">first_pass_invertibility</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">first_pass_verbose</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">first_pass_debug</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">first_pass_bpr</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">first_pass_solve_args</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;return_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;raw_equations&quot;</span><span class="p">,</span>  <span class="c1"># no need to solve (no LC found w/o invertibility)</span>
+    <span class="p">}</span>
+
+    <span class="n">raw_equations</span> <span class="o">=</span> <span class="n">find_self_equivalence</span><span class="p">(</span>
+        <span class="n">ccz_modadd_anf</span><span class="p">,</span> <span class="n">admissible_mapping</span><span class="p">,</span>
+        <span class="n">anf</span><span class="o">=</span><span class="n">modadd_anf</span><span class="p">,</span> <span class="n">num_input_anf_vars</span><span class="o">=</span><span class="n">num_input_anf_vars</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">right_se_degree</span><span class="o">=</span><span class="n">deg</span><span class="p">,</span> <span class="n">inv_left_se_degree</span><span class="o">=</span><span class="n">deg</span><span class="p">,</span>
+        <span class="n">prefix_se_coeffs</span><span class="o">=</span><span class="n">prefix_se_coeffs</span><span class="p">,</span> <span class="n">se_ct_terms</span><span class="o">=</span><span class="n">ct_terms</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">add_invertibility_equations</span><span class="o">=</span><span class="n">first_pass_invertibility</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">return_ccz_se</span><span class="o">=</span><span class="n">return_ccz_se</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">check_se</span><span class="o">=</span><span class="n">check</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">bpr</span><span class="o">=</span><span class="n">first_pass_bpr</span><span class="p">,</span>
+        <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">first_pass_verbose</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">first_pass_debug</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="o">**</span><span class="n">first_pass_solve_args</span>
+    <span class="p">)</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">get_time</span><span class="p">()</span><span class="si">}</span><span class="s2"> | raw equations without invertibility constraints obtained&quot;</span><span class="p">)</span>
+
+    <span class="n">bpr</span> <span class="o">=</span> <span class="n">raw_equations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+    <span class="n">fixed_vars</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_fixed_vars</span><span class="p">(</span>
+        <span class="n">raw_equations</span><span class="p">,</span> <span class="n">only_linear</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">initial_r_mode</span><span class="o">=</span><span class="s2">&quot;gauss&quot;</span><span class="p">,</span> <span class="n">repeat_with_r_mode</span><span class="o">=</span><span class="s2">&quot;gauss&quot;</span><span class="p">,</span>
+        <span class="n">initial_fixed_vars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="n">check</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">invertibility</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">solve_args</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;reduction_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;gauss&quot;</span><span class="p">,</span>  <span class="c1"># gauss obtained better eqs than groebner</span>
+        <span class="s2">&quot;only_linear_fixed_vars&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># w/o too many SAT solutions</span>
+        <span class="s2">&quot;num_sat_solutions&quot;</span><span class="p">:</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">infinity</span><span class="p">,</span>
+        <span class="s2">&quot;return_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;symbolic_coeffs&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;initial_equations&quot;: equations,  # no need to pass redundant equations</span>
+        <span class="s2">&quot;initial_fixed_vars&quot;</span><span class="p">:</span> <span class="n">fixed_vars</span><span class="p">,</span>
+        <span class="s2">&quot;find_linear_combinations_in_solutions&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;num_sols_per_base_sol_to_check&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;return_total_num_solutions&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">()</span>
+
+    <span class="n">symbolic_coeffs</span><span class="p">,</span> <span class="n">equations</span><span class="p">,</span> <span class="n">num_total_solutions</span> <span class="o">=</span> <span class="n">find_self_equivalence</span><span class="p">(</span>
+        <span class="n">ccz_modadd_anf</span><span class="p">,</span> <span class="n">admissible_mapping</span><span class="p">,</span>
+        <span class="n">anf</span><span class="o">=</span><span class="n">modadd_anf</span><span class="p">,</span> <span class="n">num_input_anf_vars</span><span class="o">=</span><span class="n">num_input_anf_vars</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">right_se_degree</span><span class="o">=</span><span class="n">deg</span><span class="p">,</span> <span class="n">inv_left_se_degree</span><span class="o">=</span><span class="n">deg</span><span class="p">,</span>
+        <span class="n">prefix_se_coeffs</span><span class="o">=</span><span class="n">prefix_se_coeffs</span><span class="p">,</span> <span class="n">se_ct_terms</span><span class="o">=</span><span class="n">ct_terms</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">add_invertibility_equations</span><span class="o">=</span><span class="n">invertibility</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">return_ccz_se</span><span class="o">=</span><span class="n">return_ccz_se</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">check_se</span><span class="o">=</span><span class="n">check</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span>
+        <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+        <span class="c1">#</span>
+        <span class="o">**</span><span class="n">solve_args</span>
+    <span class="p">)</span>
+
+    <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">num_total_solutions: </span><span class="si">{</span><span class="n">num_total_solutions</span><span class="si">}</span><span class="s2"> = 2^(</span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">num_total_solutions</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">4</span><span class="o">*</span><span class="n">ws</span><span class="p">:]</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">symbolic_coeffs</span><span class="p">]))</span>
+    <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;non-fixed variables (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">4</span><span class="o">*</span><span class="n">ws</span><span class="p">:])</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">variables</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;equations:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="n">equations</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">eq</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;symbolic_coeffs = </span><span class="si">{</span><span class="n">symbolic_coeffs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">symbolic_coeffs</span><span class="p">,</span> <span class="n">equations</span><span class="p">,</span> <span class="n">num_total_solutions</span></div>
+
+
+<div class="viewcode-block" id="find_ase_pmodadd_with_shape"><a class="viewcode-back" href="../../../boolcrypt.se_pmodadd.find_affine_se.html#boolcrypt.se_pmodadd.find_affine_se.find_ase_pmodadd_with_shape">[docs]</a><span class="k">def</span> <span class="nf">find_ase_pmodadd_with_shape</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">threads</span><span class="p">,</span> <span class="n">save_coeffs_eqs</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find all affine self-equivalences of the permuted modular addition for a fixed wordsize</span>
+<span class="sd">    using a predefined shape.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">wordsize</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;only supported for wordsize &gt;= 3&quot;</span>
+
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span> <span class="ow">or</span> <span class="n">debug</span>
+
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">wordsize</span>
+    <span class="n">ccz_anf_name</span> <span class="o">=</span> <span class="s2">&quot;H&quot;</span>
+    <span class="n">permuted</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">D</span><span class="si">{}</span><span class="s2">H</span><span class="si">{}</span><span class="s2">M&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;result-find_ase_pmodadd_with_shape-w</span><span class="si">{</span><span class="n">ws</span><span class="si">}{</span><span class="s1">&#39;-lse&#39;</span> <span class="k">if</span> <span class="n">lse</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">now</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+
+    <span class="n">num_input_anf_vars</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">ws</span>
+    <span class="k">if</span> <span class="n">ws</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="n">modadd_anf</span> <span class="o">=</span> <span class="n">get_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">modadd_anf</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">prefix_se_coeffs</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
+
+    <span class="n">deg</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ct_terms</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">return_ccz_se</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">invertibility</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># determinant constraint obtain from initial_equations</span>
+    <span class="n">ignore_diagonal_equations</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># no diagonal equations added with shape</span>
+
+    <span class="c1">#</span>
+
+    <span class="n">prefix_get_symbolic_anf</span> <span class="o">=</span> <span class="s2">&quot;b&quot;</span>  <span class="c1"># coeffs starting with this prefix only used for next get_symbolic_anf()</span>
+    <span class="k">assert</span> <span class="n">prefix_se_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">prefix_get_symbolic_anf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shape_fixed_vars</span><span class="p">,</span> <span class="n">initial_equations</span><span class="p">,</span> <span class="n">shape_varnames</span> <span class="o">=</span> <span class="n">shape</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">prefix_get_symbolic_anf</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">x_varnames</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">ws</span><span class="p">)]</span>
+    <span class="c1"># # shape_fixed_vars contains assignments B0* &lt;- A0*</span>
+    <span class="c1"># # however, default assignments is A0* &lt;- B0* if bpr order is A0 &gt; B0 &gt; ...</span>
+    <span class="c1"># # (default is left vars are replaced by right vars)</span>
+    <span class="c1"># # thus, coeffs are reversed to preserve shape_fixed_vars order</span>
+    <span class="n">coeff_varnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">shape_varnames</span><span class="p">))</span>
+    <span class="n">bpr</span> <span class="o">=</span> <span class="n">BooleanPolynomialRing</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="n">x_varnames</span> <span class="o">+</span> <span class="n">coeff_varnames</span><span class="p">)</span>
+    <span class="n">ccz_se_anf</span> <span class="o">=</span> <span class="n">get_symbolic_anf</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ws</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ws</span><span class="p">,</span> <span class="n">ct_terms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">prefix_inputs</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+                                  <span class="n">prefix_coeffs</span><span class="o">=</span><span class="n">prefix_get_symbolic_anf</span><span class="p">,</span>
+                                  <span class="n">coeff2expr</span><span class="o">=</span><span class="n">shape_fixed_vars</span><span class="p">,</span> <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">)</span>
+    <span class="n">bpr_gens_dict</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens_dict</span><span class="p">()</span>
+
+    <span class="n">input_ccz_anf_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">str2bp</span><span class="p">(</span><span class="n">vn</span><span class="p">,</span> <span class="n">bpr_gens_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">vn</span> <span class="ow">in</span> <span class="n">x_varnames</span><span class="p">[:</span><span class="mi">2</span><span class="o">*</span><span class="n">ws</span><span class="p">]]</span>
+    <span class="n">ccz_modadd_anf</span> <span class="o">=</span> <span class="n">get_ccz_modadd_anf</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">ccz_anf_name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">,</span>
+                                        <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">input_ccz_anf_vars</span><span class="p">)</span>
+    <span class="n">admissible_mapping</span> <span class="o">=</span> <span class="n">get_admissible_mapping</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">ccz_anf_name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+
+    <span class="c1"># fast conversion with str2bp</span>
+    <span class="c1"># (the conversion when calling bpr() uses slow and memory-limited Singular)</span>
+    <span class="n">initial_equations</span> <span class="o">=</span> <span class="p">[</span><span class="n">str2bp</span><span class="p">(</span><span class="n">eq</span><span class="p">,</span> <span class="n">bpr_gens_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="n">initial_equations</span><span class="p">]</span>
+    <span class="n">fixed_vars</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">str2bp</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">bpr_gens_dict</span><span class="p">),</span> <span class="n">bpr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="n">str2bp</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">bpr_gens_dict</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_fixed_vars</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix_get_symbolic_anf</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">lse</span><span class="p">:</span>
+        <span class="n">initial_equations</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_zero_constant_terms_equations</span><span class="p">(</span><span class="n">ccz_se_anf</span><span class="p">,</span> <span class="n">wordsize</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
+
+    <span class="n">solve_args</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;reduction_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;gauss&quot;</span><span class="p">,</span>  <span class="c1"># gauss obtained better eqs than groebner</span>
+        <span class="s2">&quot;only_linear_fixed_vars&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># w/o too many SAT solutions</span>
+        <span class="s2">&quot;num_sat_solutions&quot;</span><span class="p">:</span> <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">infinity</span><span class="p">,</span>
+        <span class="s2">&quot;return_mode&quot;</span><span class="p">:</span> <span class="s2">&quot;symbolic_coeffs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;initial_equations&quot;</span><span class="p">:</span> <span class="n">initial_equations</span><span class="p">,</span>
+        <span class="s2">&quot;initial_fixed_vars&quot;</span><span class="p">:</span> <span class="n">fixed_vars</span><span class="p">,</span>
+        <span class="s2">&quot;find_linear_combinations_in_solutions&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;num_sols_per_base_sol_to_check&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;return_total_num_solutions&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;ignore_initial_parsing&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;check_find_fixed_vars&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">symbolic_coeffs</span><span class="p">,</span> <span class="n">equations</span><span class="p">,</span> <span class="n">num_total_solutions</span> <span class="o">=</span> <span class="n">find_self_equivalence</span><span class="p">(</span>
+        <span class="n">ccz_modadd_anf</span><span class="p">,</span> <span class="n">admissible_mapping</span><span class="p">,</span>
+        <span class="c1"># degree args</span>
+        <span class="n">right_se_degree</span><span class="o">=</span><span class="n">deg</span><span class="p">,</span> <span class="n">inv_left_se_degree</span><span class="o">=</span><span class="n">deg</span><span class="p">,</span>
+        <span class="n">se_ct_terms</span><span class="o">=</span><span class="n">ct_terms</span><span class="p">,</span>
+        <span class="c1"># optimization constraints</span>
+        <span class="n">ignore_diagonal_equations</span><span class="o">=</span><span class="n">ignore_diagonal_equations</span><span class="p">,</span>
+        <span class="n">add_invertibility_equations</span><span class="o">=</span><span class="n">invertibility</span><span class="p">,</span>
+        <span class="n">check_se</span><span class="o">=</span><span class="n">check</span><span class="p">,</span>
+        <span class="n">bpr</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span>
+        <span class="c1"># optional input args</span>
+        <span class="n">ccz_se_anf</span><span class="o">=</span><span class="n">ccz_se_anf</span><span class="p">,</span>
+        <span class="n">prefix_se_coeffs</span><span class="o">=</span><span class="n">prefix_se_coeffs</span><span class="p">,</span>
+        <span class="n">input_ccz_anf_vars</span><span class="o">=</span><span class="n">input_ccz_anf_vars</span><span class="p">,</span>
+        <span class="n">anf</span><span class="o">=</span><span class="n">modadd_anf</span><span class="p">,</span> <span class="n">num_input_anf_vars</span><span class="o">=</span><span class="n">num_input_anf_vars</span><span class="p">,</span>
+        <span class="c1"># optional output args</span>
+        <span class="n">return_ccz_se</span><span class="o">=</span><span class="n">return_ccz_se</span><span class="p">,</span>
+        <span class="c1"># printing args</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+        <span class="c1"># extra args passed to solve_functional_equation()</span>
+        <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">solve_args</span>
+    <span class="p">)</span>
+
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">num_total_solutions: </span><span class="si">{</span><span class="n">num_total_solutions</span><span class="si">}</span><span class="s2"> = 2^(</span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">num_total_solutions</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">4</span><span class="o">*</span><span class="n">ws</span><span class="p">:]</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">symbolic_coeffs</span><span class="p">]))</span>
+    <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;non-fixed variables (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[</span><span class="mi">4</span><span class="o">*</span><span class="n">ws</span><span class="p">:])</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">variables</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">var2found</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">):</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">}</span>
+
+    <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;equations:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="n">equations</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">eq</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">str_symbolic_coeffs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">shape_fixed_vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix_get_symbolic_anf</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">bpr</span><span class="p">(</span><span class="n">bpr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">symbolic_coeffs</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">variables</span><span class="p">():</span>
+                    <span class="n">var2found</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">str_symbolic_coeffs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">var</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+    <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;graph_se_coeffs = </span><span class="si">{</span><span class="n">str_symbolic_coeffs</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">var2found</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">==</span> <span class="p">{</span><span class="kc">True</span><span class="p">},</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">var2found</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">equations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">save_coeffs_eqs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lse</span><span class="p">:</span>
+            <span class="n">filename_sobj</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;stored_lse_pmodadd_w</span><span class="si">{</span><span class="n">ws</span><span class="si">}</span><span class="s2">.sobj&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filename_sobj</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;stored_ase_pmodadd_w</span><span class="si">{</span><span class="n">ws</span><span class="si">}</span><span class="s2">.sobj&quot;</span>
+        <span class="n">str_equations</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span> <span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="n">equations</span><span class="p">])</span>
+        <span class="n">sage</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">save</span><span class="p">((</span><span class="n">str_symbolic_coeffs</span><span class="p">,</span> <span class="n">str_equations</span><span class="p">),</span> <span class="n">filename_sobj</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">str_symbolic_coeffs</span><span class="p">,</span> <span class="n">equations</span><span class="p">,</span> <span class="n">num_total_solutions</span></div>
+
+
+<div class="viewcode-block" id="get_zero_constant_terms_equations"><a class="viewcode-back" href="../../../boolcrypt.se_pmodadd.find_affine_se.html#boolcrypt.se_pmodadd.find_affine_se.get_zero_constant_terms_equations">[docs]</a><span class="k">def</span> <span class="nf">get_zero_constant_terms_equations</span><span class="p">(</span><span class="n">c_anf</span><span class="p">,</span> <span class="n">wordsize</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the equations to reduce the ASE of pmodadd to LSE.&quot;&quot;&quot;</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span> <span class="ow">or</span> <span class="n">debug</span>
+
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">wordsize</span>
+    <span class="n">ccz_anf_name</span> <span class="o">=</span> <span class="s2">&quot;H&quot;</span>
+    <span class="n">permuted</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">assert</span> <span class="n">filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span>
+    <span class="n">smart_print</span> <span class="o">=</span> <span class="n">get_smart_print</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">admissible_mapping</span> <span class="o">=</span> <span class="n">get_admissible_mapping</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">ccz_anf_name</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="n">permuted</span><span class="p">)</span>
+
+    <span class="n">bpr</span> <span class="o">=</span> <span class="n">c_anf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span>
+    <span class="n">c_input_vars</span> <span class="o">=</span> <span class="n">bpr</span><span class="o">.</span><span class="n">gens</span><span class="p">()[:</span><span class="mi">4</span><span class="o">*</span><span class="n">ws</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- C:&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">c_anf</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">))</span>
+
+    <span class="kn">from</span> <span class="nn">sage.structure.element</span> <span class="kn">import</span> <span class="n">is_Matrix</span>
+    <span class="k">if</span> <span class="n">is_Matrix</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">):</span>
+        <span class="n">am_anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">,</span> <span class="n">bool_poly_ring</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">c_input_vars</span><span class="p">)</span>
+        <span class="n">am_matrix</span> <span class="o">=</span> <span class="n">admissible_mapping</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">is_Matrix</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;affine admissible mappings not supported&quot;</span><span class="p">)</span>
+        <span class="n">am_anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bool_poly_ring</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span>
+                            <span class="n">input_vars</span><span class="o">=</span><span class="n">c_input_vars</span><span class="p">,</span> <span class="n">bin_vector</span><span class="o">=</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">am_matrix</span> <span class="o">=</span> <span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">am_anf</span> <span class="o">=</span> <span class="n">admissible_mapping</span>
+        <span class="n">am_matrix</span> <span class="o">=</span> <span class="n">anf2matrix</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_input_vars</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">get_ct_coeff</span><span class="p">(</span><span class="n">admissible_mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_input_vars</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;affine admissible mappings not supported&quot;</span><span class="p">)</span>
+    <span class="n">inv_am_anf</span> <span class="o">=</span> <span class="n">matrix2anf</span><span class="p">(</span><span class="n">am_matrix</span><span class="o">.</span><span class="n">inverse</span><span class="p">(),</span> <span class="n">bool_poly_ring</span><span class="o">=</span><span class="n">bpr</span><span class="p">,</span> <span class="n">input_vars</span><span class="o">=</span><span class="n">c_input_vars</span><span class="p">)</span>
+
+    <span class="n">num_c_input_vars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">c_input_vars</span><span class="p">)</span>
+    <span class="n">l_c_linv</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span>
+        <span class="n">c_anf</span><span class="p">,</span> <span class="p">{</span><span class="n">c_input_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">inv_am_anf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_c_input_vars</span><span class="p">)},</span> <span class="n">bpr</span><span class="p">)</span>
+    <span class="n">l_c_linv</span> <span class="o">=</span> <span class="n">substitute_anf</span><span class="p">(</span>
+        <span class="n">am_anf</span><span class="p">,</span> <span class="p">{</span><span class="n">c_input_vars</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="n">l_c_linv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_c_input_vars</span><span class="p">)},</span> <span class="n">bpr</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- L C L^(-1):&quot;</span><span class="p">)</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="n">get_anf_coeffmatrix_str</span><span class="p">(</span><span class="n">l_c_linv</span><span class="p">,</span> <span class="n">c_input_vars</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">smart_print</span><span class="p">(</span><span class="s2">&quot;Getting equations to set to 0 the constant terms of L C L:&quot;</span><span class="p">)</span>
+
+    <span class="n">equations</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">bpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">c_input_vars</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">index_component</span><span class="p">,</span> <span class="n">component</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l_c_linv</span><span class="p">):</span>
+        <span class="n">component</span> <span class="o">=</span> <span class="n">bpr</span><span class="p">(</span><span class="n">component</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">replacements</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">smart_print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="si">{</span><span class="n">index_component</span><span class="si">}</span><span class="s2">-th component | 0 == </span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">equations</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">equations</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_number_self_equivalences</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the number of affine/linear SE of the permuted modular addition</span>
+<span class="sd">    using the slow algorithm of Biryukov.</span>
+
+<span class="sd">        &gt;&gt;&gt; _get_number_self_equivalences(2, lse=True)</span>
+<span class="sd">        192</span>
+<span class="sd">        &gt;&gt;&gt; _get_number_self_equivalences(2, lse=False)</span>
+<span class="sd">        3072</span>
+<span class="sd">        &gt;&gt;&gt; _get_number_self_equivalences(3, lse=True)</span>
+<span class="sd">        768</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">boolcrypt.modularaddition</span> <span class="kn">import</span> <span class="n">get_modadd_lut</span>
+    <span class="kn">from</span> <span class="nn">boolcrypt.equivalence</span> <span class="kn">import</span> <span class="n">get_number_self_le</span><span class="p">,</span> <span class="n">get_number_self_ae</span>
+    <span class="k">if</span> <span class="n">lse</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">4</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">wordsize</span> <span class="o">&lt;=</span> <span class="mi">3</span>
+    <span class="n">lut</span> <span class="o">=</span> <span class="n">get_modadd_lut</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lse</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">get_number_self_le</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">get_number_self_ae</span><span class="p">(</span><span class="n">lut</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log2</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;permuted modadd with wordsize </span><span class="si">{}</span><span class="s2"> has </span><span class="si">{}</span><span class="s2"> = 2^</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> SE&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">wordsize</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">log2</span><span class="p">(</span><span class="n">result</span><span class="p">),</span> <span class="s2">&quot;linear&quot;</span> <span class="k">if</span> <span class="n">lse</span> <span class="k">else</span> <span class="s2">&quot;affine&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getrecursionlimit</span><span class="p">()</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span>
+
+    <span class="n">wordsize</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">check</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="n">save</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">lse</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">symbolic_coeffs</span><span class="p">,</span> <span class="n">equations</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">find_ase_pmodadd_with_shape</span><span class="p">(</span><span class="n">wordsize</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">threads</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lse</span><span class="p">)</span>
+    <span class="n">graph_ase_coeffs2modadd_ase_anf</span><span class="p">(</span><span class="n">symbolic_coeffs</span><span class="p">,</span> <span class="n">wordsize</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="c1"># graph_ase_coeffs2modadd_ase_anf(symbolic_coeffs, wordsize, verbose, debug, filename, equations=equations)</span>
+
+    <span class="c1"># find_ase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)</span>
+
+    <span class="c1"># # - run find_ase_pmodadd_slow and find_ase_pmodadd_with_shape for multiple wordsizes</span>
+    <span class="c1"># import time</span>
+    <span class="c1"># threads = 4</span>
+    <span class="c1"># save = False</span>
+    <span class="c1"># verbose = True</span>
+    <span class="c1"># debug = False</span>
+    <span class="c1"># filename = True</span>
+    <span class="c1"># for wordsize in [2, 3, 4, 5, 6, 16, 24, 32, 48, 64]:</span>
+    <span class="c1">#     if wordsize == 2:</span>
+    <span class="c1">#         check = True</span>
+    <span class="c1">#         find_ase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)</span>
+    <span class="c1">#     elif 3 &lt;= wordsize &lt;= 6:</span>
+    <span class="c1">#         check = True</span>
+    <span class="c1">#         find_ase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)</span>
+    <span class="c1">#         check = False</span>
+    <span class="c1">#         symbolic_coeffs, _, _ = find_ase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)</span>
+    <span class="c1">#         graph_ase_coeffs2modadd_ase_anf(symbolic_coeffs, wordsize, verbose, debug, filename)</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         check = False</span>
+    <span class="c1">#         symbolic_coeffs, _, _ = find_ase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)</span>
+    <span class="c1">#         graph_ase_coeffs2modadd_ase_anf(symbolic_coeffs, wordsize, verbose, debug, filename)</span>
+
+    <span class="c1"># - save coeffs and eqs of ASE for multiple wordsize</span>
+    <span class="c1"># threads = 4</span>
+    <span class="c1"># save = True</span>
+    <span class="c1"># verbose = False</span>
+    <span class="c1"># debug = False</span>
+    <span class="c1"># check = False</span>
+    <span class="c1"># filename = False</span>
+    <span class="c1"># for wordsize in [16, 24, 32, 48, 64]:</span>
+    <span class="c1">#     find_ase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)</span>
+
+    <span class="c1"># # - load coeffs and eqs of ASE</span>
+    <span class="c1"># verbose = True</span>
+    <span class="c1"># debug = False</span>
+    <span class="c1"># filename = None</span>
+    <span class="c1"># for wordsize in [16, 24, 32, 48, 64]:</span>
+    <span class="c1">#     filename_sobj = f&quot;stored_ase_pmodadd_w{wordsize}.sobj&quot;</span>
+    <span class="c1">#     coeff2expr, equations = sage.all.load(filename_sobj, compress=True)</span>
+    <span class="c1">#     a, b_inv = graph_ase_coeffs2modadd_ase_anf(coeff2expr, wordsize, verbose, debug, filename)</span>
+    <span class="c1">#     print(equations)</span>
+    <span class="c1">#     print(a[0])</span>
+    <span class="c1">#     print(&quot;...&quot;)</span>
+    <span class="c1">#     print(b_inv[-1], &quot;\n&quot;)</span>
+
+    <span class="c1"># # - check affine cardinality 3 * (2**(2 * {ws} + 8) and linear cardinality 3 * (2**(2 * {ws} + 2)</span>
+    <span class="c1"># threads = 4</span>
+    <span class="c1"># check = False</span>
+    <span class="c1"># save = False</span>
+    <span class="c1"># verbose = False</span>
+    <span class="c1"># debug = False</span>
+    <span class="c1"># now = datetime.datetime.now()</span>
+    <span class="c1"># now = &quot;{}D{}H{}M&quot;.format(now.day, now.hour, now.minute)</span>
+    <span class="c1"># filename = f&quot;result-cardinality_ase_pmodadd-{now}.txt&quot;</span>
+    <span class="c1"># smart_print = get_smart_print(filename)</span>
+    <span class="c1"># for wordsize in range(3, 64 + 1):</span>
+    <span class="c1">#     ws = wordsize</span>
+    <span class="c1">#     _, _, num_total_solutions = find_ase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)</span>
+    <span class="c1">#     smart_print(f&quot;w = {ws} | affine | num_total_solutions = {num_total_solutions} | &quot;</span>
+    <span class="c1">#                 f&quot;{3 * (2**(2 * ws + 8))} = 3 * (2**(2 * {ws} + 8)&quot;)</span>
+    <span class="c1">#     if num_total_solutions != 3 * (2**(2 * ws + 8)):</span>
+    <span class="c1">#         raise ValueError(f&quot;invalid number of affine self-equivalences&quot;)</span>
+    <span class="c1">#     _, _, num_total_solutions = find_ase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename, lse=True)</span>
+    <span class="c1">#     smart_print(f&quot;w = {ws} | linear | num_total_solutions = {num_total_solutions} | &quot;</span>
+    <span class="c1">#                 f&quot;{3 * (2**(2 * ws + 2))} = 3 * (2**(2 * {ws} + 2)&quot;)</span>
+    <span class="c1">#     if num_total_solutions != 3 * (2**(2 * ws + 2)):</span>
+    <span class="c1">#         raise ValueError(f&quot;invalid number of linear self-equivalences&quot;)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Adrián Ranea.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

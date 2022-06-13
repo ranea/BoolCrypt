@@ -1,0 +1,6 @@
+boolcrypt.findpolyoptimal module
+================================
+
+.. automodule:: boolcrypt.findpolyoptimal
+   :members:
+   :show-inheritance:

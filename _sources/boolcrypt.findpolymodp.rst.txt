@@ -1,0 +1,6 @@
+boolcrypt.findpolymodp module
+=============================
+
+.. automodule:: boolcrypt.findpolymodp
+   :members:
+   :show-inheritance:

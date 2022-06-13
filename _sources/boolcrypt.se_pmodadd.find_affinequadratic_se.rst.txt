@@ -1,0 +1,6 @@
+boolcrypt.se\_pmodadd.find\_affinequadratic\_se module
+======================================================
+
+.. automodule:: boolcrypt.se_pmodadd.find_affinequadratic_se
+   :members:
+   :show-inheritance:

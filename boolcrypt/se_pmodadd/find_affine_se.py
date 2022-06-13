@@ -510,7 +510,7 @@ def find_ase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
         ccz_modadd_anf, admissible_mapping,
         anf=modadd_anf, num_input_anf_vars=num_input_anf_vars,
         #
-        left_se_degree=deg, inv_right_se_degree=deg, inv_left_se_degree=deg, right_se_degree=deg,
+        right_se_degree=deg, inv_left_se_degree=deg,
         prefix_se_coeffs=prefix_se_coeffs, se_ct_terms=ct_terms,
         #
         add_invertibility_equations=first_pass_invertibility,
@@ -558,7 +558,7 @@ def find_ase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
         ccz_modadd_anf, admissible_mapping,
         anf=modadd_anf, num_input_anf_vars=num_input_anf_vars,
         #
-        left_se_degree=deg, inv_right_se_degree=deg, inv_left_se_degree=deg, right_se_degree=deg,
+        right_se_degree=deg, inv_left_se_degree=deg,
         prefix_se_coeffs=prefix_se_coeffs, se_ct_terms=ct_terms,
         #
         add_invertibility_equations=invertibility,
@@ -669,8 +669,7 @@ def find_ase_pmodadd_with_shape(wordsize, check, threads, save_coeffs_eqs, verbo
     symbolic_coeffs, equations, num_total_solutions = find_self_equivalence(
         ccz_modadd_anf, admissible_mapping,
         # degree args
-        left_se_degree=deg, inv_right_se_degree=deg,
-        inv_left_se_degree=deg, right_se_degree=deg,
+        right_se_degree=deg, inv_left_se_degree=deg,
         se_ct_terms=ct_terms,
         # optimization constraints
         ignore_diagonal_equations=ignore_diagonal_equations,

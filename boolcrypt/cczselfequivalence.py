@@ -1,5 +1,6 @@
 """Find self-equivalences of a function by finding the self-equivalences
-of its graph parametrized by a CCZ-equivalent function with lower degree."""
+of its graph (i.e., also called graph automorphisms)
+parametrized by a CCZ-equivalent function with lower degree."""
 import collections
 import itertools
 import warnings
@@ -25,14 +26,15 @@ PolynomialRing = sage.all.PolynomialRing
 BooleanPolynomialRing = sage.all.BooleanPolynomialRing
 
 
-# TODO: add to docstring ignore_determinant_equation, ccz_se_anf
 def find_self_equivalence(
     # main args
     ccz_anf, admissible_mapping,
     # alternative modes
     ccz_anf_implicit=False,
     # degree args
-    left_se_degree=1, inv_right_se_degree=1, inv_left_se_degree=1, right_se_degree=1, se_ct_terms=True,
+    right_se_degree=1,
+    inv_left_se_degree=1,
+    se_ct_terms=True,
     # optimization constraints
     ignore_diagonal_equations=False,
     add_invertibility_equations=True, ignore_determinant_equation=False,
@@ -52,13 +54,13 @@ def find_self_equivalence(
 ):
     """Find a SE of F by finding a SE of the graph of G.
 
-    Let F be the function (optionally) given by `anf` and
-    G its CCZ-equivalent function through the `admissible_mapping` L,
+    Let F be the function (optionally) given by ``anf`` and
+    G its CCZ-equivalent function through the ``admissible_mapping`` L,
     that is, Graph(F)=L(Graph(G)).
     F (if given) and G must be in ANF form, but L can be given in ANF,
     as a matrix, or as a (matrix, vector) pair.
     If F is not given, its number of input variables must be
-    given in `num_input_anf_vars`.
+    given in ``num_input_anf_vars``.
 
     Graph(F) is defined as usual, {(x, y): for all x, y=F(x)}.
     If ccz_anf_implicit=False, Graph(G) is defined similarly as Graph(F):
@@ -81,6 +83,9 @@ def find_self_equivalence(
     When ccz_anf_implicit=True, this method is not complete, meaning that
     not all the Graph(G)-SE can be found from the equation G C = C.
 
+    The ANF of C can be optionally given in ccz_se_anf to speed up this method.
+    Otherwise, it will be created using get_symbolic_anf.
+
     If return_ccz_se=False, the SE of F are returned. However,
     the left SE B are not given in the output, but their inverses B^(-1).
     If return_ccz_se=True, instead of returning the SE (A, B),
@@ -90,9 +95,13 @@ def find_self_equivalence(
 
     If add_invertibility_equations=True, the equations that
     impose (A, B) to be invertible are added to the system of equations.
-    In this case, if the self-equivalences are non-linear then
-    either inv_left_se_degree or right_se_degree is used to
-    build the invertibility equations
+    In this case and if right_se_degree=1, the constraint ``det(A)=1``
+    is added, otherwise (if inv_left_se_degree=1), the constraint
+    ``det(B^(-1))=1``.
+    If add_invertibility_equations=True and ignore_determinant_equation=False,
+    then the high-degree equation involving the determinant is not added
+    (and only some necessary but not sufficient constraints from
+    ``_get_lowdeg_inv_equations`` are added).
 
     input_ccz_anf_vars and input_anf_vars are two lists with the inputs vars
     (containing Boolean variables or strings) of the given G and F
@@ -106,7 +115,7 @@ def find_self_equivalence(
     that L C L^{-1} is diagonal and with proper degrees are ignored.
     In this case, add_invertibility_equations must be False.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     In particular, if return_mode and num_sat_solutions are not given,
     only one solution is found and the ANF of A and B^(-1) are given.
 
@@ -120,7 +129,7 @@ def find_self_equivalence(
         >>> am = sage.all.matrix(GF(2), 4*2, 4*2, am)
         >>> a, b_inv = find_self_equivalence(g, am, anf=f, se_ct_terms=False,
         ...     only_linear_fixed_vars=True, verbose=True)  # doctest:+ELLIPSIS,+NORMALIZE_WHITESPACE
-        finding SE of F through the graph of G with degrees (1, 1) and inverse degrees (1, 1)
+        finding SE (A, B) of F through the graph of G with deg(A), deg(B^(-1)) degrees (1, 1)
         - F:
         [x0*x1*x2 x0*x1*x3 x0*x2*x3 x1*x2*x3|   x0*x1    x0*x2    x0*x3    x1*x2    x1*x3    x2*x3|      x0       x1       x2       x3]
         [-----------------------------------+-----------------------------------------------------+-----------------------------------]
@@ -202,7 +211,7 @@ def find_self_equivalence(
         ...     num_sat_solutions=12+1, return_total_num_solutions=True,  initial_fixed_vars=fixed_vars,
         ...     verbose=True, debug=True)  # doctest:+ELLIPSIS,+NORMALIZE_WHITESPACE
         ignoring add_invertibility_equations when ccz_anf_implicit is True
-        finding SE of F through the graph of G with degrees (1, 1) and inverse degrees (1, 1)
+        finding SE (A, B) of F through the graph of G with deg(A), deg(B^(-1)) degrees (1, 1)
         - F:
         []
         - G (CCZ-implicit-equivalent of F):
@@ -344,11 +353,7 @@ def find_self_equivalence(
     if debug:
         verbose = True
 
-    if left_se_degree == 1 or inv_left_se_degree == 1:
-        assert left_se_degree == inv_left_se_degree == 1
-
-    if right_se_degree == 1 or inv_right_se_degree == 1:
-        assert right_se_degree == inv_right_se_degree == 1
+    assert right_se_degree == 1 or inv_left_se_degree == 1
 
     assert not isinstance(ccz_anf, sage.rings.polynomial.pbori.pbori.BooleanPolynomial)
     if input_ccz_anf_vars is None:
@@ -405,9 +410,8 @@ def find_self_equivalence(
         initial_fixed_vars = collections.OrderedDict()
 
     if verbose:
-        smart_print("finding SE of F through the graph of G "
-                    f"with degrees {left_se_degree, inv_right_se_degree} and "
-                    f"inverse degrees {inv_left_se_degree, right_se_degree}")
+        smart_print("finding SE (A, B) of F through the graph of G with deg(A), deg(B^(-1)) "
+                    f"degrees {right_se_degree, inv_left_se_degree}")
         smart_print("- F:")
         smart_print(get_anf_coeffmatrix_str(anf, input_anf_vars))
         smart_print(f"- G (CCZ-{'implicit-' if ccz_anf_implicit else ''}equivalent of F):")
@@ -422,7 +426,7 @@ def find_self_equivalence(
     # use anf and input_anf_vars instead of ccz_anf and input_ccz_anf_vars
     # to consider also the case ccz_anf_implicit=True
     num_c_input_vars = len(input_anf_vars) + len(anf)
-    c_deg = max(left_se_degree, inv_right_se_degree)
+    c_deg = max(right_se_degree, inv_left_se_degree)
 
     if bpr is not None:
         all_varnames = bpr.variable_names()
@@ -581,8 +585,8 @@ def find_self_equivalence(
 
     if not ignore_diagonal_equations:
         if verbose:
-            if left_se_degree < c_deg or inv_right_se_degree < c_deg:
-                aux = f" with top/bottom degrees {left_se_degree}/{inv_right_se_degree}"
+            if right_se_degree < c_deg or inv_left_se_degree < c_deg:
+                aux = f" with top/bottom degrees {right_se_degree}/{inv_left_se_degree}"
             else:
                 aux = ""
             smart_print(f"{get_time()} | getting equations from L C L^(-1) = diagonal{aux}")
@@ -628,8 +632,8 @@ def find_self_equivalence(
             smart_print("- L C L^(-1) (L admissible mapping L(Graph(G)=Graph(F)):")
             smart_print(get_anf_coeffmatrix_str(l_c_linv, c_input_vars))
         if debug:
-            if left_se_degree < c_deg or inv_right_se_degree < c_deg:
-                aux = f" with degrees {left_se_degree}/{inv_right_se_degree}"
+            if right_se_degree < c_deg or inv_left_se_degree < c_deg:
+                aux = f" with degrees {right_se_degree}/{inv_left_se_degree}"
             else:
                 aux = ""
             smart_print(f"equations from L C L^(-1) = diagonal{aux}:")
@@ -642,8 +646,8 @@ def find_self_equivalence(
                 if len(monomial_vars) == 0:
                     continue
 
-                if (index_component < len(input_anf_vars) and monomial.degree() > left_se_degree) or \
-                        (index_component >= len(input_anf_vars) and monomial.degree() > inv_right_se_degree):
+                if (index_component < len(input_anf_vars) and monomial.degree() > right_se_degree) or \
+                        (index_component >= len(input_anf_vars) and monomial.degree() > inv_left_se_degree):
                     if coeff == 0:
                         continue
                     if coeff == 1:
@@ -715,103 +719,65 @@ def find_self_equivalence(
             smart_print(f"{get_time()} | adding invertibility equations over L C L^(-1)")
 
         inv_equations = BooleanPolynomialVector()
-        if left_se_degree == 1 or inv_right_se_degree == 1:
-            # first part tries to get easy fixed variables from sparse row/columns
-            # nrows = num output vars, ncols = num inputs vars
 
-            # depth is computed as follows:
-            #   sum_{i=0}^{k} binom(n,i) < n^k + 1  (k == depth, n == nrows == num components)
-            #   n^k <= 2^16 (max complexity) <==> k = k log(n,n) <= log(2^16, n)
+        # first part tries to get easy fixed variables from sparse row/columns
+        # nrows = num output vars, ncols = num inputs vars
 
-            if inv_right_se_degree == 1:
-                base_matrix = anf2matrix(l_c_linv[len(anf):], c_input_vars).submatrix(col=len(input_anf_vars))
-                assert base_matrix.is_square()
-                depth = int(sage.all.log(2**16, base_matrix.nrows()))
-                aux_iv = c_input_vars[:len(anf)]
-                for matrix in [base_matrix, base_matrix.transpose()]:
-                    matrix_anf = matrix2anf(matrix, bool_poly_ring=bpr, input_vars=aux_iv)
-                    for eq in _get_lowdeg_inv_equations(matrix_anf, bpr, max_deg=3, depth=depth, input_vars=aux_iv):
-                        inv_equations.append(eq)
-            else:
-                aux_anf = l_c_linv[len(anf):]
-                depth = int(sage.all.log(2**16, len(aux_anf)))
-                for eq in _get_lowdeg_inv_equations(aux_anf, bpr, max_deg=3, depth=depth, input_vars=c_input_vars):
+        # depth is computed as follows:
+        #   sum_{i=0}^{k} binom(n,i) < n^k + 1  (k == depth, n == nrows == num components)
+        #   n^k <= 2^16 (max complexity) <==> k = k log(n,n) <= log(2^16, n)
+
+        if inv_left_se_degree == 1:
+            base_matrix = anf2matrix(l_c_linv[len(anf):], c_input_vars).submatrix(col=len(input_anf_vars))
+            assert base_matrix.is_square()
+            depth = int(sage.all.log(2**16, base_matrix.nrows()))
+            aux_iv = c_input_vars[:len(anf)]
+            for matrix in [base_matrix, base_matrix.transpose()]:
+                matrix_anf = matrix2anf(matrix, bool_poly_ring=bpr, input_vars=aux_iv)
+                for eq in _get_lowdeg_inv_equations(matrix_anf, bpr, max_deg=3, depth=depth, input_vars=aux_iv):
                     inv_equations.append(eq)
-
-            if left_se_degree == 1:
-                base_matrix = anf2matrix(l_c_linv[:len(anf)], c_input_vars).submatrix(ncols=len(input_anf_vars))
-                assert base_matrix.is_square()
-                depth = int(sage.all.log(2**16, base_matrix.nrows()))
-                aux_iv = c_input_vars[:len(input_anf_vars)]
-                for matrix in [base_matrix, base_matrix.transpose()]:
-                    matrix_anf = matrix2anf(matrix, bool_poly_ring=bpr, input_vars=aux_iv)
-                    for eq in _get_lowdeg_inv_equations(matrix_anf, bpr, max_deg=3, depth=depth, input_vars=aux_iv):
-                        inv_equations.append(eq)
-            else:
-                aux_anf = l_c_linv[:len(anf)]
-                depth = int(sage.all.log(2**16, len(aux_anf)))
-                for eq in _get_lowdeg_inv_equations(aux_anf, bpr, max_deg=3, depth=depth, input_vars=c_input_vars):
-                    inv_equations.append(eq)
-
-            # no calls to find_fixed_vars() when "raw_equations" mode
-            if solve_args.get("return_mode", None) != "raw_equations" and not ignore_determinant_equation:
-                reduction_mode = solve_args.get("reduction_mode", "gauss")
-                inv_fixed_vars, inv_equations = find_fixed_vars(
-                    inv_equations, only_linear=True,
-                    initial_r_mode=reduction_mode, repeat_with_r_mode=reduction_mode,
-                    initial_fixed_vars=initial_fixed_vars, bpr=bpr, check=check_find_fixed_vars,
-                    verbose=verbose, debug=debug, filename=filename)
-                if len(inv_fixed_vars) > len(initial_fixed_vars):
-                    for i in range(len(equations)):
-                        equations[i] = equations[i].subs(inv_fixed_vars)
-                    base_matrix = base_matrix.subs(inv_fixed_vars)
-                initial_fixed_vars = inv_fixed_vars
-                for eq in inv_equations:
-                    equations.append(eq)
-                equations.append(bpr(base_matrix.determinant()) + bpr(1))
-            else:
-                for eq in inv_equations:
-                    equations.append(eq)
         else:
-            # TODO: v2 implement non-linear add_invertibility equations
-            # main problem: bpr need to be incremented with the new vars from find_inverse
-            # for NL I could also add easy vars taking into account the balanced functions
-            raise NotImplementedError("both left_se_degree and inv_right_se_degree > 1 not supported")
-            # aux_left = inv_left_se_degree if inv_left_se_degree else sage.all.infinity
-            # aux_right = right_se_degree if right_se_degree else sage.all.infinity
-            # if aux_left <= aux_right:
-            #     aux_rep = {v: bpr(0) for v in c_input_vars[len(input_anf_vars):]}
-            #     aux_anf = substitute_anf(l_c_linv[:len(anf)], aux_rep, bpr)
-            #     raw_eqs = find_inverse(
-            #         aux_anf, inv_left_se_degree, inv_position="left", prefix_inv_coeffs=prefix_se_coeffs+"c",
-            #         input_vars=c_input_vars[:len(input_anf_vars)], return_mode="raw_equations",
-            #         verbose=verbose, debug=debug, filename=filename
-            #     )
-            # else:
-            #     aux_rep = {}
-            #     for i in range(num_c_input_vars):
-            #         if i < len(input_anf_vars):
-            #             aux_rep[c_input_vars[i]] = bpr(0)
-            #         else:
-            #             aux_rep[c_input_vars[i]] = c_input_vars[i - len(input_anf_vars)]
-            #     aux_anf = substitute_anf(l_c_linv[len(anf):], aux_rep, bpr)
-            #     raw_eqs = find_inverse(
-            #         aux_anf, right_se_degree, inv_position="left", prefix_inv_coeffs=prefix_se_coeffs+"c",
-            #         input_vars=c_input_vars[:len(input_anf_vars)], return_mode="raw_equations",
-            #         verbose=verbose, debug=debug, filename=filename
-            #     )
-            # assert raw_eqs is not None
-            # # bpr cannot be pass to find_inverse (new vars are created)
-            # reduction_mode = solve_args.get("reduction_mode", "gauss")
-            # aux_fixed_vars, aux_equations = find_fixed_vars(
-            #     raw_eqs, only_linear=False,
-            #     initial_r_mode=reduction_mode, repeat_with_r_mode=reduction_mode,
-            #     initial_fixed_vars=None, check=check_find_fixed_vars,
-            #     # verbose=verbose, debug=debug, filename=filename)
-            #     verbose=True, debug=True, filename=None)
-            # equations = list(equations)
-            # for eq in aux_equations:
-            #     equations.append(str(eq))
+            aux_anf = l_c_linv[len(anf):]
+            depth = int(sage.all.log(2**16, len(aux_anf)))
+            for eq in _get_lowdeg_inv_equations(aux_anf, bpr, max_deg=3, depth=depth, input_vars=c_input_vars):
+                inv_equations.append(eq)
+
+        if right_se_degree == 1:
+            base_matrix = anf2matrix(l_c_linv[:len(anf)], c_input_vars).submatrix(ncols=len(input_anf_vars))
+            assert base_matrix.is_square()
+            depth = int(sage.all.log(2**16, base_matrix.nrows()))
+            aux_iv = c_input_vars[:len(input_anf_vars)]
+            for matrix in [base_matrix, base_matrix.transpose()]:
+                matrix_anf = matrix2anf(matrix, bool_poly_ring=bpr, input_vars=aux_iv)
+                for eq in _get_lowdeg_inv_equations(matrix_anf, bpr, max_deg=3, depth=depth, input_vars=aux_iv):
+                    inv_equations.append(eq)
+        else:
+            aux_anf = l_c_linv[:len(anf)]
+            depth = int(sage.all.log(2**16, len(aux_anf)))
+            for eq in _get_lowdeg_inv_equations(aux_anf, bpr, max_deg=3, depth=depth, input_vars=c_input_vars):
+                inv_equations.append(eq)
+
+        # second part adds the determinant constraint to base_matrix = right A
+        # no calls to find_fixed_vars() when "raw_equations" mode
+
+        if solve_args.get("return_mode", None) != "raw_equations" and not ignore_determinant_equation:
+            reduction_mode = solve_args.get("reduction_mode", "gauss")
+            inv_fixed_vars, inv_equations = find_fixed_vars(
+                inv_equations, only_linear=True,
+                initial_r_mode=reduction_mode, repeat_with_r_mode=reduction_mode,
+                initial_fixed_vars=initial_fixed_vars, bpr=bpr, check=check_find_fixed_vars,
+                verbose=verbose, debug=debug, filename=filename)
+            if len(inv_fixed_vars) > len(initial_fixed_vars):
+                for i in range(len(equations)):
+                    equations[i] = equations[i].subs(inv_fixed_vars)
+                base_matrix = base_matrix.subs(inv_fixed_vars)
+            initial_fixed_vars = inv_fixed_vars
+            for eq in inv_equations:
+                equations.append(eq)
+            equations.append(bpr(base_matrix.determinant()) + bpr(1))
+        else:
+            for eq in inv_equations:
+                equations.append(eq)
 
         if verbose:
             smart_print(f"added {len(equations)-len_eqs_b4_inv} invertibility equations")
@@ -881,7 +847,6 @@ def find_self_equivalence(
             aux_fre.append(eq)
         new_kwargs["find_redundant_equations"] = aux_fre
 
-    # TODO: v2 implement non-linear add_invertibility equations
     if ccz_anf_implicit:
         new_kwargs["ignore_varnames"] = [vn for vn in all_varnames if vn.startswith(prefix_se_coeffs + "d")]
         for var, val in initial_fixed_vars.copy().items():
@@ -1078,8 +1043,8 @@ def find_self_equivalence(
                     monomial_vars = [bpr(v) for v in monomial.variables()]
                     if len(monomial_vars) == 0:
                         continue
-                    if (index_component < len(input_anf_vars) and monomial.degree() > left_se_degree) or \
-                            (index_component >= len(input_anf_vars) and monomial.degree() > inv_right_se_degree):
+                    if (index_component < len(input_anf_vars) and monomial.degree() > right_se_degree) or \
+                            (index_component >= len(input_anf_vars) and monomial.degree() > inv_left_se_degree):
                         if coeff != 0:
                             raise ValueError(f"L C L^(-1) (from {index_se_sol}-th solution) has different degree, "
                                              f"{index_component}-th component has monomial {monomial} "
@@ -1131,18 +1096,18 @@ def find_self_equivalence(
             aux_bpr = BooleanPolynomialRing(names=[str(v) for v in c_input_vars[:len(anf)]])
             b_inv_sol_fixed = [aux_bpr(component) for component in b_inv_sol_fixed]
 
-            if left_se_degree == 1:
+            if right_se_degree == 1:
                 if not anf2matrix(a_sol_fixed, c_input_vars[:len(input_anf_vars)]).is_invertible():
                     raise ValueError("A is not invertible")
             elif len(input_anf_vars) <= 12:
                 if not is_invertible(anf2lut(a_sol_fixed)):
                     raise ValueError("A is not invertible")
-            if inv_right_se_degree == 1:
+            if inv_left_se_degree == 1:
                 if not anf2matrix(b_inv_sol_fixed, c_input_vars[:len(anf)]).is_invertible():
                     raise ValueError("B is not invertible")
             elif len(anf) <= 12:
                 if not is_invertible(anf2lut(b_inv_sol_fixed)):
-                    raise ValueError("A is not invertible")
+                    raise ValueError("B is not invertible")
 
             if not missing_anf:
                 # lhs = compose_anf_fast(b_inv_sol_fixed, anf_simple_bpr)
@@ -1268,7 +1233,6 @@ def _get_lowdeg_inv_equations(anf, bpr, max_deg=3, depth=2, input_vars=None):
         elif deg_component == 2:
             quad_mons = [mon for mon in mon2coeff if mon.degree() == 2]
             if len(quad_mons) > 1:
-                # TODO: v2 consider QBVF with 2 quadratic terms and no foreign terms
                 # in this case, only balanced class is
                 # a(b1 + b2) + linear terms (excluded a, b1+b2, a+b1+b2)
                 continue

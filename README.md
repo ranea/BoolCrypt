@@ -10,7 +10,7 @@ BoolCrypt is a Python 3 library for vectorial Boolean functions in cryptography.
 - Solve functional equations and linear/affine/CCZ equivalence and self-equivalence problems using SAT solvers.
 
 Most of the functions and classes in BoolCrypt contain many examples of their usage in their docstrings,
-also available in the HTML documentation in [html_documentation.zip](html_documentation.zip).
+also available in the [online documentation](https://ranea.github.io/BoolCrypt/).
 
 BoolCrypt was proposed in [Implicit White-Box Implementations: White-Boxing ARX Ciphers](https://eprint.iacr.org/2022/428),
 and it is a dependency of [whiteboxarx](https://github.com/ranea/whiteboxarx).
@@ -25,7 +25,8 @@ Solving functional equations or equivalence problems requires CryptoMiniSat, whi
 sage -i cryptominisat
 ```
 
-BoolCrypt also requires [sboxU](https://github.com/lpp-crypto/sboxU) v1.0., 
+For some functions in [boolcrypt/equivalence.py](boolcrypt/equivalence.py), 
+BoolCrypt requires [sboxU](https://github.com/lpp-crypto/sboxU) v1.0., 
 but with some modifications described in [modifications_sboxU.md](modifications_sboxU.md).
 A modified version of sboxU is given in the directory [sboxU](sboxU).
 Then compile the modified sboxU by

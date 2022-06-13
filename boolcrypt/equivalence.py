@@ -99,11 +99,12 @@ def get_common_linear_reprs(lut, verbose=False, debug=False):
     """Return the common linear representatives between F(x + c) and F(x) + d.
 
     It return a dictionary with entries lr -> (left_cts, right_cts) where
+
      - lr is a linear representative
      - left_cts are those constants c such that c + F has representative lr
      - right_cts are those constants c such that F(x + c) has representative lr
 
-     If for some lr, left_cts or right_cts is empty, lr is not included in the dictionary.
+    If for some lr, left_cts or right_cts is empty, lr is not included in the dictionary.
 
         >>> lut = get_lut_inversion(4)
         >>> get_common_linear_reprs(lut, verbose=True)

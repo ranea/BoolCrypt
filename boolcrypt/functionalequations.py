@@ -157,7 +157,6 @@ def _is_fixed_var(var, eq, bpr):
     # return var not in [bpr(v) for v in (eq + var).variables()]
 
 
-# TODO: update docstring with updated_vars
 def _find_fix_var(eq, only_linear=False, prev_eqs=None, fixedvar2ct=None, fixedvar2expr=None,
                   bpr=None, check=True, verbose=False, filename=None, indentation_lvl=0):
     """Find one fixed variable in a Boolean equation given by a Boolean polynomial.
@@ -167,10 +166,17 @@ def _find_fix_var(eq, only_linear=False, prev_eqs=None, fixedvar2ct=None, fixedv
     Among all the possible fixed variables, the biggest one is chosen.
     (according to the term order of the Boolean polynomial ring).
 
+    Additional dictionaries can be given in fixedvar2ct and fixedvar2expr
+    mapping variables to their constant values or their symbolic expressions.
+
     This method returns None if no fixed variable is found, otherwise
-    a triple (x{i}, f(x{i+1},..,xn), J), where J is a list of indices
-    of prev_eqs (if not None) that are found to contained fixed variables
-    after the found fixed variable is replaces in prev_eqs.
+    a triple (x{i}, f(x{i+1},..,xn), PE, UV), where:
+
+    - PE is a list of indices of prev_eqs (if not None) that are found to contain
+      fixed variables after the found fixed variable are replaced in prev_eqs.
+    - UV is a list containing the variables that where updated in fixedvar2expr
+      that contained x{i} in their expressions but they were replaced by
+      f(x{i+1},..,xn).
 
     If only_linear=True, only find linear assignments.
 
@@ -222,7 +228,7 @@ def _find_fix_var(eq, only_linear=False, prev_eqs=None, fixedvar2ct=None, fixedv
             return substitute_variables(bpr, ordered_replacement, expr)
 
     # take the biggest variable (probably the pivot)
-    # thus, smallest vars represent free parameters
+    # thus, the smallest vars represent free parameters
     first_var = True
     for var in reversed(sorted(bpr(v) for v in eq.variables())):
         if _is_fixed_var(var, eq, bpr):
@@ -561,9 +567,6 @@ def find_fixed_vars(equations, only_linear=False, initial_r_mode=None, repeat_wi
 # ----------------------------------------------------
 
 
-# TODO: add to docstring initial_fixed_vars, ignore_initial_parsing, check_find_fixed_vars
-#       return_mode = ["symbolic_coeffs", "lincomb_solutions"],
-# TODO: v2 print_common_nonlinear_vars
 def solve_functional_equation(
     # mandatory args
     lhs_anfs, rhs_anfs,
@@ -620,23 +623,34 @@ def solve_functional_equation(
     where each solution si = [siF, siG] is a pair containing the list of
     non-symbolic ANFs of the left and right side, that is,
     [siF, siG] = [[siF0, siF1, ...], [siG0, siG1, ...]].
+
     If return_mode="list_coeffs", return a tuple containing
     the list of solutions [s0, s1, ...], where each si is a list
     containing the ANF coefficients of [siF, siG], and a list
     with the free variables.
 
     If return_mode="symbolic_anf", the solutions are given symbolically
-    that is, a 4-tuple is returned (symF, symG, num_sols, eqs).
+    that is, a 4-tuple is returned (symF, symG, eqs, num_sols).
     For symF = [symF0, symF1, ...], symFi is the symbolic ANF of Fi,
     where each coefficient is substituted with the fixed variables found
     (and similar for symG and symGi).
-    The number num_sols represents the total number of solutions found.
     The list eqs contain the equations that the symbolic coefficients
     satisfy that could not be reduced more.
+    The number num_sols represents the total number of solutions found.
+
+    If return_mode="symbolic_coeffs", the solutions are given symbolically
+    but a 3-tuple is returned (fvs, eqs, num_sols).
+    fvs is a dictionary of fixed variables mapping the variables
+    to their symbolic or constant values,
+    and (eqs, num_sols) is similar as in return_mode="symbolic_anf".
 
     If return_mode=raw_equations, return the list of equations associated
     to the functional problem before finding fixed variables and before
     calling the SAT solver.
+
+    If return_mode="lincomb_solutions", it returns the linear combinations
+    among the solutions obtained from the SAT solver (see below the explanation
+    regarding find_linear_combinations_in_solutions).
 
     A Boolean polynomial ring bpr can be given to determine the
     term order. Otherwise, lexicographic order will be used
@@ -645,6 +659,9 @@ def solve_functional_equation(
     A list of equations can be given in find_redundant_equations.
     In that case, instead of solving the functional equation,
     it is returned the list of equations that are satisfied by all solutions.
+
+    A list of fixed variables can be given in initial_fixed_vars
+    as a dictionary mapping variables to their constant or symbolic values.
 
     A list of Boolean equations (or strings) can be given in initial_equations
     which will be added as extra constraints to the funcional equation.
@@ -667,6 +684,14 @@ def solve_functional_equation(
 
     If return_total_num_solutions is True, append to the output
     the number of total solutions (taking into account the free variables).
+
+    If ignore_initial_parsing is True, then initial_fixed_vars is not used to replace
+    variables in the list of ANF or in the list of initial equations (in the first pass),
+    and other checks regarding the BooleanPolynomialRing are ignored.
+    The default value of ignore_initial_parsing (False) is recommended.
+
+    If check_find_fixed_vars is True, internal calls to find_fixed_vars
+    are done with check=True (see find_fixed_vars).
 
     A list of variables (strings or Boolean variables) can be given in
     ignore_varnames, which won't be included in the solutions and will
@@ -1452,7 +1477,6 @@ def solve_functional_equation(
             initial_fixed_vars=None, bpr=bpr, check=check_find_fixed_vars,
             verbose=verbose, debug=debug, filename=filename)
 
-        # TODO: v2 replace .subs()
         fixed_vars_modified = len(new_fixed_vars) > 0
         for var, expr in fixed_vars.items():
             new_expr = bpr(expr.subs(new_fixed_vars))
@@ -1616,7 +1640,7 @@ def find_inverse(
     must be defined in the boolean polynomial ring
     BooleanPolynomialRing(n,'x') with n the number of input variables.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     By default, return_mode="list_anfs" and num_sat_solutions="1".
     If these two parameters are not given, only one solution is found
     and the ANF of the inverse is returned.
@@ -1661,8 +1685,6 @@ def find_inverse(
     """
     assert inv_position in ["left", "right"]
     assert not isinstance(anf, sage.rings.polynomial.pbori.pbori.BooleanPolynomial)
-
-    # TODO: v2 add support for other bpr (in similar methods too)
 
     # # deprecated
     # if solve_args.get("bpr", None) is not None:
@@ -1748,7 +1770,6 @@ def find_inverse(
             return result
 
 
-# TODO: add to docstring add_invertibility_equations (needed if left or right are NOT permutations)
 def find_equivalence(
     left_anf, right_anf, left_equiv_degree=1, right_equiv_degree=1,
     equiv_ct_terms=True,
@@ -1765,16 +1786,27 @@ def find_equivalence(
 
     If given degrees are 1 and equiv_ct_terms=True (resp. False),
     this methods finds whether F and G are affine (resp. linear) equivalent.
+    Note that right_equiv_degree affects the right equivalence A and
+    left_equiv_degree affects the left equivalence B.
 
     If F and G are the same, this methods finds self-equivalences.
 
     The pair (A, B) is found by solving the functional equation B F A = G.
 
+    The parameter add_invertibility_equations can be [False, "right", "left", "both"].
+    If "right" or "both", an additional constraint is added to ensure
+    the affine function B is a permutation (only supported with degree=1).
+    If "left" or "both", an additional constraint is added to ensure
+    the affine function A is a permutation (only supported with degree=1).
+    If False, no additional constraint is added regarding invertibility.
+    Note that if F and G are permutations with the same input size,
+    then no invertibility constraint is needed.
+
     This method does not support symbolic ANF, and the input functions F and G
     must be defined in the boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     By default, return_mode="list_anfs" and num_sat_solutions="1".
     If these two parameters are not given, only one solution is found
     and a pair containing the ANF of A and B is returned.
@@ -1798,7 +1830,7 @@ def find_equivalence(
         >>> get_anf_coeffmatrix_str(right_aff, input_vars=["x0", "x1", "x2"])
         [x0 x1 x2| 1]
         [--------+--]
-        [ 0  1  0| 1]
+        [ 0  1  0| 0]
         [ 1  0  0| 0]
         [ 0  0  1| 1]
         >>> find_equivalence(left_anf, lut2anf(get_lut_inversion(3)))
@@ -1808,11 +1840,11 @@ def find_equivalence(
         >>> right_se, left_se = find_equivalence(left_anf, left_anf, 2, 2, equiv_ct_terms=False)  # non-linear SE
         >>> assert check_self_le_anf(left_anf, right_se, left_se, None)
         >>> get_anf_coeffmatrix_str(right_se, input_vars=["x0", "x1", "x2"])
-        [x0*x2 x1*x2|   x0    x1    x2]
-        [-----------+-----------------]
-        [    1     1|    0     1     1]
-        [    0     1|    1     0     1]
-        [    1     0|    1     1     1]
+        [x0*x1 x0*x2 x1*x2|   x0    x1    x2]
+        [-----------------+-----------------]
+        [    0     0     0|    0     1     1]
+        [    1     1     1|    0     1     1]
+        [    0     0     0|    1     0     1]
 
     .. Implementation details:
 
@@ -1894,10 +1926,12 @@ def find_equivalence(
 
     initial_equations = []
     if add_invertibility_equations in ["right", "both"]:
+        assert right_equiv_degree == 1
         aux_bpr = f0[0].parent()
         aux_iv = [aux_bpr(v) for v in f0_input_vars]
         initial_equations.append(aux_bpr(anf2matrix(f0, aux_iv).determinant()) + aux_bpr(1))
     if add_invertibility_equations in ["left", "both"]:
+        assert left_equiv_degree == 1
         aux_bpr = f2[0].parent()
         aux_iv = [aux_bpr(v) for v in f2_input_vars]
         initial_equations.append(aux_bpr(anf2matrix(f2, aux_iv).determinant()) + aux_bpr(1))
@@ -1929,7 +1963,6 @@ def find_equivalence(
             return result
 
 
-# TODO: add to docstring add_invertibility_equations
 def find_half_affine_equivalence(
     left_anf, inv_right_anf,
     # left_input_vars=None, inv_right_input_vars=None,
@@ -1944,11 +1977,14 @@ def find_half_affine_equivalence(
     In particular, if F = G, A is a right affine self-equivalence of F.
     If no solution is found, None is returned.
 
+    If add_invertibility_equations is True, an additional constraint is added to ensure
+    A is invertible (not needed if F and G are permutations with the same input size).
+
     This method does not support symbolic ANF, and the input functions F and G
     must be defined in the boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     By default, return_mode="list_anfs" and num_sat_solutions="1".
     If these two parameters are not given, only one solution is found
     and the ANF of A is returned.
@@ -2090,7 +2126,7 @@ def find_nondiagonal_ase(
     must be defined in the boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     By default, return_mode="list_anfs" and num_sat_solutions="1".
     If these two parameters are not given, only one solution is found
     and a pair with the ANF of A and B is returned.
@@ -2106,12 +2142,12 @@ def find_nondiagonal_ase(
         >>> get_anf_coeffmatrix_str(right_se, input_vars=["x" + str(i) for i in range(6)])
         [x0 x1 x2 x3 x4 x5]
         [-----------------]
-        [ 1  0  0  0  1  1]
-        [ 0  0  1  0  0  0]
+        [ 1  0  1  0  1  0]
+        [ 0  1  0  0  0  0]
         [ 0  1  1  0  0  0]
-        [ 0  0  0  1  1  0]
+        [ 0  0  0  1  0  0]
         [ 0  0  0  0  0  1]
-        [ 0  0  0  0  1  1]
+        [ 0  0  0  0  1  0]
         >>> left_anf = lut2anf(get_lut_inversion(3))
         >>> right_anf = left_anf
         >>> find_nondiagonal_ase(left_anf, right_anf, se_ct_terms=False)  # doctest:+SKIP
@@ -2221,7 +2257,7 @@ def find_noninvertible_ase(
     must be defined in the boolean polynomial ring
     BooleanPolynomialRing(n,'x') with n the number of input variables.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     By default, return_mode="list_anfs" and num_sat_solutions="1".
     If these two parameters are not given, only one solution is found
     and a pair containing the ANF of A and B is returned.
@@ -2355,7 +2391,7 @@ def find_horizontal_decomposition(
     must be defined in the boolean polynomial ring
     BooleanPolynomialRing(n,'x') with n the number of input variables.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     By default, return_mode="list_anfs" and num_sat_solutions="1".
     If these two parameters are not given, only one solution is found
     abd the triple ((P, Q), A, B), each one in ANF form, is returned.
@@ -2516,10 +2552,10 @@ def find_horizontal_decomposition(
             return result
 
 
-# TODO: v2 support right_anf to be in implicit form
 def find_ccz_equivalence(
     left_anf, right_anf,
-    equiv_degree=1, inv_equiv_degree=1, equiv_ct_terms=True,
+    equiv_degree=1, # inv_equiv_degree=1,
+    equiv_ct_terms=True,
     add_invertibility_equations=True,
     # left_input_vars=None, right_input_vars=None,
     prefix_am_coeffs="a",
@@ -2545,15 +2581,14 @@ def find_ccz_equivalence(
     G(a_0(u, F(u))) = a_1(u, F(u)).
 
     If add_invertibility_equations=True, the equations that
-    impose A to be invertible are added to the system of equations.
-    In this case, if equiv_degree>1, the inv_equiv_degree is used to
-    build the invertibility equations.
+    impose A to be invertible are added to the system of equations
+    (only supported for equiv_degree=1).
 
     This method does not support symbolic ANF, and the input functions F and G
     must be defined in the boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
-    Named arguments from **solve_args are passed to solve_functional_equation().
+    Named arguments from ``**solve_args`` are passed to solve_functional_equation().
     By default, return_mode="list_anfs" and num_sat_solutions="1".
     If these two parameters are not given, only one solution is found
     and the ANF of A is returned.
@@ -2569,7 +2604,7 @@ def find_ccz_equivalence(
         [ 1  0  0  0  0  0]
         [ 0  0  0  0  0  1]
         [ 1  1  0  1  0  0]
-        [ 0  0  0  1  0  0]
+        [ 0  0  1  1  0  1]
         [ 0  0  1  0  0  0]
         >>> find_ccz_equivalence(left_anf, lut2anf(get_lut_inversion(3)), only_linear_fixed_vars=True)  # doctest:+SKIP
         No solution found (system of equations is inconsistent (unsatisfiable))
@@ -2603,8 +2638,9 @@ def find_ccz_equivalence(
     # if B^{-1} = (b_0, b_1) verifies b_1(u, F(u)) = G(b_0(u, F(u))),
     # then Gamma_F = B(Gamma_G).
     # But this is equivalent to B(Gamma_F) = Gamma_G
-    if equiv_degree == 1 or inv_equiv_degree == 1:
-        assert equiv_degree == inv_equiv_degree == 1
+
+    # if equiv_degree == 1 or inv_equiv_degree == 1:
+    #     assert equiv_degree == inv_equiv_degree == 1
 
     assert not isinstance(left_anf, sage.rings.polynomial.pbori.pbori.BooleanPolynomial)
     assert not isinstance(right_anf, sage.rings.polynomial.pbori.pbori.BooleanPolynomial)
@@ -2680,16 +2716,16 @@ def find_ccz_equivalence(
     rhs_input_vars = [g0_input_vars, g1_input_vars]
 
     if add_invertibility_equations:
-        if equiv_degree == 1:
-            a_matrix = anf2matrix(a, [a_bpr("x" + str(i)) for i in range(num_a_inputs)])
-            initial_equations = [a_bpr(a_matrix.determinant()) + a_bpr(1)]
-        else:
-            initial_equations = find_inverse(
-                a, inv_equiv_degree, inv_position="left", prefix_inv_coeffs=prefix_am_coeffs+"c",
-                input_vars=["x" + str(i) for i in range(num_a_inputs)],
-                verbose=verbose, debug=debug, filename=filename, return_mode="raw_equations"
-            )
-            assert initial_equations is not None
+        assert equiv_degree == 1
+        a_matrix = anf2matrix(a, [a_bpr("x" + str(i)) for i in range(num_a_inputs)])
+        initial_equations = [a_bpr(a_matrix.determinant()) + a_bpr(1)]
+        # # not fully tested
+        # initial_equations = find_inverse(
+        #     a, inv_equiv_degree, inv_position="left", prefix_inv_coeffs=prefix_am_coeffs+"c",
+        #     input_vars=["x" + str(i) for i in range(num_a_inputs)],
+        #     verbose=verbose, debug=debug, filename=filename, return_mode="raw_equations"
+        # )
+        # assert initial_equations is not None
     else:
         initial_equations = []
 

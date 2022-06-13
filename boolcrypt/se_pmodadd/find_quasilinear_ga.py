@@ -1,9 +1,11 @@
-"""Find quasi-linear quadratic implicit functions of the permuted modular addition.
+"""Find graph automorphisms C' of pmodadd such that T C' is quasi-linear.
 
-Given the well-known implicit T of pmoddadd, this script finds a CCZ C' of pmodadd
-such that T C' is quasi-linear.
-
+T is the well-known implicit T of pmoddadd (permuted modular addition).
 F(x, y) is quasi-linear if for any fixed x0, F(x0, y) is linear (up to a constant).
+Here, CCZ-SE refers to graph automorphisms.
+
+Note that this script only finds a small subset of graph automorphisms,
+since many coefficients are preemptively fixed.
 """
 import collections
 import itertools
@@ -61,15 +63,13 @@ def check_partial_fixed_implicit_is_a_permutation(wordsize, verbose):
         print("All T(x_0, y) are permutations")
 
 
-# copy of cczselfequivalence.find_self_equivalence with
-# add_allones_equations and modified invertibility section
 def find_self_equivalence_quasilinear_implicit_pmodadd(
     # main args
     ccz_anf, admissible_mapping,
     # alternative modes
     ccz_anf_implicit=False,
     # degree args
-    left_se_degree=1, inv_right_se_degree=1, inv_left_se_degree=1, right_se_degree=1, se_ct_terms=True,
+    se_degree=1, se_ct_terms=True,
     # optimization constraints
     ignore_diagonal_equations=False,
     add_invertibility_equations=True, ignore_determinant_equation=False,
@@ -88,19 +88,16 @@ def find_self_equivalence_quasilinear_implicit_pmodadd(
     # extra args passed to solve_functional_equation()
     **solve_args
 ):
+    """Copy of cczselfequivalence.find_self_equivalence, but where many coefficients are fixed to one
+    and where the invertibility constraint is modified.
+    """
     smart_print = get_smart_print(filename)
 
     if debug:
         verbose = True
 
-    if return_ccz_se is False or left_se_degree != 1 or inv_left_se_degree != 1 or ccz_anf_implicit:
+    if return_ccz_se is False or ccz_anf_implicit or se_degree != 1:
         raise ValueError("invalid arguments")
-
-    if left_se_degree == 1 or inv_left_se_degree == 1:
-        assert left_se_degree == inv_left_se_degree == 1
-
-    if right_se_degree == 1 or inv_right_se_degree == 1:
-        assert right_se_degree == inv_right_se_degree == 1
 
     assert not isinstance(ccz_anf, sage.rings.polynomial.pbori.pbori.BooleanPolynomial)
     if input_ccz_anf_vars is None:
@@ -157,9 +154,7 @@ def find_self_equivalence_quasilinear_implicit_pmodadd(
         initial_fixed_vars = collections.OrderedDict()
 
     if verbose:
-        smart_print("finding SE of F through the graph of G "
-                    f"with degrees {left_se_degree, inv_right_se_degree} and "
-                    f"inverse degrees {inv_left_se_degree, right_se_degree}")
+        smart_print(f"finding CCZ-SE of F through the graph of G with degree {se_degree}")
         smart_print("- F:")
         smart_print(get_anf_coeffmatrix_str(anf, input_anf_vars))
         smart_print(f"- G (CCZ-{'implicit-' if ccz_anf_implicit else ''}equivalent of F):")
@@ -174,7 +169,7 @@ def find_self_equivalence_quasilinear_implicit_pmodadd(
     # use anf and input_anf_vars instead of ccz_anf and input_ccz_anf_vars
     # to consider also the case ccz_anf_implicit=True
     num_c_input_vars = len(input_anf_vars) + len(anf)
-    c_deg = max(left_se_degree, inv_right_se_degree)
+    c_deg = se_degree
 
     if bpr is not None:
         all_varnames = bpr.variable_names()
@@ -344,11 +339,7 @@ def find_self_equivalence_quasilinear_implicit_pmodadd(
 
     if not ignore_diagonal_equations:
         if verbose:
-            if left_se_degree < c_deg or inv_right_se_degree < c_deg:
-                aux = f" with top/bottom degrees {left_se_degree}/{inv_right_se_degree}"
-            else:
-                aux = ""
-            smart_print(f"{get_time()} | getting equations from T L C L^(-1) = quasi-linear{aux}")
+            smart_print(f"{get_time()} | getting equations from T L C L^(-1) = quasi-linear")
             smart_print(" - T:")
             smart_print(get_anf_coeffmatrix_str(implicit_modadd, c_input_vars))
 
@@ -399,11 +390,7 @@ def find_self_equivalence_quasilinear_implicit_pmodadd(
             smart_print("- T L C L^(-1) (L admissible mapping L(Graph(G)=Graph(F)):")
             smart_print(get_anf_coeffmatrix_str(t_l_c_linv, c_input_vars))
         if debug:
-            if left_se_degree < c_deg or inv_right_se_degree < c_deg:
-                aux = f" with degrees {left_se_degree}/{inv_right_se_degree}"
-            else:
-                aux = ""
-            smart_print(f"equations from T L C L^(-1) = quasi-linear{aux}:")
+            smart_print(f"equations from T L C L^(-1) = quasi-linear:")
 
         index_eq = len(initial_equations)
         for index_component, component in enumerate(t_l_c_linv):
@@ -511,6 +498,7 @@ def find_self_equivalence_quasilinear_implicit_pmodadd(
 
     # 1.5 - Reducing initial and diagonal equations
 
+    # no calls to find_fixed_vars() when "raw_equations" mode
     if solve_args.get("return_mode", None) != "raw_equations" and not ignore_diagonal_equations:
         if verbose:
             smart_print(f"{get_time()} | finding fixed variables and reducing initial and quasi-linear equations")
@@ -538,7 +526,7 @@ def find_self_equivalence_quasilinear_implicit_pmodadd(
         if verbose:
             smart_print(f"{get_time()} | adding invertibility equations over C")
 
-        assert left_se_degree == 1 and inv_right_se_degree == 1
+        assert se_degree == 1
 
         base_matrix = anf2matrix(c, c_input_vars)
 
@@ -1460,9 +1448,7 @@ def find_cczse_pmodadd_3passes(wordsize, check_se, threads, verbose, debug, file
     raw_equations = find_self_equivalence_quasilinear_implicit_pmodadd(
         ccz_modadd_anf, admissible_mapping,
         # degree args
-        left_se_degree=deg, inv_right_se_degree=deg,
-        inv_left_se_degree=deg, right_se_degree=deg,
-        se_ct_terms=ct_terms,
+        se_degree=deg, se_ct_terms=ct_terms,
         # optimization constraints
         add_allones_equations=add_allones_equations,
         add_invertibility_equations=invertibility,
@@ -1512,9 +1498,7 @@ def find_cczse_pmodadd_3passes(wordsize, check_se, threads, verbose, debug, file
     redundant_equations = find_self_equivalence_quasilinear_implicit_pmodadd(
         ccz_modadd_anf, admissible_mapping,
         # degree args
-        left_se_degree=deg, inv_right_se_degree=deg,
-        inv_left_se_degree=deg, right_se_degree=deg,
-        se_ct_terms=ct_terms,
+        se_degree=deg, se_ct_terms=ct_terms,
         # optimization constraints
         add_allones_equations=add_allones_equations,
         add_invertibility_equations=invertibility,
@@ -1555,9 +1539,7 @@ def find_cczse_pmodadd_3passes(wordsize, check_se, threads, verbose, debug, file
         redundant_equations = find_self_equivalence_quasilinear_implicit_pmodadd(
             ccz_modadd_anf, admissible_mapping,
             # degree args
-            left_se_degree=deg, inv_right_se_degree=deg,
-            inv_left_se_degree=deg, right_se_degree=deg,
-            se_ct_terms=ct_terms,
+            se_degree=deg, se_ct_terms=ct_terms,
             # optimization constraints
             add_allones_equations=add_allones_equations,
             add_invertibility_equations=invertibility,
@@ -1608,9 +1590,7 @@ def find_cczse_pmodadd_3passes(wordsize, check_se, threads, verbose, debug, file
     symbolic_coeffs, equations, num_total_solutions = find_self_equivalence_quasilinear_implicit_pmodadd(
         ccz_modadd_anf, admissible_mapping,
         # degree args
-        left_se_degree=deg, inv_right_se_degree=deg,
-        inv_left_se_degree=deg, right_se_degree=deg,
-        se_ct_terms=ct_terms,
+        se_degree=deg, se_ct_terms=ct_terms,
         # optimization constraints
         add_allones_equations=add_allones_equations,
         add_invertibility_equations=invertibility,
@@ -1756,9 +1736,7 @@ def find_cczse_pmodadd_with_shape(wordsize, check_se, threads, save_coeffs_eqs, 
     symbolic_coeffs, equations, num_total_solutions = find_self_equivalence_quasilinear_implicit_pmodadd(
         ccz_modadd_anf, admissible_mapping,
         # degree args
-        left_se_degree=deg, inv_right_se_degree=deg,
-        inv_left_se_degree=deg, right_se_degree=deg,
-        se_ct_terms=ct_terms,
+        se_degree=deg, se_ct_terms=ct_terms,
         # optimization constraints
         add_allones_equations=add_allones_equations,
         add_invertibility_equations=invertibility,
@@ -1824,7 +1802,7 @@ def find_cczse_pmodadd_with_shape(wordsize, check_se, threads, save_coeffs_eqs, 
     # smart_print(f"new_symbolic_coeffs = {sorted(new_symbolic_coeffs)}\n")
     # print_new_symbolic_coeffs(base_coeff2ct_str, symbolic_coeffs, filename)
 
-    # TODO: deprecated (code used to found A0/A1 inner square can be Id and 0 blocks)
+    # deprecated (code used to found A0/A1 inner square can be Id and 0 blocks)
     # if ws >= 5:
     #     equations = list(equations)
     #     first_bad_equation = -1

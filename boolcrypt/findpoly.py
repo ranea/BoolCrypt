@@ -489,14 +489,14 @@ def check_permutation(input_file, mode, degree=None, output_file=None,
 
     List of modes:
 
-    "is_odd" outputs the permutations that are odd (like the inversion)
-    "inv_deg_max" outputs the permutations whose inverse degree
-                  are greater than the target degree
-    "inv_deg_min" outputs the permutations whose inverse degree
-                  are lower than the target degree
-    "unique" outputs the list of permutations without duplicates
-    "invertible" outputs the permutations that are invertible
-    "linear_repr" outputs the linear representatives, without duplicates
+    - "is_odd" outputs the permutations that are odd (like the inversion)
+    - "inv_deg_max" outputs the permutations whose inverse degree
+      are greater than the target degree
+    - "inv_deg_min" outputs the permutations whose inverse degree
+      are lower than the target degree
+    - "unique" outputs the list of permutations without duplicates
+    - "invertible" outputs the permutations that are invertible
+    - "linear_repr" outputs the linear representatives, without duplicates
 
         >>> x = PolynomialRing(get_rijndael_field(), 'x').gen()
         >>> temp_file = sage.all.tmp_filename('testing_check_lut', '.txt')

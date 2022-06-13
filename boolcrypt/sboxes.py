@@ -20,6 +20,7 @@ linear_3b_classes = [
     (1, 0, 2, 4, 3, 6, 5, 7),
     (1, 0, 2, 4, 3, 6, 7, 5)
 ]
+"""List of representatives of the 3-bit linear-equivalence classes."""
 
 affine_3b_classes = [
     (0, 1, 2, 3, 4, 5, 6, 7),
@@ -27,6 +28,7 @@ affine_3b_classes = [
     (0, 1, 2, 3, 4, 6, 7, 5),
     (0, 1, 2, 4, 3, 6, 7, 5),  # inversion
 ]
+"""List of representatives of the 4-bit linear-equivalence classes."""
 
 
 # -------------
@@ -55,6 +57,7 @@ high_se_4bit_sboxes = [
     "0123456789ABCDEF"
 ]
 high_se_4bit_sboxes = [hex_string2lut(l, 1) for l in high_se_4bit_sboxes]
+"""List of representatives of the 4-bit affine-equivalence classes with high number of self-equivalences."""
 
 
 high_se_4bit_2deg_sboxes = [
@@ -66,9 +69,11 @@ high_se_4bit_2deg_sboxes = [
     "1032456789ABCDEF"
 ]
 high_se_4bit_2deg_sboxes = [hex_string2lut(l, 1) for l in high_se_4bit_2deg_sboxes]
+"""List of representatives of the 4-bit quadratic affine-equivalence classes with high number of self-equivalences."""
 
 
 def get_4bit_permutations():
+    """Get the representatives of the 4-bit affine-equivalence classes (permutations)."""
     classes = []
     try:
         path_sboxes = pathlib.Path(__file__).parent / "sboxes/4bit-AffineClasses.txt"
@@ -81,6 +86,7 @@ def get_4bit_permutations():
 
 
 def get_4bit_2d_permutations():
+    """Get the representatives of the 4-bit quadratic affine-equivalence classes (permutations)."""
     from boolcrypt.utilities import get_algebraic_degree
     classes = []
     try:
@@ -123,6 +129,7 @@ inv2deg_5bit_2deg_sboxes = [
     "000102030405060708090a0b101112130c0d0e0f18191a1b1c1d1e1f14151617",
 ]
 inv2deg_5bit_2deg_sboxes = [hex_string2lut(l, 2) for l in inv2deg_5bit_2deg_sboxes]
+"""List of representatives of the 5-bit quadratic affine-equivalence classes with quadratic inverse."""
 
 
 inv3deg_5bit_2deg_sboxes = [
@@ -185,6 +192,7 @@ inv3deg_5bit_2deg_sboxes = [
     "000102040308101c050a1a1211141f1d0615180c160f19070e130d17091e1b0b",
 ]
 inv3deg_5bit_2deg_sboxes = [hex_string2lut(l, 2) for l in inv3deg_5bit_2deg_sboxes]
+"""List of representatives of the 5-bit quadratic affine-equivalence classes with cubic inverse."""
 
 
 # -------------
@@ -193,6 +201,7 @@ inv3deg_5bit_2deg_sboxes = [hex_string2lut(l, 2) for l in inv3deg_5bit_2deg_sbox
 
 
 def get_quadratic_6bit_permutations():
+    """Get the representatives of the 6-bit affine-equivalence classes (permutations)."""
     classes = []
     try:
         path_sboxes = pathlib.Path(__file__).parent / "sboxes/2deg-6bit-AffineClasses.txt"
@@ -218,3 +227,4 @@ rssb_6bit = [
     "2123353c2419263d1d292a080b1b200a311e2c3e34042d050f1f02222f11283f",
 ]
 rssb_6bit = [hex_string2lut(l, 2) for l in rssb_6bit]
+"""List of representatives of the 6-bit rotation-symmetric S-boxes."""

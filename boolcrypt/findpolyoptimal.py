@@ -70,7 +70,6 @@ def find_optimal_equiv_poly(lut, field=None, mode="random", minimize="deg", file
     else:
         assert False
 
-    # TODO: v2 add an optional parameter to avoid recomputing the linear group
     linear_group = sage.all.GL(dimension, GF(2))
     linear_group_list = linear_group
     linear_group_list = []
@@ -207,7 +206,6 @@ def find_optimal_equiv_anf(sbox_lut, mode="random", minimize="terms", filename=N
     else:
         raise NotImplementedError("only minimize=terms implemented")
 
-    # TODO: v2 add an optional parameter to avoid recomputing the linear group
     linear_group = sage.all.GL(n, GF(2))
     linear_group_list = linear_group
     linear_group_list = []
@@ -251,7 +249,6 @@ def find_optimal_equiv_anf(sbox_lut, mode="random", minimize="terms", filename=N
     if verbose:
         smart_print("{}\t{}: {}\t{}".format(get_time(), minimize, minimum, best_anf))
 
-    # TODO: v2 generalize the objective function
     if minimum == n:
         return best_anf
 

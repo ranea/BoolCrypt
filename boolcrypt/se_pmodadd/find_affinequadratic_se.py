@@ -1,4 +1,4 @@
-"""Find quadratic-affine self-equivalences (QASE) of the permuted modular addition."""
+"""Find affine-quadratic self-equivalences (QASE) of the permuted modular addition."""
 import collections
 import itertools
 import math
@@ -704,7 +704,7 @@ def shape(wordsize, prefix_symbolic_anf, verbose, filename):
     return var2val, initial_equations, varnames
 
 
-def graph_qase_coeffs2modadd_qase_anf(coeff2expr, wordsize, verbose, debug, filename, equations=None):
+def graph_aqse_coeffs2modadd_aqse_anf(coeff2expr, wordsize, verbose, debug, filename, equations=None):
     """Given the symbolic coefficients of the CCZ ASE of the "H" quadratic CCZ,
     return the symbolic anf ASE of the permuted modular addition.
     """
@@ -717,7 +717,7 @@ def graph_qase_coeffs2modadd_qase_anf(coeff2expr, wordsize, verbose, debug, file
     if filename is True:
         now = datetime.datetime.now()
         now = "{}D{}H{}M".format(now.day, now.hour, now.minute)
-        filename = f"result-graph_qase_coeffs2modadd_qase_anf-w{ws}-{now}.txt"
+        filename = f"result-graph_aqse_coeffs2modadd_aqse_anf-w{ws}-{now}.txt"
 
     admissible_mapping = get_admissible_mapping(ws, name=ccz_anf_name, permuted=permuted)
 
@@ -831,7 +831,7 @@ def graph_qase_coeffs2modadd_qase_anf(coeff2expr, wordsize, verbose, debug, file
     return a, b_inv
 
 
-def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
+def find_aqse_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
     """Find all QASE of the permuted modular addition for a fixed wordsize"""
     assert wordsize <= 5
 
@@ -844,7 +844,7 @@ def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
     if filename is True:
         now = datetime.datetime.now()
         now = "{}D{}H{}M".format(now.day, now.hour, now.minute)
-        filename = f"result-find_qase_pmodadd_slow-w{ws}-{now}.txt"
+        filename = f"result-find_aqse_pmodadd_slow-w{ws}-{now}.txt"
 
     ccz_modadd_anf = get_ccz_modadd_anf(ws, name=ccz_anf_name, permuted=permuted)
     admissible_mapping = get_admissible_mapping(ws, name=ccz_anf_name, permuted=permuted)
@@ -857,11 +857,8 @@ def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
 
     prefix_se_coeffs = "a"
 
-    left_se_degree, inv_left_se_degree = 1, 1
-    inv_right_se_degree, right_se_degree = 2, None
+    right_se_degree, inv_left_se_degree = 1, 2
     # changing the order of degrees doesn't make the computation faster
-    # left_se_degree, inv_left_se_degree = 2, None
-    # inv_right_se_degree, right_se_degree = 1, 1
     ct_terms = True
     return_ccz_se = False
 
@@ -885,8 +882,7 @@ def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
         ccz_modadd_anf, admissible_mapping,
         anf=modadd_anf, num_input_anf_vars=num_input_anf_vars,
         #
-        left_se_degree=left_se_degree, inv_right_se_degree=inv_right_se_degree,
-        inv_left_se_degree=inv_left_se_degree, right_se_degree=right_se_degree,
+        right_se_degree=right_se_degree, inv_left_se_degree=inv_left_se_degree,
         prefix_se_coeffs=prefix_se_coeffs, se_ct_terms=ct_terms,
         #
         add_invertibility_equations=invertibility,
@@ -936,8 +932,7 @@ def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
         anf=modadd_anf, num_input_anf_vars=num_input_anf_vars,
         input_ccz_anf_vars=input_ccz_anf_vars,
         #
-        left_se_degree=left_se_degree, inv_right_se_degree=inv_right_se_degree,
-        inv_left_se_degree=inv_left_se_degree, right_se_degree=right_se_degree,
+        right_se_degree=right_se_degree, inv_left_se_degree=inv_left_se_degree,
         prefix_se_coeffs=prefix_se_coeffs, se_ct_terms=ct_terms,
         #
         add_invertibility_equations=invertibility,
@@ -973,8 +968,7 @@ def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
             anf=modadd_anf, num_input_anf_vars=num_input_anf_vars,
             input_ccz_anf_vars=input_ccz_anf_vars,
             #
-            left_se_degree=left_se_degree, inv_right_se_degree=inv_right_se_degree,
-            inv_left_se_degree=inv_left_se_degree, right_se_degree=right_se_degree,
+            right_se_degree=right_se_degree, inv_left_se_degree=inv_left_se_degree,
             prefix_se_coeffs=prefix_se_coeffs, se_ct_terms=ct_terms,
             #
             add_invertibility_equations=invertibility,
@@ -1020,8 +1014,7 @@ def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
         anf=modadd_anf, num_input_anf_vars=num_input_anf_vars,
         input_ccz_anf_vars=input_ccz_anf_vars,
         #
-        left_se_degree=left_se_degree, inv_right_se_degree=inv_right_se_degree,
-        inv_left_se_degree=inv_left_se_degree, right_se_degree=right_se_degree,
+        right_se_degree=right_se_degree, inv_left_se_degree=inv_left_se_degree,
         prefix_se_coeffs=prefix_se_coeffs, se_ct_terms=ct_terms,
         #
         add_invertibility_equations=invertibility,
@@ -1054,7 +1047,7 @@ def find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename):
     return symbolic_coeffs, equations, num_total_solutions
 
 
-def find_qase_pmodadd_with_shape(wordsize, check, threads, save_coeffs_eqs, verbose, debug, filename):
+def find_aqse_pmodadd_with_shape(wordsize, check, threads, save_coeffs_eqs, verbose, debug, filename):
     """Find all QASE of the permuted modular addition for a fixed wordsize using a predefined shape."""
     assert wordsize >= 4, "only supported for wordsize >= 4"
 
@@ -1067,7 +1060,7 @@ def find_qase_pmodadd_with_shape(wordsize, check, threads, save_coeffs_eqs, verb
     if filename is True:
         now = datetime.datetime.now()
         now = "{}D{}H{}M".format(now.day, now.hour, now.minute)
-        filename = f"result-find_qase_pmodadd_with_shape-w{ws}-{now}.txt"
+        filename = f"result-find_aqse_pmodadd_with_shape-w{ws}-{now}.txt"
 
     num_input_anf_vars = 2*ws
     if ws <= 6:
@@ -1077,8 +1070,7 @@ def find_qase_pmodadd_with_shape(wordsize, check, threads, save_coeffs_eqs, verb
 
     prefix_se_coeffs = "a"
 
-    left_se_degree, inv_left_se_degree = 1, 1
-    inv_right_se_degree, right_se_degree = 2, None
+    right_se_degree, inv_left_se_degree = 1, 2
     ct_terms = True
     return_ccz_se = False
 
@@ -1135,8 +1127,7 @@ def find_qase_pmodadd_with_shape(wordsize, check, threads, save_coeffs_eqs, verb
     symbolic_coeffs, equations, num_total_solutions = find_self_equivalence(
         ccz_modadd_anf, admissible_mapping,
         # degree args
-        left_se_degree=left_se_degree, inv_right_se_degree=inv_right_se_degree,
-        inv_left_se_degree=inv_left_se_degree, right_se_degree=right_se_degree,
+        right_se_degree=right_se_degree, inv_left_se_degree=inv_left_se_degree,
         se_ct_terms=ct_terms,
         # optimization constraints
         ignore_diagonal_equations=ignore_diagonal_equations,
@@ -1187,7 +1178,7 @@ def find_qase_pmodadd_with_shape(wordsize, check, threads, save_coeffs_eqs, verb
     assert len(equations) == 14 if ws == 4 else 3
 
     if save_coeffs_eqs:
-        filename_sobj = f"stored_qase_pmodadd_w{ws}.sobj"
+        filename_sobj = f"stored_aqse_pmodadd_w{ws}.sobj"
         str_equations = tuple([str(eq) for eq in equations])
         sage.all.save((str_symbolic_coeffs, str_equations), filename_sobj, compress=True)
 
@@ -1206,12 +1197,12 @@ if __name__ == '__main__':
     debug = False
     filename = None
 
-    symbolic_coeffs, _, _ = find_qase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
-    # graph_qase_coeffs2modadd_qase_anf(symbolic_coeffs, wordsize, verbose, debug, filename)
+    symbolic_coeffs, _, _ = find_aqse_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
+    # graph_aqse_coeffs2modadd_aqse_anf(symbolic_coeffs, wordsize, verbose, debug, filename)
 
-    # find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)
+    # find_aqse_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)
 
-    # # - run find_qase_pmodadd_slow and find_qase_pmodadd_with_shape for multiple wordsizes
+    # # - run find_aqse_pmodadd_slow and find_aqse_pmodadd_with_shape for multiple wordsizes
     # import time
     # threads = 4
     # save = False
@@ -1221,17 +1212,17 @@ if __name__ == '__main__':
     # for wordsize in [2, 3, 4, 5, 6, 16, 24, 32, 48, 64]:
     #     if wordsize in [2, 3]:
     #         check = True
-    #         find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)
+    #         find_aqse_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)
     #     elif 4 == wordsize:
     #         check = True
-    #         find_qase_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)
+    #         find_aqse_pmodadd_slow(wordsize, check, threads, verbose, debug, filename)
     #         check = False
-    #         symbolic_coeffs, _, _ = find_qase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
-    #         graph_qase_coeffs2modadd_qase_anf(symbolic_coeffs, wordsize, verbose, debug, filename)
+    #         symbolic_coeffs, _, _ = find_aqse_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
+    #         graph_aqse_coeffs2modadd_aqse_anf(symbolic_coeffs, wordsize, verbose, debug, filename)
     #     else:
     #         check = False
-    #         symbolic_coeffs, _, _ = find_qase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
-    #         graph_qase_coeffs2modadd_qase_anf(symbolic_coeffs, wordsize, verbose, debug, filename)
+    #         symbolic_coeffs, _, _ = find_aqse_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
+    #         graph_aqse_coeffs2modadd_aqse_anf(symbolic_coeffs, wordsize, verbose, debug, filename)
 
     # # - save coeffs and eqs of QSE for multiple wordsize
     # threads = 4
@@ -1241,16 +1232,16 @@ if __name__ == '__main__':
     # check = False
     # filename = False
     # for wordsize in [16, 24, 32, 48, 64]:
-    #     find_qase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
+    #     find_aqse_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
 
     # - load coeffs and eqs of QSE
     # verbose = True
     # debug = False
     # filename = None
     # for wordsize in [16, 24, 32, 48, 64]:
-    #     filename_sobj = f"stored_qase_pmodadd_w{wordsize}.sobj"
+    #     filename_sobj = f"stored_aqse_pmodadd_w{wordsize}.sobj"
     #     coeff2expr, equations = sage.all.load(filename_sobj, compress=True)
-    #     a, b_inv = graph_qase_coeffs2modadd_qase_anf(coeff2expr, wordsize, verbose, debug, filename)
+    #     a, b_inv = graph_aqse_coeffs2modadd_aqse_anf(coeff2expr, wordsize, verbose, debug, filename)
     #     print(equations)
     #     print(a[0])
     #     print("...")
@@ -1268,8 +1259,8 @@ if __name__ == '__main__':
     # smart_print = get_smart_print(filename)
     # for wordsize in range(4, 64 + 1):
     #     ws = wordsize
-    #     _, _, num_total_solutions = find_qase_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
-    #     smart_print(f"w = {ws} | quadratic-affine | num_total_solutions = {num_total_solutions} | "
+    #     _, _, num_total_solutions = find_aqse_pmodadd_with_shape(wordsize, check, threads, save, verbose, debug, filename)
+    #     smart_print(f"w = {ws} | affine-quadratic | num_total_solutions = {num_total_solutions} | "
     #                 f"{9 * (2**(3 * ws + 14))} = 9 * (2**(3 * {ws} + 14)")
     #     if num_total_solutions != 9 * (2**(3 * ws + 14)):
-    #         raise ValueError(f"invalid number of quadratic-affine self-equivalences")
+    #         raise ValueError(f"invalid number of affine-quadratic self-equivalences")

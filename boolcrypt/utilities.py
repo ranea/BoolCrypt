@@ -30,7 +30,7 @@ def get_smart_print(filename):
         def smart_print(*args, **kwargs):
             print(*args, **kwargs, flush=True)
     elif filename is False:
-        def smart_print(*args):
+        def smart_print(*args, **kwargs):
             return
     else:
         assert isinstance(filename, str)
@@ -706,7 +706,6 @@ def is_balanced(anf):
     return len(set(counter.values())) == 1
 
 
-# TODO: add to docstring full_repr
 def get_anf_coeffmatrix_str(anf, input_vars=None, full_repr=None):
     """Return the coefficient matrix of a (symbolic) anf as a string.
 
@@ -716,7 +715,8 @@ def get_anf_coeffmatrix_str(anf, input_vars=None, full_repr=None):
 
     If the anf is symbolic and the number of symbolic coefficients
     is greater than 32, then instead of the coefficient matrix,
-    a short string representation of the ANF is returned.
+    a short string representation of the ANF is returned
+    (unless ``full_repr`` is True).
 
         >>> x, y, z = BooleanPolynomialRing(names="x, y, z").gens()
         >>> f0 = x*y*z + x*y + x*z + y*z + x + y + z + 1
@@ -1635,6 +1635,7 @@ def get_symbolic_anf(degree, num_inputs, num_outputs, ct_terms=True,
     """Return an ANF with symbolic coefficients given as Boolean variables.
 
     Parameters:
+
         - prefix_inputs: the prefix string to label the input variables of the ANF.
         - prefix_coeffs: the prefix string to label the coefficients of the ANF.
         - degree: the algebraic degree of the ANF.
@@ -1647,6 +1648,8 @@ def get_symbolic_anf(degree, num_inputs, num_outputs, ct_terms=True,
         - bpr: if given, each ANF component is an element of given Boolean poly ring
         - return_varnames: if True, return the varnames of the parent BooleanPolynomialRing
           of the symbolic anf.
+
+    ::
 
         >>> get_anf_coeffmatrix_str(get_symbolic_anf(1, 3, 3), input_vars=[0, 1, 2])
         [  x0   x1   x2|   1]

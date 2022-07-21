@@ -1637,7 +1637,7 @@ def find_inverse(
     If no inverse is found, None returned.
 
     This method does not support symbolic ANF, and the input function F
-    must be defined in the boolean polynomial ring
+    must be defined in the Boolean polynomial ring
     BooleanPolynomialRing(n,'x') with n the number of input variables.
 
     Named arguments from ``**solve_args`` are passed to solve_functional_equation().
@@ -1702,11 +1702,11 @@ def find_inverse(
 
     bpr_x = BooleanPolynomialRing(len(input_vars), 'x')
     if solve_args.get("bpr", bpr_x) != bpr_x:
-        raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+        raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                   f"(and not {solve_args['bpr']})")
     for i, v in enumerate(input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {anf[0].parent()})")
 
     assert all(not str(v).startswith(prefix_inv_coeffs) for v in input_vars)
@@ -1803,7 +1803,7 @@ def find_equivalence(
     then no invertibility constraint is needed.
 
     This method does not support symbolic ANF, and the input functions F and G
-    must be defined in the boolean polynomial ring
+    must be defined in the Boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
     Named arguments from ``**solve_args`` are passed to solve_functional_equation().
@@ -1883,15 +1883,15 @@ def find_equivalence(
 
     bpr_x = BooleanPolynomialRing(max(len(left_input_vars), len(right_input_vars)), 'x')
     if solve_args.get("bpr", bpr_x) != bpr_x:
-        raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+        raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                   f"(and not {solve_args['bpr']})")
     for i, v in enumerate(left_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {left_anf[0].parent()})")
     for i, v in enumerate(right_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {right_anf[0].parent()})")
 
     for v in itertools.chain(left_input_vars, right_input_vars):
@@ -1981,7 +1981,7 @@ def find_half_affine_equivalence(
     A is invertible (not needed if F and G are permutations with the same input size).
 
     This method does not support symbolic ANF, and the input functions F and G
-    must be defined in the boolean polynomial ring
+    must be defined in the Boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
     Named arguments from ``**solve_args`` are passed to solve_functional_equation().
@@ -2041,15 +2041,15 @@ def find_half_affine_equivalence(
 
     bpr_x = BooleanPolynomialRing(max(len(left_input_vars), len(inv_right_input_vars)), 'x')
     if solve_args.get("bpr", bpr_x) != bpr_x:
-        raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+        raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                   f"(and not {solve_args['bpr']})")
     for i, v in enumerate(left_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {left_anf[0].parent()})")
     for i, v in enumerate(inv_right_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {inv_right_anf[0].parent()})")
 
     for v in left_input_vars + inv_right_input_vars:
@@ -2123,7 +2123,7 @@ def find_nondiagonal_ase(
     If se_ct_terms=False, the constant terms of A and B are set to zero.
 
     This method does not support symbolic ANF, and the input functions F and G
-    must be defined in the boolean polynomial ring
+    must be defined in the Boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
     Named arguments from ``**solve_args`` are passed to solve_functional_equation().
@@ -2181,15 +2181,15 @@ def find_nondiagonal_ase(
 
     bpr_x = BooleanPolynomialRing(max(len(left_input_vars), len(right_input_vars)), 'x')
     if solve_args.get("bpr", bpr_x) != bpr_x:
-        raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+        raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                   f"(and not {solve_args['bpr']})")
     for i, v in enumerate(left_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {left_anf[0].parent()})")
     for i, v in enumerate(right_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {right_anf[0].parent()})")
 
     assert all(not str(v).startswith(prefix_se_left_coeffs) for v in left_input_vars + right_input_vars)
@@ -2254,7 +2254,7 @@ def find_noninvertible_ase(
     If se_ct_terms=False, the constant terms of A and B are set to zero.
 
     This method does not support symbolic ANF, and the input function F
-    must be defined in the boolean polynomial ring
+    must be defined in the Boolean polynomial ring
     BooleanPolynomialRing(n,'x') with n the number of input variables.
 
     Named arguments from ``**solve_args`` are passed to solve_functional_equation().
@@ -2302,11 +2302,11 @@ def find_noninvertible_ase(
 
     bpr_x = BooleanPolynomialRing(len(input_anf_vars), 'x')
     if solve_args.get("bpr", bpr_x) != bpr_x:
-        raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+        raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                   f"(and not {solve_args['bpr']})")
     for i, v in enumerate(input_anf_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {anf[0].parent()})")
 
     assert all(not str(v).startswith(prefix_right_se_coeffs) for v in input_anf_vars)
@@ -2388,7 +2388,7 @@ def find_horizontal_decomposition(
     If aff_ct_terms=False, finds A and B linear instead of affine.
 
     This method does not support symbolic ANF, and the input function G
-    must be defined in the boolean polynomial ring
+    must be defined in the Boolean polynomial ring
     BooleanPolynomialRing(n,'x') with n the number of input variables.
 
     Named arguments from ``**solve_args`` are passed to solve_functional_equation().
@@ -2447,11 +2447,11 @@ def find_horizontal_decomposition(
 
     bpr_x = BooleanPolynomialRing(len(input_anf_vars), 'x')
     if solve_args.get("bpr", bpr_x) != bpr_x:
-        raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+        raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                   f"(and not {solve_args['bpr']})")
     for i, v in enumerate(input_anf_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {anf[0].parent()})")
 
     num_p_vars = num_inputs_first_factor
@@ -2585,7 +2585,7 @@ def find_ccz_equivalence(
     (only supported for equiv_degree=1).
 
     This method does not support symbolic ANF, and the input functions F and G
-    must be defined in the boolean polynomial ring
+    must be defined in the Boolean polynomial ring
     BooleanPolynomialRing(n, 'x') with n the number of input variables.
 
     Named arguments from ``**solve_args`` are passed to solve_functional_equation().
@@ -2662,15 +2662,15 @@ def find_ccz_equivalence(
 
     bpr_x = BooleanPolynomialRing(max(len(left_input_vars), len(right_input_vars)), 'x')
     if solve_args.get("bpr", bpr_x) != bpr_x:
-        raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+        raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                   f"(and not {solve_args['bpr']})")
     for i, v in enumerate(left_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {left_anf[0].parent()})")
     for i, v in enumerate(right_input_vars):
         if v != bpr_x.gens()[i]:
-            raise NotImplementedError(f"only the boolean polynomial ring {bpr_x} is supported "
+            raise NotImplementedError(f"only the Boolean polynomial ring {bpr_x} is supported "
                                       f"(and not {right_anf[0].parent()})")
 
     assert all(not str(v).startswith(prefix_am_coeffs)
